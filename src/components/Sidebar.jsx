@@ -32,19 +32,19 @@ export default function Sidebar() {
     };
 
     const navLinkClass = (path) => isActive(path) 
-        ? "flex items-center gap-3 w-full px-3 py-3 bg-gradient-to-r from-nebula-cyan/10 to-transparent border-l-2 border-nebula-cyan text-white rounded-r-xl transition-colors group"
-        : "flex items-center gap-3 w-full px-3 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-colors group";
+        ? `flex items-center ${isCollapsed ? 'justify-center px-0' : 'gap-3 px-3'} w-full py-2.5 bg-gradient-to-r from-nebula-cyan/10 to-transparent border-l-2 border-nebula-cyan text-white ${isCollapsed ? '' : 'rounded-r-xl'} transition-colors group`
+        : `flex items-center ${isCollapsed ? 'justify-center px-0' : 'gap-3 px-3'} w-full py-2.5 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-colors group`;
 
     const iconClass = (path) => isActive(path)
-        ? "w-5 h-5 text-nebula-cyan flex-shrink-0"
-        : "w-5 h-5 group-hover:text-nebula-cyan transition-colors flex-shrink-0";
+        ? "w-[18px] h-[18px] text-nebula-cyan flex-shrink-0"
+        : "w-[18px] h-[18px] group-hover:text-nebula-cyan transition-colors flex-shrink-0";
 
     const textClass = (path) => isActive(path)
-        ? `font-bold text-nebula-cyan whitespace-nowrap transition-all duration-300 ${isCollapsed ? 'opacity-0 w-0 hidden' : 'opacity-100 w-auto block'}`
-        : `font-medium whitespace-nowrap transition-all duration-300 ${isCollapsed ? 'opacity-0 w-0 hidden' : 'opacity-100 w-auto block'}`;
+        ? `font-bold text-sm text-nebula-cyan whitespace-nowrap transition-all duration-300 ${isCollapsed ? 'opacity-0 w-0 hidden' : 'opacity-100 w-auto block'}`
+        : `font-medium text-sm whitespace-nowrap transition-all duration-300 ${isCollapsed ? 'opacity-0 w-0 hidden' : 'opacity-100 w-auto block'}`;
 
     return (
-        <aside className={`${isCollapsed ? 'w-20' : 'w-64'} h-[100dvh] glass-panel flex flex-col relative z-50 border-r border-white/5 transition-all duration-300 flex-shrink-0`}>
+        <aside className={`${isCollapsed ? 'w-16' : 'w-56'} h-[100dvh] glass-panel flex flex-col relative z-50 border-r border-white/5 transition-all duration-300 flex-shrink-0`}>
             
             {/* Collapse Toggle Button */}
             <button 
@@ -55,13 +55,13 @@ export default function Sidebar() {
                 {isCollapsed ? <PanelLeftOpen className="w-3.5 h-3.5" /> : <PanelLeftClose className="w-3.5 h-3.5" />}
             </button>
 
-            <div className="h-20 flex items-center justify-center px-4 border-b border-white/5 overflow-hidden">
-                <div className={`w-full ${isCollapsed ? 'flex justify-center' : 'pl-2'}`}>
+            <div className={`h-20 flex items-center justify-center ${isCollapsed ? 'px-0' : 'px-4'} border-b border-white/5 overflow-hidden`}>
+                <div className={`w-full flex ${isCollapsed ? 'justify-center' : 'pl-2'}`}>
                     <NebulaLogo showText={!isCollapsed} className={isCollapsed ? 'justify-center' : ''} text="Nebula" />
                 </div>
             </div>
             
-            <nav className="flex-1 py-8 px-4 flex flex-col gap-2 relative z-0 overflow-x-hidden overflow-y-auto hide-scrollbar">
+            <nav className={`flex-1 py-8 ${isCollapsed ? 'px-2' : 'px-4'} flex flex-col gap-2 relative z-0 overflow-x-hidden overflow-y-auto hide-scrollbar`}>
                 <Link to="/home" className={`${navLinkClass('/home')} relative group/tooltip`}>
                     <HomeIcon className={iconClass('/home')} />
                     <span className={textClass('/home')}>{t('sidebar.dashboard')}</span>
@@ -111,7 +111,7 @@ export default function Sidebar() {
                 <div className="h-px bg-white/5 my-2 mx-4"></div>
             </nav>
 
-            <div className="p-4 border-t border-white/5 relative z-50">
+            <div className={`${isCollapsed ? 'p-2' : 'p-4'} border-t border-white/5 relative z-50`}>
                 <Link to="/settings" className={`${navLinkClass('/settings')} relative z-0 group/tooltip`}>
                     <Settings className={iconClass('/settings')} />
                     <span className={textClass('/settings')}>{t('sidebar.settings')}</span>
@@ -123,10 +123,10 @@ export default function Sidebar() {
                 </Link>
                 
                 {/*  Profile Dropdown  */}
-                <div className={`relative group cursor-pointer glass-panel ${isCollapsed ? 'p-2 justify-center' : 'p-3'} rounded-2xl flex items-center gap-3 hover:bg-white/5 transition-colors mt-2 z-[60]`}>
-                    <div className="relative w-10 h-10 flex-shrink-0">
+                <div className={`relative group cursor-pointer glass-panel ${isCollapsed ? 'p-1.5 justify-center' : 'p-3'} rounded-2xl flex items-center gap-3 hover:bg-white/5 transition-colors mt-2 z-[60]`}>
+                    <div className={`relative flex-shrink-0 ${isCollapsed ? 'w-8 h-8' : 'w-10 h-10'}`}>
                         <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=100" className="w-full h-full rounded-full border border-nebula-800 object-cover" />
-                        <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-nebula-900"></div>
+                        <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-nebula-900"></div>
                     </div>
                     {!isCollapsed && (
                         <>

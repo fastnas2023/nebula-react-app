@@ -126,7 +126,7 @@ export default function Schedule() {
                         <div className="space-y-6">
                             <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 space-y-6">
                                 <h3 className="font-display text-lg font-bold flex items-center gap-2 border-b border-white/5 pb-4">
-                                    <Shield className="w-4 h-4 text-nebula-cyan" /> {t('schedule.security')}
+                                    <Shield className="w-5 h-5 text-nebula-cyan" /> {t('schedule.security')}
                                 </h3>
                                 
                                 <div className="flex items-center justify-between group cursor-pointer" onClick={() => setWaitingRoom(!waitingRoom)}>
@@ -150,7 +150,7 @@ export default function Schedule() {
                                 </div>
 
                                 <h3 className="font-display text-lg font-bold flex items-center gap-2 border-b border-white/5 pb-4 pt-4">
-                                    <Settings2 className="w-4 h-4 text-nebula-purple" /> {t('schedule.advancedTitle')}
+                                    <Settings2 className="w-5 h-5 text-nebula-purple" /> {t('schedule.advancedTitle')}
                                 </h3>
 
                                 <div className="flex items-center justify-between group cursor-pointer" onClick={() => setHostVideo(!hostVideo)}>
@@ -181,7 +181,7 @@ export default function Schedule() {
                                 <span className="absolute inset-0 bg-gradient-to-r from-nebula-cyan to-nebula-purple opacity-70 group-hover:opacity-100 transition-opacity duration-500"></span>
                                 <div className="relative px-6 py-4 bg-[#030108] rounded-full flex items-center justify-center gap-2 group-hover:bg-transparent transition-colors duration-500">
                                     <span className="font-bold tracking-wide text-white">{t('schedule.generateLink')}</span>
-                                    <LinkIcon className="w-4 h-4 text-white group-hover:translate-x-1 transition-transform" />
+                                    <LinkIcon className="w-5 h-5 text-white group-hover:translate-x-1 transition-transform" />
                                 </div>
                             </Link>
                         </div>
