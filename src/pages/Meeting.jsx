@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { UserPlus, LayoutGrid, MicOff, Mic, Video, MonitorUp, PhoneOff, Info, Send } from 'lucide-react';
+import { UserPlus, LayoutGrid, MicOff, Mic, Video, MonitorUp, PhoneOff, Info, Send, Sparkles, Bot, ListTodo, FileText } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import NebulaLogo from '../components/NebulaLogo';
 
@@ -17,6 +17,16 @@ export default function Meeting() {
         }
     ]);
     const [newMessage, setNewMessage] = useState("");
+    const [isAiThinking, setIsAiThinking] = useState(false);
+    const messagesEndRef = useRef(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages, isAiThinking]);
 
     const handleSendMessage = () => {
         if (!newMessage.trim()) return;
@@ -32,6 +42,35 @@ export default function Meeting() {
         setMessages([...messages, msg]);
         setNewMessage("");
     };
+
+    const handleAiAction = (action) => {
+        const userPrompt = {
+            id: Date.now(),
+            sender: t('meeting.you'),
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            text: action.label,
+            avatar: "https://i.pravatar.cc/100?img=1"
+        };
+        setMessages(prev => [...prev, userPrompt]);
+        setIsAiThinking(true);
+
+        setTimeout(() => {
+            const aiResponse = {
+                id: Date.now() + 1,
+                sender: "Nebula AI",
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                text: action.response,
+                isAi: true
+            };
+            setMessages(prev => [...prev, aiResponse]);
+            setIsAiThinking(false);
+        }, 1500);
+    };
+
+    const aiActions = [
+        { id: 'summary', icon: <FileText className="w-3 h-3" />, label: "Summarize", response: "Here is a quick summary: David presented the new glassmorphism UI. Elena agreed it looks great. Next step: Finalize the color palette." },
+        { id: 'action', icon: <ListTodo className="w-3 h-3" />, label: "Action Items", response: "1. David: Share the Figma link.\n2. You: Update the CSS variables.\n3. Elena: Review the mobile layout." },
+    ];
 
     return (
         <div className="h-[100dvh] w-full font-sans antialiased flex flex-col relative overflow-hidden selection:bg-nebula-accent selection:text-white">
@@ -187,23 +226,66 @@ export default function Meeting() {
                     <div className="p-5 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
                         <h2 className="font-display font-bold text-lg text-white">{t('meeting.messages')}</h2>
                     </div>
-                    <div className="flex-1 overflow-y-auto p-5 space-y-6 flex flex-col">
+                    <div className="flex-1 overflow-y-auto p-5 space-y-6 flex flex-col relative hide-scrollbar">
                         {messages.map((msg) => (
-                            <div key={msg.id} className="flex gap-3">
-                                <img src={msg.avatar} className="w-8 h-8 rounded-full mt-1 opacity-80" />
-                                <div>
+                            <div key={msg.id} className={`flex gap-3 ${msg.isAi ? 'bg-emerald-500/5 p-4 rounded-2xl border border-emerald-500/10 shadow-[inset_0_0_20px_rgba(16,185,129,0.05)]' : ''}`}>
+                                {msg.isAi ? (
+                                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-500 to-nebula-cyan flex items-center justify-center flex-shrink-0 mt-1 shadow-lg shadow-emerald-500/20">
+                                        <Sparkles className="w-4 h-4 text-white" />
+                                    </div>
+                                ) : (
+                                    <img src={msg.avatar} className="w-8 h-8 rounded-full mt-1 opacity-80 flex-shrink-0 object-cover" />
+                                )}
+                                <div className="flex-1 min-w-0">
                                     <div className="flex items-baseline gap-2 mb-1">
-                                        <span className="font-bold text-sm text-white/90">{msg.sender}</span>
+                                        <span className={`font-bold text-sm ${msg.isAi ? 'text-emerald-400 font-display' : 'text-white/90'}`}>{msg.sender}</span>
                                         <span className="text-[10px] text-white/40 font-bold">{msg.time}</span>
                                     </div>
-                                    <div className="text-sm text-white/70 leading-relaxed bg-white/5 p-3 rounded-2xl rounded-tl-sm border border-white/5 inline-block font-medium break-words max-w-[240px]">
+                                    <div className={`text-sm leading-relaxed p-3 rounded-2xl rounded-tl-sm inline-block font-medium break-words w-full ${msg.isAi ? 'text-white/90 bg-transparent p-0 whitespace-pre-line' : 'text-white/70 bg-white/5 border border-white/5 max-w-[240px]'}`}>
                                         {msg.text}
                                     </div>
                                 </div>
                             </div>
                         ))}
+                        {isAiThinking && (
+                            <div className="flex gap-3 bg-emerald-500/5 p-4 rounded-2xl border border-emerald-500/10">
+                                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-500 to-nebula-cyan flex items-center justify-center flex-shrink-0 shadow-lg shadow-emerald-500/20">
+                                    <Sparkles className="w-4 h-4 text-white animate-spin" style={{ animationDuration: '3s' }} />
+                                </div>
+                                <div>
+                                    <div className="flex items-baseline gap-2 mb-1">
+                                        <span className="font-bold text-sm text-emerald-400 font-display">Nebula AI</span>
+                                    </div>
+                                    <div className="flex gap-1.5 items-center h-5">
+                                        <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce"></div>
+                                        <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                                        <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        <div ref={messagesEndRef} />
                     </div>
-                    <div className="p-4 border-t border-white/5 bg-black/20">
+                    
+                    <div className="p-4 border-t border-white/5 bg-black/20 flex flex-col gap-3">
+                        {/* AI Quick Actions */}
+                        <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-1">
+                            <div className="flex items-center justify-center bg-white/5 rounded-full px-2 text-white/40">
+                                <Bot className="w-3.5 h-3.5" />
+                            </div>
+                            {aiActions.map(action => (
+                                <button 
+                                    key={action.id}
+                                    onClick={() => handleAiAction(action)}
+                                    disabled={isAiThinking}
+                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-400 text-xs font-bold whitespace-nowrap transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {action.icon} {action.label}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Input Box */}
                         <div className="relative flex items-center">
                             <input 
                                 type="text" 
@@ -211,11 +293,13 @@ export default function Meeting() {
                                 value={newMessage}
                                 onChange={(e) => setNewMessage(e.target.value)}
                                 onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                                className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-4 pr-14 text-sm text-white placeholder-white/30 focus:outline-none focus:border-nebula-purple/50 transition-all" 
+                                disabled={isAiThinking}
+                                className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-4 pr-14 text-sm text-white placeholder-white/30 focus:outline-none focus:border-nebula-purple/50 transition-all disabled:opacity-50" 
                             />
                             <button 
                                 onClick={handleSendMessage}
-                                className="absolute right-2 w-10 h-10 rounded-lg bg-nebula-cyan/20 hover:bg-nebula-cyan/40 text-nebula-cyan flex items-center justify-center transition-colors"
+                                disabled={isAiThinking || !newMessage.trim()}
+                                className="absolute right-2 w-10 h-10 rounded-lg bg-nebula-cyan/20 hover:bg-nebula-cyan/40 text-nebula-cyan flex items-center justify-center transition-colors disabled:opacity-50 disabled:hover:bg-nebula-cyan/20"
                             >
                                 <Send className="w-4 h-4" />
                             </button>
