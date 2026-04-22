@@ -130,7 +130,7 @@ export default function Meeting() {
                 {/*  Active Speaker / Main Video (Takes up majority of space)  */}
                 <div className="flex-[3] relative min-h-0">
                     <div className="voice-reactive-border"></div>
-                    <div className="video-tile speaking relative group h-full w-full bg-black rounded-3xl overflow-hidden shadow-2xl">
+                    <div className="video-tile speaking relative group h-full w-full bg-black rounded-3xl overflow-hidden shadow-2xl border border-white/5">
                         <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=1600" className="w-full h-full object-cover object-top opacity-80" alt="Main speaker" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20"></div>
                         
