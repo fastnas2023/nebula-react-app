@@ -45,7 +45,7 @@ export default function DesignSystem() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 {/* Typography */}
                 <div className="space-y-6">
-                  <h3 className="text-sm font-mono text-gray-500 uppercase tracking-widest">Typography Scale</h3>
+                  <h3 className="text-sm font-mono text-gray-500 uppercase tracking-widest">{t('designSystem.typographyScale')}</h3>
                   <div className="space-y-4">
                     <div className="flex items-baseline gap-4 border-b border-white/5 pb-4">
                       <span className="font-display text-4xl font-bold w-48">Display</span>
@@ -68,7 +68,7 @@ export default function DesignSystem() {
 
                 {/* Colors */}
                 <div className="space-y-6">
-                  <h3 className="text-sm font-mono text-gray-500 uppercase tracking-widest">Color Palette</h3>
+                  <h3 className="text-sm font-mono text-gray-500 uppercase tracking-widest">{t('designSystem.colorPalette')}</h3>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     {[
                       { name: 'Space', hex: '#030108', class: 'bg-[#030108] border border-white/10' },
@@ -95,54 +95,54 @@ export default function DesignSystem() {
                 
                 {/* Buttons */}
                 <div className="p-8 rounded-2xl bg-white/[0.02] border border-white/5 space-y-8">
-                  <h3 className="text-sm font-mono text-gray-500 uppercase tracking-widest">Buttons</h3>
+                  <h3 className="text-sm font-mono text-gray-500 uppercase tracking-widest">{t('designSystem.buttons')}</h3>
                   
                   <div className="space-y-6">
                     {/* Primary Cyber Button */}
                     <button className="w-full relative group overflow-hidden rounded-full p-[1px]">
                       <span className="absolute inset-0 bg-gradient-to-r from-nebula-cyan to-nebula-purple opacity-70 group-hover:opacity-100 transition-opacity duration-500"></span>
                       <div className="relative px-6 py-3 bg-[#030108] rounded-full flex items-center justify-center gap-2 group-hover:bg-transparent transition-colors duration-500">
-                        <span className="font-semibold tracking-wide text-white">Primary Action</span>
+                        <span className="font-semibold tracking-wide text-white">{t('designSystem.primaryAction')}</span>
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </div>
                     </button>
 
                     {/* Secondary Ghost Button */}
                     <button className="w-full px-6 py-3 rounded-full bg-white/5 border border-white/10 text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-300 font-medium">
-                      Secondary Ghost
+                      {t('designSystem.secondaryGhost')}
                     </button>
 
                     {/* Danger / Action */}
                     <button className="w-full px-6 py-3 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-all duration-300 font-medium">
-                      Destructive Action
+                      {t('designSystem.destructiveAction')}
                     </button>
                   </div>
                 </div>
 
                 {/* Inputs */}
                 <div className="p-8 rounded-2xl bg-white/[0.02] border border-white/5 space-y-8">
-                  <h3 className="text-sm font-mono text-gray-500 uppercase tracking-widest">Form Controls</h3>
+                  <h3 className="text-sm font-mono text-gray-500 uppercase tracking-widest">{t('designSystem.formControls')}</h3>
                   
                   <div className="space-y-6">
                     <div className="space-y-2">
-                      <label className="text-xs font-mono text-gray-400 ml-1">Email Address</label>
+                      <label className="text-xs font-mono text-gray-400 ml-1">{t('designSystem.emailLabel')}</label>
                       <div className="relative group">
                         <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-nebula-cyan transition-colors" />
                         <input 
                           type="email" 
-                          placeholder="name@company.com" 
+                          placeholder={t('designSystem.emailPlaceholder')}
                           className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-white placeholder-gray-600 focus:outline-none focus:border-nebula-cyan/50 focus:ring-1 focus:ring-nebula-cyan/50 transition-all"
                         />
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-xs font-mono text-gray-400 ml-1">Search Database (Focus State)</label>
+                      <label className="text-xs font-mono text-gray-400 ml-1">{t('designSystem.searchLabel')}</label>
                       <div className="relative">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-nebula-cyan" />
                         <input 
                           type="text" 
-                          defaultValue="Nebula Engine" 
+                          defaultValue={t('designSystem.searchPlaceholder')}
                           className="w-full bg-black/60 border border-nebula-cyan/50 ring-1 ring-nebula-cyan/30 rounded-xl py-3 pl-11 pr-4 text-white focus:outline-none transition-all"
                         />
                         <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
@@ -156,7 +156,7 @@ export default function DesignSystem() {
 
                 {/* Cards */}
                 <div className="p-8 rounded-2xl bg-white/[0.02] border border-white/5 space-y-8">
-                  <h3 className="text-sm font-mono text-gray-500 uppercase tracking-widest">Cards & Surfaces</h3>
+                  <h3 className="text-sm font-mono text-gray-500 uppercase tracking-widest">{t('designSystem.cardsSurfaces')}</h3>
                   
                   {/* Stat Card */}
                   <div className="p-5 rounded-2xl bg-black/40 border border-white/5 backdrop-blur-xl hover:border-white/10 transition-colors group cursor-pointer">
@@ -165,11 +165,11 @@ export default function DesignSystem() {
                         <Play className="w-4 h-4" />
                       </div>
                       <span className="text-xs font-mono text-green-400 flex items-center gap-1">
-                        <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></div> Live
+                        <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></div> {t('designSystem.live')}
                       </span>
                     </div>
                     <div className="space-y-1">
-                      <div className="text-sm text-gray-400">Global Latency</div>
+                      <div className="text-sm text-gray-400">{t('designSystem.globalLatency')}</div>
                       <div className="font-mono text-2xl text-white group-hover:text-nebula-cyan transition-colors">12.4ms</div>
                     </div>
                   </div>
@@ -182,7 +182,7 @@ export default function DesignSystem() {
                       </div>
                       <div>
                         <div className="text-sm font-medium text-white">Alex Chen</div>
-                        <div className="text-xs text-gray-500">Engineering</div>
+                        <div className="text-xs text-gray-500">{t('designSystem.engineering')}</div>
                       </div>
                     </div>
                     <ChevronRight className="w-4 h-4 text-gray-600" />
@@ -193,7 +193,7 @@ export default function DesignSystem() {
 
             {/* 3. Page Layouts (Miniatures) */}
             <section>
-              <h2 className="font-display text-2xl font-bold border-b border-white/10 pb-4 mb-8">3. Page Archetypes</h2>
+              <h2 className="font-display text-2xl font-bold border-b border-white/10 pb-4 mb-8">3. {t('designSystem.pageArchetypes')}</h2>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 
@@ -214,7 +214,7 @@ export default function DesignSystem() {
                     <div className="w-1/2 h-2 bg-gray-500/50 rounded mb-8"></div>
                     <div className="w-24 h-8 bg-nebula-cyan/80 rounded-full"></div>
                   </div>
-                  <div className="absolute bottom-4 left-4 text-xs font-mono text-gray-600">Hero + CTA</div>
+                  <div className="absolute bottom-4 left-4 text-xs font-mono text-gray-600">{t('designSystem.heroLayout')}</div>
                 </div>
 
                 {/* List Layout Mockup */}
@@ -232,7 +232,7 @@ export default function DesignSystem() {
                       </div>
                     ))}
                   </div>
-                  <div className="absolute bottom-4 left-4 text-xs font-mono text-gray-600">Data List / Dashboard</div>
+                  <div className="absolute bottom-4 left-4 text-xs font-mono text-gray-600">{t('designSystem.listLayout')}</div>
                 </div>
 
                 {/* Detail Layout Mockup */}
@@ -251,7 +251,7 @@ export default function DesignSystem() {
                     </div>
                     <div className="w-full h-20 bg-nebula-purple/10 border border-nebula-purple/20 rounded-xl mt-4"></div>
                   </div>
-                  <div className="absolute bottom-4 left-4 text-xs font-mono text-gray-600">Split Detail View</div>
+                  <div className="absolute bottom-4 left-4 text-xs font-mono text-gray-600">{t('designSystem.detailLayout')}</div>
                 </div>
 
               </div>

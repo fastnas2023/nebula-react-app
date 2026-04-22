@@ -22,9 +22,9 @@ export default function Whiteboard() {
                     <div className="w-3 h-3 bg-white rounded-full"></div>
                 </div>
                 <div>
-                    <h1 className="font-display font-bold text-xl text-white">Product Architecture Sync</h1>
+                    <h1 className="font-display font-bold text-xl text-white">{t('whiteboard.mockTitle')}</h1>
                     <div className="flex items-center gap-2 text-xs text-white/50 uppercase font-bold">
-                        <span className="text-emerald-400">●</span> 01:24:39
+                        <span className="text-emerald-400">●</span> {t('whiteboard.mockSubtitle')}
                     </div>
                 </div>
             </div>
@@ -83,8 +83,8 @@ export default function Whiteboard() {
                         <div className="w-px h-4 bg-white/20"></div>
                         <button className="hover:text-red-400 transition-colors"><Trash2 className="w-4 h-4" /></button>
                     </div>
-                    <div className="text-xs font-bold text-yellow-800 uppercase mb-2">Architecture</div>
-                    <p className="font-handwriting text-2xl leading-relaxed text-black">Redesign the checkout flow for mobile app.</p>
+                    <div className="text-xs font-bold text-yellow-800 uppercase mb-2">{t('whiteboard.mockNote1Topic')}</div>
+                    <p className="font-handwriting text-2xl leading-relaxed text-black">{t('whiteboard.mockNote1Desc')}</p>
                 </div>
 
                 {/*  Sticky Note 2  */}
@@ -95,14 +95,14 @@ export default function Whiteboard() {
                         <div className="w-px h-4 bg-white/20"></div>
                         <button className="hover:text-red-400 transition-colors"><Trash2 className="w-4 h-4" /></button>
                     </div>
-                    <div className="text-xs font-bold text-pink-200 uppercase mb-2">Performance</div>
-                    <p className="font-handwriting text-2xl leading-relaxed">Check API latency issues on US-East region.</p>
+                    <div className="text-xs font-bold text-pink-200 uppercase mb-2">{t('whiteboard.mockNote2Topic')}</div>
+                    <p className="font-handwriting text-2xl leading-relaxed">{t('whiteboard.mockNote2Desc')}</p>
                 </div>
 
                 {/*  Cursor Indicator  */}
                 <div className="absolute top-[280px] left-[650px] pointer-events-none flex flex-col items-center">
                     <MousePointer2 className="w-6 h-6 text-nebula-cyan drop-shadow-md -ml-2 -mt-1" />
-                    <div className="bg-nebula-cyan text-black text-[10px] px-2 py-0.5 rounded-full mt-1 shadow-lg shadow-nebula-cyan/50 whitespace-nowrap font-bold">David (Drawing)</div>
+                    <div className="bg-nebula-cyan text-black text-[10px] px-2 py-0.5 rounded-full mt-1 shadow-lg shadow-nebula-cyan/50 whitespace-nowrap font-bold">{t('whiteboard.mockCursorLabel')}</div>
                 </div>
 
                 {/*  Floating Videos  */}

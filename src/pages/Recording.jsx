@@ -19,8 +19,8 @@ export default function Recording() {
                 <ArrowLeft className="w-5 h-5 text-gray-400" />
             </Link>
             <div>
-                <h1 className="font-display text-xl font-bold">Q3 Product Roadmap Review</h1>
-                <p className="text-xs text-gray-500 font-mono mt-1">Recorded Oct 15, 2026 • 45m 12s</p>
+                <h1 className="font-display text-xl font-bold">{t('recording.mockTitle')}</h1>
+                <p className="text-xs text-gray-500 font-mono mt-1">{t('recording.mockSubtitle')}</p>
             </div>
         </div>
         <div className="flex items-center gap-4">
@@ -97,7 +97,7 @@ export default function Recording() {
                 {/*  Executive Summary  */}
                 <div className="ai-border bg-white/5 p-5 rounded-3xl">
                     <h3 className="font-display font-bold text-lg mb-3 flex items-center gap-2"><FileText className="w-4 h-4 text-nebula-purple" /> {t('recording.executiveSummary')}</h3>
-                    <p className="text-sm text-gray-300 leading-relaxed font-medium">The team reviewed the Q3 roadmap, focusing on the new WebRTC mesh architecture. David confirmed the canvas recording feature is on track. Sarah highlighted potential mobile performance bottlenecks which require further testing next week.</p>
+                    <p className="text-sm text-gray-300 leading-relaxed font-medium">{t('recording.mockSummaryDesc')}</p>
                 </div>
 
                 {/*  Action Items  */}
@@ -107,15 +107,15 @@ export default function Recording() {
                         <li className="flex items-start gap-3 bg-white/5 p-3 rounded-xl border border-white/5">
                             <input type="checkbox" className="mt-1 w-4 h-4 rounded border-white/20 bg-black/50 text-nebula-emerald focus:ring-nebula-emerald cursor-pointer" />
                             <div className="flex-1">
-                                <p className="text-sm text-white font-medium">Schedule load testing for mobile devices</p>
-                                <p className="text-xs text-gray-500 mt-1 font-mono">@Sarah • Due Friday</p>
+                                <p className="text-sm text-white font-medium">{t('recording.mockAction1Title')}</p>
+                                <p className="text-xs text-gray-500 mt-1 font-mono">{t('recording.mockAction1Desc')}</p>
                             </div>
                         </li>
                         <li className="flex items-start gap-3 bg-white/5 p-3 rounded-xl border border-white/5">
                             <input type="checkbox" defaultChecked className="mt-1 w-4 h-4 rounded border-white/20 bg-nebula-emerald text-black cursor-pointer" />
                             <div className="flex-1">
-                                <p className="text-sm text-gray-400 font-medium line-through">Finalize Figma mockups for dashboard</p>
-                                <p className="text-xs text-gray-500 mt-1 font-mono">@Alex • Completed</p>
+                                <p className="text-sm text-gray-400 font-medium line-through">{t('recording.mockAction2Title')}</p>
+                                <p className="text-xs text-gray-500 mt-1 font-mono">{t('recording.mockAction2Desc')}</p>
                             </div>
                         </li>
                     </ul>
@@ -128,17 +128,17 @@ export default function Recording() {
                         <div className="relative cursor-pointer group">
                             <div className="absolute -left-[21px] top-1.5 w-2 h-2 rounded-full bg-nebula-cyan group-hover:scale-150 transition-transform"></div>
                             <div className="text-xs font-mono text-nebula-cyan font-bold mb-1">05:12</div>
-                            <p className="text-sm text-gray-300 group-hover:text-white transition-colors font-medium">Discussion on WebRTC signaling limits</p>
+                            <p className="text-sm text-gray-300 group-hover:text-white transition-colors font-medium">{t('recording.mockMoment1Title')}</p>
                         </div>
                         <div className="relative cursor-pointer group">
                             <div className="absolute -left-[21px] top-1.5 w-2 h-2 rounded-full bg-nebula-purple group-hover:scale-150 transition-transform"></div>
                             <div className="text-xs font-mono text-nebula-purple font-bold mb-1">12:04</div>
-                            <p className="text-sm text-gray-300 group-hover:text-white transition-colors font-medium">David demonstrates canvas recording prototype</p>
+                            <p className="text-sm text-gray-300 group-hover:text-white transition-colors font-medium">{t('recording.mockMoment2Title')}</p>
                         </div>
                         <div className="relative cursor-pointer group">
                             <div className="absolute -left-[21px] top-1.5 w-2 h-2 rounded-full bg-white/20 group-hover:bg-white transition-colors"></div>
                             <div className="text-xs font-mono text-gray-500 mb-1">38:45</div>
-                            <p className="text-sm text-gray-300 group-hover:text-white transition-colors font-medium">Q&A and final wrap-up</p>
+                            <p className="text-sm text-gray-300 group-hover:text-white transition-colors font-medium">{t('recording.mockMoment3Title')}</p>
                         </div>
                     </div>
                 </div>

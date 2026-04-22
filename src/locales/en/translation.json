@@ -296,18 +296,54 @@
     "executiveSummary": "Executive Summary",
     "actionItems": "Action Items",
     "keyMoments": "Key Moments",
-    "participantsSummary": "{{names}} participated"
+    "participantsSummary": "{{names}} are in this meeting",
+    "mockTitle": "Q3 Product Roadmap Review",
+    "mockSubtitle": "Recorded Oct 15, 2026 • 45m 12s",
+    "mockSummaryDesc": "The team reviewed the Q3 roadmap, focusing on the new WebRTC mesh architecture. David confirmed the canvas recording feature is on track. Sarah highlighted potential mobile performance bottlenecks which require further testing next week.",
+    "mockAction1Title": "Schedule load testing for mobile devices",
+    "mockAction1Desc": "@Sarah • Due Friday",
+    "mockAction2Title": "Finalize Figma mockups for dashboard",
+    "mockAction2Desc": "@Alex • Completed",
+    "mockMoment1Title": "Discussion on WebRTC signaling limits",
+    "mockMoment2Title": "David demonstrates canvas recording prototype",
+    "mockMoment3Title": "Q&A and final wrap-up"
   },
   "whiteboard": {
     "collaborating": "{{count}} Collaborating",
     "closeBoard": "Close Board",
-    "minimap": "Minimap"
+    "minimap": "Minimap",
+    "mockTitle": "Product Architecture Sync",
+    "mockSubtitle": "01:24:39",
+    "mockNote1Topic": "Architecture",
+    "mockNote1Desc": "Redesign the checkout flow for mobile app.",
+    "mockNote2Topic": "Performance",
+    "mockNote2Desc": "Check API latency issues on US-East region.",
+    "mockCursorLabel": "David (Drawing)"
   },
   "designSystem": {
     "badge": "NEBULA DESIGN SYSTEM v1.0",
     "title": "Minimal. Premium.\nTech-Oriented.",
     "subtitle": "A unified design language focusing on extreme clarity, profound depth, and restrained aesthetic choices. Zero clutter, pure focus.",
     "foundations": "Foundations",
-    "coreComponents": "Core Components"
+    "coreComponents": "Core Components",
+    "pageArchetypes": "Page Archetypes",
+    "typographyScale": "Typography Scale",
+    "colorPalette": "Color Palette",
+    "buttons": "Buttons",
+    "formControls": "Form Controls",
+    "cardsSurfaces": "Cards & Surfaces",
+    "primaryAction": "Primary Action",
+    "secondaryGhost": "Secondary Ghost",
+    "destructiveAction": "Destructive Action",
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "name@company.com",
+    "searchLabel": "Search Database (Focus State)",
+    "searchPlaceholder": "Nebula Engine",
+    "globalLatency": "Global Latency",
+    "engineering": "Engineering",
+    "heroLayout": "Hero + CTA",
+    "listLayout": "Data List / Dashboard",
+    "detailLayout": "Split Detail View",
+    "live": "Live"
   }
 }
