@@ -1,0 +1,158 @@
+{
+  "nav": {
+    "features": "Features",
+    "architecture": "Architecture",
+    "deployment": "Deployment",
+    "startMeeting": "Start Meeting"
+  },
+  "hero": {
+    "p2pBadge": "100% P2P",
+    "engineBadge": "Decentralized Engine v3.0",
+    "title1": "Beyond Limits.",
+    "title2": "Zero Servers.",
+    "desc": "Experience the ultimate \"Burn After Reading\" privacy. Our 100% P2P WebRTC architecture connects browsers directly, completely bypassing traditional media servers.",
+    "deployBtn": "Deploy Nebula",
+    "sourceBtn": "View Source"
+  },
+  "metrics": {
+    "latency": "Server Latency",
+    "encryption": "P2P Encryption",
+    "costs": "SFU/MCU Costs",
+    "scalability": "Scalability"
+  },
+  "architecture": {
+    "badge": "Core Engine",
+    "title1": "Dismantling the",
+    "title2": "status quo.",
+    "desc": "We threw away the expensive streaming farms and rebuilt video conferencing purely for the browser's edge capabilities.",
+    "card1": {
+      "title": "100% P2P Mesh Network",
+      "desc": "The server is just a matchmaker. Once connected, all audio and video streams flow directly between browsers. Unplug the server, and the meeting continues flawlessly."
+    },
+    "card2": {
+      "title": "Burn After Reading",
+      "desc": "Media streams are generated, encrypted, and destroyed entirely within client memory. Physical-level data sovereignty."
+    },
+    "card3": {
+      "title": "Canvas Recording",
+      "desc": "We use native HTML5 Canvas & AudioContext to composite multi-track layouts locally. Zero cloud recording costs."
+    },
+    "card4": {
+      "title": "Watchdog Fallback",
+      "desc": "Mobile browser crashed on hardware decoding? Our Canvas Watchdog detects frame freezes >3.5s and instantly takes over rendering to prevent blue screens.",
+      "status": "SYSTEM STABLE"
+    }
+  },
+  "features": {
+    "showcase1": {
+      "title1": "Cyber-Glassmorphism.",
+      "title2": "Redefining presence.",
+      "desc": "Abandon the utilitarian look of legacy open-source tools. Nebula introduces a luxurious dark mode, heavy backdrop blurs, and cinematic Framer Motion transitions.",
+      "point1Title": "Dynamic Gallery Grid",
+      "point1Desc": "UI engine auto-calculates the optimal video layout based on device aspect ratio and participant count.",
+      "point2Title": "High-end Brand Presence",
+      "point2Desc": "Impress clients during pitches with a sci-fi holographic aesthetic that elevates your corporate image.",
+      "name1": "Sarah Jenkins",
+      "name2": "David"
+    },
+    "showcase2": {
+      "title1": "Crash-proof",
+      "title2": "screen sharing.",
+      "desc": "When you share your screen, the system automatically engages Focus Mode. We intelligently detect and block the dreaded \"infinite mirror\" effect that causes browser memory leaks and GPU crashes.",
+      "readBlog": "Read Engineering Blog",
+      "activeTitle": "Screen Sharing Active",
+      "activeDesc": "Focus Mode: Infinite Mirror Blocked",
+      "stopBtn": "Stop Sharing"
+    }
+  },
+  "deployment": {
+    "title1": "Zero Marginal Cost.",
+    "title2": "Infinite Scale.",
+    "desc": "Whether you have 10 or 10,000 employees, a basic $5/mo cloud server (or a Raspberry Pi) is all you need to host the signaling engine for your entire company.",
+    "deployBtn": "Deploy on your server",
+    "openSource": "Open source and free forever."
+  },
+  "footer": {
+    "copyright": "© 2026 Nebula Mesh Networks.",
+    "github": "GitHub",
+    "docs": "Documentation",
+    "privacy": "Privacy",
+    "admin": "Admin Portal"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "meetings": "Meetings",
+    "recordings": "Recordings",
+    "profile": "Profile",
+    "contacts": "Contacts",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "greeting": "Welcome back",
+    "upcoming": "Upcoming",
+    "recent": "Recent",
+    "live": "Live",
+    "ends": "Ends",
+    "joinNow": "Join Now",
+    "details": "Details",
+    "newMeeting": "New Meeting",
+    "startInstant": "Start instantly",
+    "joinMeeting": "Join Meeting",
+    "enterId": "Enter meeting ID or link",
+    "schedule": "Schedule",
+    "planAhead": "Plan ahead"
+  },
+  "setup": {
+    "title": "Ready to join?",
+    "room": "Room",
+    "displayName": "Display Name",
+    "camera": "Camera",
+    "microphone": "Microphone",
+    "joinBtn": "Join Meeting"
+  },
+  "meeting": {
+    "summary": "Meeting Summary",
+    "aiNotes": "AI is taking notes",
+    "messages": "Messages",
+    "sendPlaceholder": "Send a message...",
+    "speaking": "Speaking...",
+    "recording": "Recording",
+    "leave": "Leave",
+    "you": "You"
+  },
+  "schedule": {
+    "title": "Schedule a Meeting",
+    "topic": "Topic",
+    "topicPlaceholder": "Design Sync / Weekly Standup",
+    "date": "Date",
+    "time": "Time",
+    "timezone": "Timezone",
+    "duration": "Duration",
+    "durationOptions": {
+      "15m": "15 Minutes",
+      "30m": "30 Minutes",
+      "45m": "45 Minutes",
+      "1h": "1 Hour",
+      "custom": "Custom"
+    },
+    "security": "Security",
+    "requirePassword": "Require Password",
+    "waitingRoom": "Waiting Room",
+    "generateLink": "Generate Invite Link",
+    "cancel": "Cancel"
+  },
+  "invite": {
+    "title": "You've been invited",
+    "host": "Host",
+    "duration": "Duration",
+    "time": "Time",
+    "joinBtn": "Join Waiting Room",
+    "decline": "Decline"
+  },
+  "screenshare": {
+    "viewing": "You are viewing {{name}}'s screen",
+    "requestControl": "Request Control",
+    "fitToScreen": "Fit to Screen",
+    "exitFullscreen": "Exit Fullscreen"
+  }
+}

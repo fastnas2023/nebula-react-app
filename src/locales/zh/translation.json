@@ -1,0 +1,158 @@
+{
+  "nav": {
+    "features": "核心特性",
+    "architecture": "底层架构",
+    "deployment": "私有部署",
+    "startMeeting": "立即开会"
+  },
+  "hero": {
+    "p2pBadge": "纯 P2P 架构",
+    "engineBadge": "去中心化引擎 v3.0",
+    "title1": "突破极限。",
+    "title2": "零服务器。",
+    "desc": "体验极致的“阅后即焚”级隐私。我们 100% P2P 的 WebRTC 架构让浏览器之间直接相连，彻底绕过传统的昂贵流媒体服务器。",
+    "deployBtn": "部署 Nebula",
+    "sourceBtn": "查看源码"
+  },
+  "metrics": {
+    "latency": "服务器延迟",
+    "encryption": "端到端加密",
+    "costs": "流媒体成本",
+    "scalability": "扩展性"
+  },
+  "architecture": {
+    "badge": "核心引擎",
+    "title1": "彻底颠覆",
+    "title2": "传统架构。",
+    "desc": "我们抛弃了昂贵的流媒体服务器集群，完全基于浏览器边缘计算能力重构了视频会议体验。",
+    "card1": {
+      "title": "100% P2P 网状网络",
+      "desc": "服务器仅仅是个“红娘”。一旦连接建立，所有音视频流直接在浏览器之间传输。即使拔掉服务器网线，会议依然流畅进行。"
+    },
+    "card2": {
+      "title": "阅后即焚",
+      "desc": "所有的媒体流都在客户端内存中产生、加密并在接收端销毁。实现物理级别的数据主权防泄漏。"
+    },
+    "card3": {
+      "title": "前端多轨录制",
+      "desc": "我们突破性地利用浏览器原生的 Canvas 和 AudioContext 实时重绘混音多路视频，实现零云端成本的本地录像。"
+    },
+    "card4": {
+      "title": "看门狗容灾机制",
+      "desc": "手机浏览器硬解视频卡死？我们的 Canvas 看门狗一旦检测到帧率卡死超过 3.5 秒，将瞬间接管渲染，彻底杜绝蓝屏崩溃。",
+      "status": "系统稳定运行"
+    }
+  },
+  "features": {
+    "showcase1": {
+      "title1": "赛博玻璃拟物化。",
+      "title2": "重塑临场感。",
+      "desc": "彻底告别传统开源工具简陋的界面。Nebula 引入了高奢暗黑模式、重度毛玻璃质感以及 Framer Motion 电影级动态转场。",
+      "point1Title": "智能画廊排版",
+      "point1Desc": "UI 引擎根据设备屏幕比例和参会人数，动态自适应计算出最完美的视频网格布局。",
+      "point2Title": "高奢品牌调性",
+      "point2Desc": "用极具未来感的全息视觉美学，在向客户提案时极大地提升您的企业科技形象。",
+      "name1": "Sarah Jenkins",
+      "name2": "David"
+    },
+    "showcase2": {
+      "title1": "防崩溃的",
+      "title2": "屏幕共享。",
+      "desc": "当您分享屏幕时，系统自动切入专注模式，并智能阻断导致显卡内存溢出的“无限镜面套娃”效应。",
+      "readBlog": "阅读工程博客",
+      "activeTitle": "屏幕共享中",
+      "activeDesc": "专注模式：无限镜面已阻断",
+      "stopBtn": "停止共享"
+    }
+  },
+  "deployment": {
+    "title1": "零边际成本。",
+    "title2": "无限扩展。",
+    "desc": "无论您的团队是 10 人还是 10,000 人，一台基础的廉价云服务器（甚至是树莓派）就能支撑全公司的视频会议信令。",
+    "deployBtn": "私有化部署",
+    "openSource": "开源且永久免费。"
+  },
+  "footer": {
+    "copyright": "© 2026 Nebula Mesh Networks. 保留所有权利。",
+    "github": "GitHub",
+    "docs": "开发文档",
+    "privacy": "隐私条款",
+    "admin": "管理后台"
+  },
+  "sidebar": {
+    "dashboard": "仪表盘",
+    "meetings": "会议",
+    "recordings": "录像",
+    "profile": "个人资料",
+    "contacts": "联系人",
+    "settings": "设置"
+  },
+  "dashboard": {
+    "greeting": "欢迎回来",
+    "upcoming": "即将开始",
+    "recent": "最近会议",
+    "live": "进行中",
+    "ends": "结束于",
+    "joinNow": "加入会议",
+    "details": "详情",
+    "newMeeting": "新建会议",
+    "startInstant": "立即开始",
+    "joinMeeting": "加入会议",
+    "enterId": "输入会议 ID 或链接",
+    "schedule": "安排会议",
+    "planAhead": "提前规划"
+  },
+  "setup": {
+    "title": "准备好加入了？",
+    "room": "房间",
+    "displayName": "显示名称",
+    "camera": "摄像头",
+    "microphone": "麦克风",
+    "joinBtn": "加入会议"
+  },
+  "meeting": {
+    "summary": "会议纪要",
+    "aiNotes": "AI 正在记录",
+    "messages": "消息",
+    "sendPlaceholder": "发送消息...",
+    "speaking": "正在讲话...",
+    "recording": "录制中",
+    "leave": "离开",
+    "you": "你"
+  },
+  "schedule": {
+    "title": "安排会议",
+    "topic": "会议主题",
+    "topicPlaceholder": "设计同步 / 每周站会",
+    "date": "日期",
+    "time": "时间",
+    "timezone": "时区",
+    "duration": "时长",
+    "durationOptions": {
+      "15m": "15 分钟",
+      "30m": "30 分钟",
+      "45m": "45 分钟",
+      "1h": "1 小时",
+      "custom": "自定义"
+    },
+    "security": "安全",
+    "requirePassword": "需要密码",
+    "waitingRoom": "开启等候室",
+    "generateLink": "生成邀请链接",
+    "cancel": "取消"
+  },
+  "invite": {
+    "title": "您收到了一个会议邀请",
+    "host": "主持人",
+    "duration": "时长",
+    "time": "时间",
+    "joinBtn": "加入等候室",
+    "decline": "拒绝"
+  },
+  "screenshare": {
+    "viewing": "您正在观看 {{name}} 的屏幕",
+    "requestControl": "请求控制",
+    "fitToScreen": "适应屏幕",
+    "exitFullscreen": "退出全屏"
+  }
+}
