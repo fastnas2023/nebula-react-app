@@ -152,7 +152,7 @@ export default function Screenshare() {
                         )}
                         
                         {/* Annotation Layer */}
-                        {isAnnotating && <AnnotationCanvas onClose={() => setIsAnnotating(false)} />}
+                        {isAnnotating && <AnnotationCanvas onClose={isPresenter ? null : () => setIsAnnotating(false)} />}
                     </div>
                 }
                 rightContent={

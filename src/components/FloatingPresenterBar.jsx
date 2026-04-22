@@ -10,7 +10,7 @@ export default function FloatingPresenterBar({ onStopShare, onToggleAnnotate, is
   const [isPaused, setIsPaused] = useState(false);
 
   return (
-    <div className="fixed top-6 left-0 right-0 flex justify-center z-[100] pointer-events-none">
+    <div className="fixed top-6 left-0 right-0 flex justify-center z-[200] pointer-events-none">
       <motion.div
         drag
         dragMomentum={false}
