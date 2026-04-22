@@ -1,7 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { X } from 'lucide-react';
 
-const AnnotationCanvas = () => {
+const AnnotationCanvas = ({ onClose }) => {
   const { t } = useTranslation();
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
@@ -104,7 +105,7 @@ const AnnotationCanvas = () => {
         onTouchCancel={stopDrawing}
         className="pointer-events-auto touch-none w-full h-full bg-transparent cursor-crosshair"
       />
-      <div className="absolute top-4 right-4 pointer-events-auto">
+      <div className="absolute top-4 right-4 pointer-events-auto flex items-center gap-2">
         <button
           onClick={clearCanvas}
           className="bg-white/90 text-slate-800 border border-slate-200 hover:bg-slate-50 font-medium py-2 px-4 rounded-lg shadow-sm transition-colors flex items-center gap-2"
@@ -114,6 +115,15 @@ const AnnotationCanvas = () => {
           </svg>
           {t('annotation.clearCanvas')}
         </button>
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="bg-red-500/90 text-white border border-red-600 hover:bg-red-500 font-medium p-2 rounded-lg shadow-sm transition-colors flex items-center justify-center"
+            title={t('annotation.close')}
+          >
+            <X size={20} />
+          </button>
+        )}
       </div>
     </div>
   );

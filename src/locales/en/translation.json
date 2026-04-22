@@ -237,7 +237,8 @@
     "yesLeave": "Yes, Leave"
   },
   "annotation": {
-    "clearCanvas": "Clear canvas"
+    "clearCanvas": "Clear canvas",
+    "close": "Close annotation"
   },
   "settings": {
     "title": "Audio & Video Settings",

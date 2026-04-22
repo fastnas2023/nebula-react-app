@@ -62,7 +62,13 @@ export default function Screenshare() {
                 <div className="flex items-center gap-3">
                     {/*  Role Toggle Mock Button  */}
                 <button 
-                    onClick={() => setIsPresenter(!isPresenter)} 
+                    onClick={() => {
+                        const nextIsPresenter = !isPresenter;
+                        setIsPresenter(nextIsPresenter);
+                        if (!nextIsPresenter) {
+                            setIsAnnotating(false); // Stop annotating when switching to participant
+                        }
+                    }} 
                     className="glass-button px-4 h-10 rounded-xl flex items-center justify-center text-xs font-bold mr-4 text-nebula-cyan border-nebula-cyan/30"
                 >
                     {isPresenter ? t('screenshare.viewAsParticipant') : t('screenshare.viewAsPresenter')}
@@ -146,7 +152,7 @@ export default function Screenshare() {
                         )}
                         
                         {/* Annotation Layer */}
-                        {isAnnotating && <AnnotationCanvas />}
+                        {isAnnotating && <AnnotationCanvas onClose={() => setIsAnnotating(false)} />}
                     </div>
                 }
                 rightContent={

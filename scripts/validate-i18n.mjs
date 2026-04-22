@@ -88,6 +88,7 @@ const requiredKeys = [
   'screenshare.cancel',
   'screenshare.yesLeave',
   'annotation.clearCanvas',
+  'annotation.close',
   'schedule.inviteesLabel',
   'schedule.inviteesPlaceholder',
   'schedule.timezoneOptions.pst',

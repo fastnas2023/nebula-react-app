@@ -237,7 +237,8 @@
     "yesLeave": "确认离开"
   },
   "annotation": {
-    "clearCanvas": "清空画布"
+    "clearCanvas": "清空画布",
+    "close": "退出批注"
   },
   "settings": {
     "title": "音视频设置",
