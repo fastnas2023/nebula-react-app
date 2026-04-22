@@ -50,7 +50,7 @@ export default function Sidebar() {
             <button 
                 onClick={() => setIsCollapsed(!isCollapsed)}
                 className="absolute -right-3 top-8 w-6 h-6 bg-[#0a0514] border border-white/10 rounded-full flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-colors z-50 shadow-lg"
-                title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                title={isCollapsed ? t('sidebar.expandSidebar') : t('sidebar.collapseSidebar')}
             >
                 {isCollapsed ? <PanelLeftOpen className="w-3.5 h-3.5" /> : <PanelLeftClose className="w-3.5 h-3.5" />}
             </button>
@@ -116,7 +116,7 @@ export default function Sidebar() {
                     {!isCollapsed && <span className="font-medium whitespace-nowrap">{isZh ? 'EN' : '中文'}</span>}
                     {isCollapsed && (
                         <div className="absolute left-full ml-4 px-3 py-1.5 bg-black/90 border border-white/10 text-white text-xs font-bold rounded-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition-opacity duration-200 whitespace-nowrap z-[100] shadow-xl">
-                            {isZh ? 'Switch to English' : '切换至中文'}
+                            {isZh ? t('sidebar.switchToEnglish') : t('sidebar.switchToChinese')}
                         </div>
                     )}
                 </button>
@@ -143,7 +143,7 @@ export default function Sidebar() {
                         <>
                             <div className="flex-1 min-w-0">
                                 <p className="text-sm font-bold text-white truncate">Sarah Jenkins</p>
-                                <p className="text-xs text-white/50 truncate">Pro Plan</p>
+                                <p className="text-xs text-white/50 truncate">{t('sidebar.proPlan')}</p>
                             </div>
                             <ChevronUp className="w-4 h-4 text-white/50 group-hover:text-white transition-colors flex-shrink-0" />
                         </>
@@ -153,14 +153,14 @@ export default function Sidebar() {
                     <div className={`absolute ${isCollapsed ? 'left-full bottom-0 pl-3' : 'bottom-full left-0 pb-3'} w-48 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto z-[100] transition-all duration-200`}>
                         <div className="bg-[#0a0514] border border-white/10 rounded-xl py-2 shadow-[0_0_30px_rgba(0,0,0,1)]">
                             <button onClick={() => navigate('/profile')} className="w-full px-4 py-2 text-left text-sm text-white/90 hover:bg-white/10 flex items-center gap-3 transition-colors">
-                                <User className="w-4 h-4 text-white/50" /> My Profile
+                                <User className="w-4 h-4 text-white/50" /> {t('sidebar.myProfile')}
                             </button>
                             <button onClick={() => navigate('/profile')} className="w-full px-4 py-2 text-left text-sm text-white/90 hover:bg-white/10 flex items-center gap-3 transition-colors">
-                                <CreditCard className="w-4 h-4 text-white/50" /> Billing & Plan
+                                <CreditCard className="w-4 h-4 text-white/50" /> {t('sidebar.billingAndPlan')}
                             </button>
                             <div className="w-full h-px bg-white/10 my-1"></div>
                             <button onClick={() => navigate('/login')} className="w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-red-500/10 flex items-center gap-3 transition-colors">
-                                <LogOut className="w-4 h-4" /> Sign Out
+                                <LogOut className="w-4 h-4" /> {t('sidebar.signOut')}
                             </button>
                         </div>
                     </div>

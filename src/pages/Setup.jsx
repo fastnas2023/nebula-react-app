@@ -1,18 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Mic, Video, Image, ChevronDown, ArrowRight } from 'lucide-react';
+import { Mic, Video, Image, ChevronDown, ArrowRight, ArrowLeft, Settings2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import NebulaLogo from '../components/NebulaLogo';
 
 export default function Setup() {
     const navigate = useNavigate();
     const { t } = useTranslation();
+    const [displayName, setDisplayName] = useState('Sarah Jenkins');
+    const [showAdvanced, setShowAdvanced] = useState(false);
+
+    const handleJoin = (e) => {
+        e.preventDefault();
+        if (displayName.trim()) {
+            navigate('/meeting');
+        }
+    };
 
     return (
         <div className="min-h-[100dvh] w-full font-sans antialiased flex items-center justify-center relative">
             
     <div className="bg-mesh fixed"></div>
     <div className="bg-noise fixed"></div>
+
+    <Link to="/home" className="absolute top-8 left-8 flex items-center gap-2 text-gray-400 hover:text-white transition-colors z-20 group font-mono text-sm">
+        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> {t('setup.backToHome')}
+    </Link>
 
     <div className="relative z-10 w-full max-w-5xl p-6 lg:p-12">
         <div className="text-center mb-10">
@@ -40,7 +53,7 @@ export default function Setup() {
                             <div className="audio-bar animate h-full"></div>
                         </div>
                         <div className="glass-panel px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-bold text-emerald-400">
-                            <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div> 32ms
+                            <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div> {t('setup.networkLatency', { time: 32 })}
                         </div>
                     </div>
 
@@ -57,7 +70,7 @@ export default function Setup() {
                                 <Image className="w-5 h-5 text-nebula-cyan" />
                             </button>
                             <div className="tooltip-text absolute -top-10 left-1/2 -translate-x-1/2 bg-white text-black text-xs font-bold px-3 py-1.5 rounded-lg whitespace-nowrap shadow-xl">
-                                Virtual Background
+                                {t('setup.virtualBackground')}
                                 <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-white rotate-45"></div>
                             </div>
                         </div>
@@ -67,10 +80,16 @@ export default function Setup() {
 
             {/*  Settings Side  */}
             <div className="w-full md:w-2/5 glass-panel rounded-3xl p-8 flex flex-col justify-center border border-white/10">
-                <div className="space-y-6">
+                <form className="space-y-6" onSubmit={handleJoin}>
                     <div>
                         <label className="block text-sm font-bold text-white/70 mb-2">{t('setup.displayName')}</label>
-                        <input type="text" defaultValue="Sarah Jenkins" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-nebula-cyan/50 focus:ring-1 focus:ring-nebula-cyan/50 transition-all font-bold text-lg"  />
+                        <input 
+                            type="text" 
+                            value={displayName}
+                            onChange={(e) => setDisplayName(e.target.value)}
+                            required
+                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-nebula-cyan/50 focus:ring-1 focus:ring-nebula-cyan/50 transition-all font-bold text-lg"  
+                        />
                     </div>
 
                     <div className="space-y-4">
@@ -78,8 +97,8 @@ export default function Setup() {
                             <label className="block text-xs font-bold text-white/50 mb-2 uppercase tracking-wider">{t('setup.camera')}</label>
                             <div className="relative">
                                 <select className="w-full appearance-none bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm font-medium focus:outline-none focus:border-white/20">
-                                    <option>FaceTime HD Camera (Built-in)</option>
-                                    <option>Logitech Brio</option>
+                                    <option>{t('setup.devices.cameraBuiltIn')}</option>
+                                    <option>{t('setup.devices.cameraLogitech')}</option>
                                 </select>
                                 <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 pointer-events-none" />
                             </div>
@@ -88,20 +107,53 @@ export default function Setup() {
                             <label className="block text-xs font-bold text-white/50 mb-2 uppercase tracking-wider">{t('setup.microphone')}</label>
                             <div className="relative">
                                 <select className="w-full appearance-none bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm font-medium focus:outline-none focus:border-white/20">
-                                    <option>MacBook Pro Microphone</option>
-                                    <option>Shure SM7B</option>
+                                    <option>{t('setup.devices.micMacBook')}</option>
+                                    <option>{t('setup.devices.micShure')}</option>
                                 </select>
                                 <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 pointer-events-none" />
                             </div>
                         </div>
+                        
+                        <div>
+                            <button 
+                                type="button"
+                                onClick={() => setShowAdvanced(!showAdvanced)}
+                                className="flex items-center gap-2 text-xs font-bold text-white/50 hover:text-white transition-colors py-2 uppercase tracking-wider w-full text-left"
+                            >
+                                <Settings2 className="w-3.5 h-3.5" />
+                                {t('setup.advancedSettings')}
+                                <ChevronDown className={`w-3.5 h-3.5 ml-auto transition-transform ${showAdvanced ? "rotate-180" : ""}`} />
+                            </button>
+                            
+                            {showAdvanced && (
+                                <div className="mt-3 space-y-3 p-4 bg-white/5 rounded-xl border border-white/10 animate-fade-in">
+                                    <label className="flex items-center justify-between cursor-pointer group">
+                                        <span className="text-sm text-white/70 group-hover:text-white transition-colors">{t('setup.features.hdVideo')}</span>
+                                        <div className="w-8 h-4 bg-nebula-cyan/20 rounded-full relative">
+                                            <div className="absolute right-0 top-0 w-4 h-4 bg-nebula-cyan rounded-full shadow-[0_0_10px_rgba(0,240,255,0.5)]"></div>
+                                        </div>
+                                    </label>
+                                    <label className="flex items-center justify-between cursor-pointer group">
+                                        <span className="text-sm text-white/70 group-hover:text-white transition-colors">{t('setup.features.aiNoiseCancellation')}</span>
+                                        <div className="w-8 h-4 bg-nebula-cyan/20 rounded-full relative">
+                                            <div className="absolute right-0 top-0 w-4 h-4 bg-nebula-cyan rounded-full shadow-[0_0_10px_rgba(0,240,255,0.5)]"></div>
+                                        </div>
+                                    </label>
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     <div className="pt-6 mt-6 border-t border-white/10">
-                        <Link to="/meeting" className="gradient-btn w-full py-4 rounded-full font-display font-bold text-lg text-white shadow-lg flex items-center justify-center gap-2">
+                        <button 
+                            type="submit"
+                            disabled={!displayName.trim()}
+                            className="gradient-btn w-full py-4 rounded-full font-display font-bold text-lg text-white shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                        >
                             {t('setup.joinBtn')} <ArrowRight className="w-5 h-5" />
-                        </Link>
+                        </button>
                     </div>
-                </div>
+                </form>
             </div>
 
         </div>

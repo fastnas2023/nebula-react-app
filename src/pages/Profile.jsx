@@ -1,11 +1,13 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Camera, QrCode, Copy, Zap, Check, Fingerprint, ChevronDown, RefreshCw, ShieldAlert } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import Sidebar from '../components/Sidebar';
 import Background from '../components/Background';
 
 export default function Profile() {
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     return (
         <div className="h-[100dvh] w-full font-sans antialiased flex relative">
@@ -14,8 +16,8 @@ export default function Profile() {
             <main className="flex-1 h-full overflow-y-auto relative z-10 p-6 lg:p-12 scroll-smooth scroll-hidden">
         <div className="max-w-4xl mx-auto px-8 py-12">
             
-            <h1 className="font-display text-4xl font-bold mb-2">Profile & Security</h1>
-            <p className="text-gray-400 font-mono text-sm mb-12">Manage your operator identity and cryptographic keys.</p>
+            <h1 className="font-display text-4xl font-bold mb-2">{t('profile.title')}</h1>
+            <p className="text-gray-400 font-mono text-sm mb-12">{t('profile.subtitle')}</p>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 
@@ -31,21 +33,21 @@ export default function Profile() {
                             {/*  Hover Overlay  */}
                             <div className="absolute inset-0 z-20 rounded-full flex flex-col items-center justify-center avatar-upload-overlay border-2 border-nebula-cyan">
                                 <Camera className="w-6 h-6 text-white mb-1" />
-                                <span className="text-[10px] font-bold text-white uppercase tracking-widest">Update</span>
+                                <span className="text-[10px] font-bold text-white uppercase tracking-widest">{t('profile.update')}</span>
                             </div>
                         </div>
 
                         <h2 className="font-display text-2xl font-bold text-white mb-1">David Chen</h2>
                         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-nebula-emerald/10 border border-nebula-emerald/20 text-nebula-emerald text-xs font-mono font-bold mb-6">
-                            <div className="w-1.5 h-1.5 bg-nebula-emerald rounded-full animate-pulse"></div> Active Node
+                            <div className="w-1.5 h-1.5 bg-nebula-emerald rounded-full animate-pulse"></div> {t('profile.activeNode')}
                         </div>
 
                         <div className="w-full space-y-3">
                             <button className="w-full py-3 bg-white/5 hover:bg-white/10 rounded-xl text-sm font-bold transition-colors flex items-center justify-center gap-2">
-                                <QrCode className="w-4 h-4 text-gray-400" /> My Meeting QR
+                                <QrCode className="w-4 h-4 text-gray-400" /> {t('profile.myMeetingQr')}
                             </button>
                             <button className="w-full py-3 bg-white/5 hover:bg-white/10 rounded-xl text-sm font-bold transition-colors flex items-center justify-center gap-2">
-                                <Copy className="w-4 h-4 text-gray-400" /> Copy P2P Link
+                                <Copy className="w-4 h-4 text-gray-400" /> {t('profile.copyP2pLink')}
                             </button>
                         </div>
                     </div>
@@ -54,8 +56,8 @@ export default function Profile() {
                     <div className="glass-panel p-6 rounded-3xl border-t-2 border-nebula-purple">
                         <div className="flex justify-between items-start mb-4">
                             <div>
-                                <h3 className="font-bold text-lg text-white flex items-center gap-2"><Zap className="w-4 h-4 text-nebula-purple" /> Pro Plan</h3>
-                                <p className="text-xs text-gray-500 font-mono mt-1">Billed annually</p>
+                                <h3 className="font-bold text-lg text-white flex items-center gap-2"><Zap className="w-4 h-4 text-nebula-purple" /> {t('profile.proPlan')}</h3>
+                                <p className="text-xs text-gray-500 font-mono mt-1">{t('profile.billedAnnually')}</p>
                             </div>
                             <span className="text-2xl font-display font-bold text-nebula-purple">$12<span className="text-sm text-gray-500">/mo</span></span>
                         </div>
@@ -70,7 +72,7 @@ export default function Profile() {
                             </div>
                         </div>
                         <button className="w-full py-2.5 bg-nebula-purple/10 hover:bg-nebula-purple/20 text-nebula-purple rounded-xl text-sm font-bold transition-colors border border-nebula-purple/30">
-                            Manage Billing
+                            {t('profile.manageBilling')}
                         </button>
                     </div>
                 </div>
@@ -79,28 +81,28 @@ export default function Profile() {
                 <div className="lg:col-span-2 space-y-6">
                     <div className="glass-panel p-8 rounded-3xl">
                         <h3 className="font-display text-xl font-bold mb-6 flex items-center gap-2 border-b border-white/10 pb-4">
-                            <Fingerprint className="w-5 h-5 text-nebula-cyan" /> Identity
+                            <Fingerprint className="w-5 h-5 text-nebula-cyan" /> {t('profile.identity')}
                         </h3>
                         
                         <form className="space-y-6">
                             <div className="grid grid-cols-2 gap-6">
                                 <div className="space-y-2">
-                                    <label className="text-xs font-mono text-gray-400 uppercase tracking-widest flex items-center gap-2">First Name</label>
+                                    <label className="text-xs font-mono text-gray-400 uppercase tracking-widest flex items-center gap-2">{t('profile.firstName')}</label>
                                     <input type="text" defaultValue="David" className="w-full input-cyber rounded-xl px-4 py-3.5 text-sm focus:bg-black/50"  />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-xs font-mono text-gray-400 uppercase tracking-widest flex items-center gap-2">Last Name</label>
+                                    <label className="text-xs font-mono text-gray-400 uppercase tracking-widest flex items-center gap-2">{t('profile.lastName')}</label>
                                     <input type="text" defaultValue="Chen" className="w-full input-cyber rounded-xl px-4 py-3.5 text-sm focus:bg-black/50"  />
                                 </div>
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-xs font-mono text-gray-400 uppercase tracking-widest flex items-center gap-2">Operator Email (Read-only)</label>
+                                <label className="text-xs font-mono text-gray-400 uppercase tracking-widest flex items-center gap-2">{t('profile.operatorEmailReadOnly')}</label>
                                 <input type="email" defaultValue="david.chen@nebula.io" readOnly className="w-full bg-white/5 border border-white/5 text-gray-400 rounded-xl px-4 py-3.5 text-sm cursor-not-allowed"  />
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-xs font-mono text-gray-400 uppercase tracking-widest flex items-center gap-2">Timezone</label>
+                                <label className="text-xs font-mono text-gray-400 uppercase tracking-widest flex items-center gap-2">{t('profile.timezone')}</label>
                                 <div className="relative">
                                     <select className="w-full input-cyber rounded-xl px-4 py-3.5 text-sm focus:bg-black/50 appearance-none bg-transparent">
                                         <option value="pst">Pacific Time (PT) - Current: 10:42 AM</option>
@@ -113,7 +115,7 @@ export default function Profile() {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-xs font-mono text-gray-400 uppercase tracking-widest flex items-center gap-2">Personal Meeting ID</label>
+                                <label className="text-xs font-mono text-gray-400 uppercase tracking-widest flex items-center gap-2">{t('profile.personalMeetingId')}</label>
                                 <div className="flex gap-2">
                                     <input type="text" defaultValue="NBL-8X92-K" readOnly className="flex-1 input-cyber rounded-xl px-4 py-3.5 text-sm font-mono text-nebula-cyan bg-nebula-cyan/5 border-nebula-cyan/20"  />
                                     <button type="button" className="px-4 py-3.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-colors">
@@ -123,9 +125,9 @@ export default function Profile() {
                             </div>
 
                             <div className="pt-6 border-t border-white/10 flex justify-end gap-4">
-                                <button type="button" className="px-6 py-3 bg-transparent text-gray-400 hover:text-white font-bold rounded-xl transition-colors">Discard</button>
+                                <button type="button" className="px-6 py-3 bg-transparent text-gray-400 hover:text-white font-bold rounded-xl transition-colors">{t('profile.discard')}</button>
                                 <button type="button" className="px-8 py-3 bg-nebula-cyan text-black hover:bg-cyan-400 font-bold rounded-xl transition-all duration-300 shadow-[0_0_15px_rgba(0,240,255,0.3)] hover:shadow-[0_0_25px_rgba(0,240,255,0.5)] transform hover:-translate-y-0.5">
-                                    Save Changes
+                                    {t('profile.saveChanges')}
                                 </button>
                             </div>
                         </form>
@@ -134,24 +136,24 @@ export default function Profile() {
                     {/*  Security Settings  */}
                     <div className="glass-panel p-8 rounded-3xl border border-red-500/20">
                         <h3 className="font-display text-xl font-bold mb-2 flex items-center gap-2 text-red-400">
-                            <ShieldAlert className="w-5 h-5" /> Danger Zone
+                            <ShieldAlert className="w-5 h-5" /> {t('profile.dangerZone')}
                         </h3>
-                        <p className="text-sm text-gray-500 mb-6">Irreversible actions regarding your cryptographic keys and account.</p>
+                        <p className="text-sm text-gray-500 mb-6">{t('profile.dangerZoneDesc')}</p>
 
                         <div className="space-y-4">
                             <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5">
                                 <div>
-                                    <h4 className="text-white font-bold text-sm">Regenerate P2P Keys</h4>
-                                    <p className="text-xs text-gray-500 mt-1">This will invalidate all current meeting links.</p>
+                                    <h4 className="text-white font-bold text-sm">{t('profile.regenerateKeys')}</h4>
+                                    <p className="text-xs text-gray-500 mt-1">{t('profile.invalidateLinks')}</p>
                                 </div>
-                                <button className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg text-sm font-bold transition-colors border border-white/10">Rotate Keys</button>
+                                <button className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg text-sm font-bold transition-colors border border-white/10">{t('profile.rotateKeys')}</button>
                             </div>
                             <div className="flex items-center justify-between p-4 rounded-xl bg-red-500/5 border border-red-500/10">
                                 <div>
-                                    <h4 className="text-red-400 font-bold text-sm">Delete Account</h4>
-                                    <p className="text-xs text-gray-500 mt-1">Permanently erase all recordings and settings.</p>
+                                    <h4 className="text-red-400 font-bold text-sm">{t('profile.deleteAccount')}</h4>
+                                    <p className="text-xs text-gray-500 mt-1">{t('profile.deleteAccountDesc')}</p>
                                 </div>
-                                <button className="px-4 py-2 bg-red-500/20 hover:bg-red-500/40 text-red-400 rounded-lg text-sm font-bold transition-colors border border-red-500/30">Delete</button>
+                                <button className="px-4 py-2 bg-red-500/20 hover:bg-red-500/40 text-red-400 rounded-lg text-sm font-bold transition-colors border border-red-500/30">{t('profile.delete')}</button>
                             </div>
                         </div>
                     </div>

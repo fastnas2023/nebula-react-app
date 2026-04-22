@@ -93,20 +93,20 @@ export default function Schedule() {
                                     <div className="relative group">
                                         <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-nebula-cyan transition-colors pointer-events-none" />
                                         <select className="w-full bg-black/40 border border-white/10 rounded-xl pl-11 pr-4 py-3 text-white focus:outline-none focus:border-nebula-cyan/50 focus:ring-1 focus:ring-nebula-cyan/50 transition-all appearance-none cursor-pointer">
-                                            <option value="pst">Pacific Time (US & Canada)</option>
-                                            <option value="est">Eastern Time (US & Canada)</option>
-                                            <option value="utc">UTC</option>
+                                            <option value="pst">{t('schedule.timezoneOptions.pst')}</option>
+                                            <option value="est">{t('schedule.timezoneOptions.est')}</option>
+                                            <option value="utc">{t('schedule.timezoneOptions.utc')}</option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-xs font-mono text-gray-400 uppercase tracking-widest ml-1">Invitees</label>
+                                    <label className="text-xs font-mono text-gray-400 uppercase tracking-widest ml-1">{t('schedule.inviteesLabel')}</label>
                                     <div className="relative group">
                                         <Users className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-nebula-cyan transition-colors pointer-events-none" />
                                         <input 
                                             type="text" 
-                                            placeholder="Add emails, comma separated..." 
+                                            placeholder={t('schedule.inviteesPlaceholder')} 
                                             className="w-full bg-black/40 border border-white/10 rounded-xl pl-11 pr-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-nebula-cyan/50 focus:ring-1 focus:ring-nebula-cyan/50 transition-all"
                                         />
                                     </div>
@@ -132,7 +132,7 @@ export default function Schedule() {
                                 <div className="flex items-center justify-between group cursor-pointer" onClick={() => setWaitingRoom(!waitingRoom)}>
                                     <div>
                                         <p className="text-sm font-medium text-white group-hover:text-nebula-cyan transition-colors select-none">{t('schedule.waitingRoom')}</p>
-                                        <p className="text-xs text-gray-500 mt-0.5 select-none">Admit guests manually</p>
+                                        <p className="text-xs text-gray-500 mt-0.5 select-none">{t('schedule.admitGuestsManually')}</p>
                                     </div>
                                     <button className={`w-10 h-5 rounded-full flex items-center px-0.5 transition-colors relative ${waitingRoom ? 'bg-nebula-cyan/20 border border-nebula-cyan/50' : 'bg-black/50 border border-white/10'}`}>
                                         <div className={`w-4 h-4 rounded-full transition-transform ${waitingRoom ? 'bg-nebula-cyan shadow-[0_0_10px_rgba(0,240,255,0.5)] translate-x-5' : 'bg-gray-500 translate-x-0'}`}></div>
@@ -142,7 +142,7 @@ export default function Schedule() {
                                 <div className="flex items-center justify-between group cursor-pointer" onClick={() => setRequirePasscode(!requirePasscode)}>
                                     <div>
                                         <p className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors select-none">{t('schedule.requirePassword')}</p>
-                                        <p className="text-xs text-gray-500 mt-0.5 select-none">Numeric PIN required</p>
+                                        <p className="text-xs text-gray-500 mt-0.5 select-none">{t('schedule.pinRequired')}</p>
                                     </div>
                                     <button className={`w-10 h-5 rounded-full flex items-center px-0.5 transition-colors relative ${requirePasscode ? 'bg-nebula-cyan/20 border border-nebula-cyan/50' : 'bg-black/50 border border-white/10'}`}>
                                         <div className={`w-4 h-4 rounded-full transition-transform ${requirePasscode ? 'bg-nebula-cyan shadow-[0_0_10px_rgba(0,240,255,0.5)] translate-x-5' : 'bg-gray-500 translate-x-0'}`}></div>
@@ -150,13 +150,13 @@ export default function Schedule() {
                                 </div>
 
                                 <h3 className="font-display text-lg font-bold flex items-center gap-2 border-b border-white/5 pb-4 pt-4">
-                                    <Settings2 className="w-4 h-4 text-nebula-purple" /> Advanced
+                                    <Settings2 className="w-4 h-4 text-nebula-purple" /> {t('schedule.advancedTitle')}
                                 </h3>
 
                                 <div className="flex items-center justify-between group cursor-pointer" onClick={() => setHostVideo(!hostVideo)}>
                                     <div>
-                                        <p className="text-sm font-medium text-white group-hover:text-nebula-purple transition-colors select-none">Host Video On</p>
-                                        <p className="text-xs text-gray-500 mt-0.5 select-none">Start with camera active</p>
+                                        <p className="text-sm font-medium text-white group-hover:text-nebula-purple transition-colors select-none">{t('schedule.hostVideoOn')}</p>
+                                        <p className="text-xs text-gray-500 mt-0.5 select-none">{t('schedule.hostVideoDesc')}</p>
                                     </div>
                                     <button className={`w-10 h-5 rounded-full flex items-center px-0.5 transition-colors relative ${hostVideo ? 'bg-nebula-purple/20 border border-nebula-purple/50' : 'bg-black/50 border border-white/10'}`}>
                                         <div className={`w-4 h-4 rounded-full transition-transform ${hostVideo ? 'bg-nebula-purple shadow-[0_0_10px_rgba(138,43,226,0.5)] translate-x-5' : 'bg-gray-500 translate-x-0'}`}></div>
@@ -165,8 +165,8 @@ export default function Schedule() {
 
                                 <div className="flex items-center justify-between group cursor-pointer" onClick={() => setAutoRecord(!autoRecord)}>
                                     <div>
-                                        <p className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors select-none">Auto Record</p>
-                                        <p className="text-xs text-gray-500 mt-0.5 select-none">Save to local canvas</p>
+                                        <p className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors select-none">{t('schedule.autoRecord')}</p>
+                                        <p className="text-xs text-gray-500 mt-0.5 select-none">{t('schedule.autoRecordDesc')}</p>
                                     </div>
                                     <button className={`w-10 h-5 rounded-full flex items-center px-0.5 transition-colors relative ${autoRecord ? 'bg-nebula-purple/20 border border-nebula-purple/50' : 'bg-black/50 border border-white/10'}`}>
                                         <div className={`w-4 h-4 rounded-full transition-transform ${autoRecord ? 'bg-nebula-purple shadow-[0_0_10px_rgba(138,43,226,0.5)] translate-x-5' : 'bg-gray-500 translate-x-0'}`}></div>

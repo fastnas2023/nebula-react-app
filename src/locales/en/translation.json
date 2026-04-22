@@ -79,13 +79,35 @@
     "privacy": "Privacy",
     "admin": "Admin Portal"
   },
+  "login": {
+    "returnToOrbit": "Return to Orbit",
+    "authenticate": "Authenticate",
+    "subtitle": "Enter your credentials to access the mesh network.",
+    "operatorId": "Operator ID",
+    "emailPlaceholder": "name@company.com",
+    "passkey": "Passkey",
+    "lostKey": "Lost Key?",
+    "establishing": "Establishing...",
+    "initializeConnection": "Initialize Connection",
+    "newToNetwork": "New to the network?",
+    "requestAccess": "Request Access",
+    "encryptedSession": "End-to-End Encrypted Session"
+  },
   "sidebar": {
     "dashboard": "Dashboard",
     "meetings": "Meetings",
     "recordings": "Recordings",
     "profile": "Profile",
     "contacts": "Contacts",
-    "settings": "Settings"
+    "settings": "Settings",
+    "expandSidebar": "Expand sidebar",
+    "collapseSidebar": "Collapse sidebar",
+    "switchToEnglish": "Switch to English",
+    "switchToChinese": "切换至中文",
+    "proPlan": "Pro Plan",
+    "myProfile": "My Profile",
+    "billingAndPlan": "Billing & Plan",
+    "signOut": "Sign Out"
   },
   "dashboard": {
     "greeting": "Welcome back",
@@ -100,7 +122,10 @@
     "joinMeeting": "Join Meeting",
     "enterId": "Enter meeting ID or link",
     "schedule": "Schedule",
-    "planAhead": "Plan ahead"
+    "planAhead": "Plan ahead",
+    "searchPlaceholder": "Search meetings, contacts, or recordings...",
+    "meetingSummary": "You have {{count}} meetings scheduled for today. Ready to connect?",
+    "viewAll": "View All"
   },
   "setup": {
     "title": "Ready to join?",
@@ -108,7 +133,21 @@
     "displayName": "Display Name",
     "camera": "Camera",
     "microphone": "Microphone",
-    "joinBtn": "Join Meeting"
+    "joinBtn": "Join Meeting",
+    "backToHome": "Back to Home",
+    "virtualBackground": "Virtual Background",
+    "advancedSettings": "Advanced Settings",
+    "networkLatency": "{{time}}ms",
+    "devices": {
+      "cameraBuiltIn": "FaceTime HD Camera (Built-in)",
+      "cameraLogitech": "Logitech Brio",
+      "micMacBook": "MacBook Pro Microphone",
+      "micShure": "Shure SM7B"
+    },
+    "features": {
+      "hdVideo": "HD Video (1080p)",
+      "aiNoiseCancellation": "AI Noise Cancellation"
+    }
   },
   "meeting": {
     "summary": "Meeting Summary",
@@ -118,7 +157,15 @@
     "speaking": "Speaking...",
     "recording": "Recording",
     "leave": "Leave",
-    "you": "You"
+    "you": "You",
+    "joinedMeeting": "Joined the meeting",
+    "roomIdLabel": "Room ID: {{id}}",
+    "aiActionSummarize": "Summarize",
+    "aiActionItems": "Action Items",
+    "leaveMeetingTitle": "Leave Meeting?",
+    "leaveMeetingDesc": "Are you sure you want to disconnect from this session?",
+    "cancelBtn": "Cancel",
+    "confirmLeaveBtn": "Yes, Leave"
   },
   "schedule": {
     "title": "Schedule a Meeting",
@@ -128,6 +175,13 @@
     "time": "Time",
     "timezone": "Timezone",
     "duration": "Duration",
+    "inviteesLabel": "Invitees",
+    "inviteesPlaceholder": "Add emails, comma separated...",
+    "timezoneOptions": {
+      "pst": "Pacific Time (US & Canada)",
+      "est": "Eastern Time (US & Canada)",
+      "utc": "UTC"
+    },
     "durationOptions": {
       "15m": "15 Minutes",
       "30m": "30 Minutes",
@@ -138,6 +192,13 @@
     "security": "Security",
     "requirePassword": "Require Password",
     "waitingRoom": "Waiting Room",
+    "admitGuestsManually": "Admit guests manually",
+    "pinRequired": "Numeric PIN required",
+    "advancedTitle": "Advanced",
+    "hostVideoOn": "Host Video On",
+    "hostVideoDesc": "Start with camera active",
+    "autoRecord": "Auto Record",
+    "autoRecordDesc": "Save to local canvas",
     "generateLink": "Generate Invite Link",
     "cancel": "Cancel"
   },
@@ -147,12 +208,105 @@
     "duration": "Duration",
     "time": "Time",
     "joinBtn": "Join Waiting Room",
-    "decline": "Decline"
+    "decline": "Decline",
+    "namePlaceholder": "Enter your name to join...",
+    "e2eEncrypted": "E2E Encrypted"
   },
   "screenshare": {
     "viewing": "You are viewing {{name}}'s screen",
     "requestControl": "Request Control",
     "fitToScreen": "Fit to Screen",
-    "exitFullscreen": "Exit Fullscreen"
+    "exitFullscreen": "Exit Fullscreen",
+    "viewAsParticipant": "View as Participant",
+    "viewAsPresenter": "View as Presenter",
+    "doubleClickToFullscreen": "Double click to fullscreen",
+    "doubleClickToExit": "Double click to exit fullscreen",
+    "theaterMode": "Theater Mode",
+    "exitTheaterMode": "Exit Theater Mode",
+    "osFullscreen": "OS Fullscreen",
+    "exitOsFullscreen": "Exit OS Fullscreen",
+    "infiniteMirrorDetected": "Infinite Mirror Detected",
+    "infiniteMirrorWarning": "You are sharing the same browser tab where the meeting is running. We've temporarily paused the video feed to prevent your browser from crashing.",
+    "ignore": "Ignore",
+    "stopSharing": "Stop Sharing",
+    "speaking": "Speaking",
+    "sharedScreenAlt": "Shared Screen",
+    "leaveMeetingTitle": "Leave Meeting?",
+    "leaveMeetingConfirm": "Are you sure you want to disconnect from this session?",
+    "cancel": "Cancel",
+    "yesLeave": "Yes, Leave"
+  },
+  "annotation": {
+    "clearCanvas": "Clear canvas"
+  },
+  "settings": {
+    "title": "Audio & Video Settings",
+    "subtitle": "Configure your default hardware and meeting preferences.",
+    "camera": "Camera",
+    "device": "Device",
+    "changeBackground": "Change Background",
+    "mirrorVideo": "Mirror my video",
+    "mirrorVideoDesc": "Flip your camera horizontally",
+    "audio": "Audio",
+    "microphone": "Microphone",
+    "noiseCancellation": "Noise Cancellation",
+    "noiseCancellationDesc": "Suppress background noise",
+    "discardChanges": "Discard Changes",
+    "saveSettings": "Save Settings"
+  },
+  "profile": {
+    "title": "Profile & Security",
+    "subtitle": "Manage your operator identity and cryptographic keys.",
+    "update": "Update",
+    "activeNode": "Active Node",
+    "myMeetingQr": "My Meeting QR",
+    "copyP2pLink": "Copy P2P Link",
+    "proPlan": "Pro Plan",
+    "billedAnnually": "Billed annually",
+    "manageBilling": "Manage Billing",
+    "identity": "Identity",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "operatorEmailReadOnly": "Operator Email (Read-only)",
+    "timezone": "Timezone",
+    "personalMeetingId": "Personal Meeting ID",
+    "discard": "Discard",
+    "saveChanges": "Save Changes",
+    "dangerZone": "Danger Zone",
+    "dangerZoneDesc": "Irreversible actions regarding your cryptographic keys and account.",
+    "regenerateKeys": "Regenerate P2P Keys",
+    "invalidateLinks": "This will invalidate all current meeting links.",
+    "rotateKeys": "Rotate Keys",
+    "deleteAccount": "Delete Account",
+    "deleteAccountDesc": "Permanently erase all recordings and settings.",
+    "delete": "Delete"
+  },
+  "contacts": {
+    "title": "Network Contacts",
+    "subtitle": "Manage your team and secure connections.",
+    "addConnection": "Add Connection",
+    "searchPlaceholder": "Search by name, role, or ID..."
+  },
+  "recording": {
+    "share": "Share",
+    "downloadMp4": "Download MP4",
+    "aiSummary": "AI Summary",
+    "transcript": "Transcript",
+    "executiveSummary": "Executive Summary",
+    "actionItems": "Action Items",
+    "keyMoments": "Key Moments",
+    "participantsSummary": "{{names}} participated"
+  },
+  "whiteboard": {
+    "collaborating": "{{count}} Collaborating",
+    "closeBoard": "Close Board",
+    "minimap": "Minimap"
+  },
+  "designSystem": {
+    "badge": "NEBULA DESIGN SYSTEM v1.0",
+    "title": "Minimal. Premium.\nTech-Oriented.",
+    "subtitle": "A unified design language focusing on extreme clarity, profound depth, and restrained aesthetic choices. Zero clutter, pure focus.",
+    "foundations": "Foundations",
+    "coreComponents": "Core Components"
   }
 }

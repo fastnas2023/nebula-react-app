@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Search, Mail, Command, Play, User, Bell, ChevronRight, CheckCircle2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import Sidebar from '../components/Sidebar';
 
 export default function DesignSystem() {
   const [activeTab, setActiveTab] = useState('buttons');
+  const { t } = useTranslation();
+  const [titleLine1, titleLine2] = t('designSystem.title').split('\n');
 
   return (
     <div className="flex h-[100dvh] bg-[#030108] text-white font-sans overflow-hidden">
@@ -21,14 +24,14 @@ export default function DesignSystem() {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-gray-400 mb-6">
                 <Command className="w-3 h-3" />
-                <span>NEBULA DESIGN SYSTEM v1.0</span>
+                <span>{t('designSystem.badge')}</span>
               </div>
               <h1 className="font-display text-5xl md:text-7xl font-bold tracking-tight mb-6">
-                Minimal. Premium. <br />
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-nebula-cyan via-nebula-purple to-nebula-magenta">Tech-Oriented.</span>
+                {titleLine1} <br />
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-nebula-cyan via-nebula-purple to-nebula-magenta">{titleLine2 || ''}</span>
               </h1>
               <p className="text-gray-400 text-lg max-w-2xl leading-relaxed">
-                A unified design language focusing on extreme clarity, profound depth, and restrained aesthetic choices. Zero clutter, pure focus.
+                {t('designSystem.subtitle')}
               </p>
             </motion.div>
           </header>
@@ -37,7 +40,7 @@ export default function DesignSystem() {
             
             {/* 1. Foundations: Colors & Typography */}
             <section>
-              <h2 className="font-display text-2xl font-bold border-b border-white/10 pb-4 mb-8">1. Foundations</h2>
+              <h2 className="font-display text-2xl font-bold border-b border-white/10 pb-4 mb-8">1. {t('designSystem.foundations')}</h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 {/* Typography */}
@@ -86,7 +89,7 @@ export default function DesignSystem() {
 
             {/* 2. Core Components */}
             <section>
-              <h2 className="font-display text-2xl font-bold border-b border-white/10 pb-4 mb-8">2. Core Components</h2>
+              <h2 className="font-display text-2xl font-bold border-b border-white/10 pb-4 mb-8">2. {t('designSystem.coreComponents')}</h2>
               
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 

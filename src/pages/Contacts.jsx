@@ -1,11 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, UserPlus, Phone, Video, Mail, MoreVertical } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import Sidebar from '../components/Sidebar';
 import Background from '../components/Background';
 
 export default function Contacts() {
     const navigate = useNavigate();
+    const { t } = useTranslation();
     
     const contacts = [
         { name: "Alex Chen", role: "Engineering Lead", status: "online", img: "https://i.pravatar.cc/150?img=11" },
@@ -23,18 +25,18 @@ export default function Contacts() {
                 <div className="max-w-5xl mx-auto">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
                         <div>
-                            <h1 className="font-display text-4xl font-bold mb-2">Network Contacts</h1>
-                            <p className="text-gray-400 font-mono text-sm">Manage your team and secure connections.</p>
+                            <h1 className="font-display text-4xl font-bold mb-2">{t('contacts.title')}</h1>
+                            <p className="text-gray-400 font-mono text-sm">{t('contacts.subtitle')}</p>
                         </div>
                         <button className="btn-cyber px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,240,255,0.2)] hover:shadow-[0_0_30px_rgba(138,43,226,0.4)]">
-                            <UserPlus className="w-5 h-5" /> Add Connection
+                            <UserPlus className="w-5 h-5" /> {t('contacts.addConnection')}
                         </button>
                     </div>
 
                     {/* Search and Filter */}
                     <div className="glass-panel p-4 rounded-2xl mb-8 flex items-center gap-4">
                         <Search className="w-5 h-5 text-white/50" />
-                        <input type="text" placeholder="Search by name, role, or ID..." className="flex-1 bg-transparent border-none text-white focus:outline-none placeholder-white/30" />
+                        <input type="text" placeholder={t('contacts.searchPlaceholder')} className="flex-1 bg-transparent border-none text-white focus:outline-none placeholder-white/30" />
                     </div>
 
                     {/* Contacts Grid */}

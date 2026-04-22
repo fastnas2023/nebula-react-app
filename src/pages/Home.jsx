@@ -19,7 +19,7 @@ export default function Home() {
         <div className="flex justify-between items-center mb-12">
             <div className="relative w-full max-w-md hidden md:block">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
-                <input type="text" placeholder="Search meetings, contacts, or recordings..." 
+                <input type="text" placeholder={t('dashboard.searchPlaceholder')} 
                     className="w-full search-bar rounded-full py-2.5 pl-10 pr-4 text-sm text-white placeholder-white/30 focus:outline-none focus:border-nebula-purple/50 focus:ring-1 focus:ring-nebula-purple/50" />
             </div>
             <div className="flex items-center gap-4 ml-auto">
@@ -37,7 +37,7 @@ export default function Home() {
 
         <header className="mb-10">
             <h1 className="font-display font-bold text-4xl md:text-5xl text-white mb-3 tracking-tight">{t('dashboard.greeting')}, <span className="gradient-text">Sarah</span></h1>
-            <p className="text-white/60 text-lg font-medium">You have 3 meetings scheduled for today. Ready to connect?</p>
+            <p className="text-white/60 text-lg font-medium">{t('dashboard.meetingSummary', { count: 3 })}</p>
         </header>
 
         {/*  Quick Actions  */}
@@ -77,7 +77,7 @@ export default function Home() {
         <div>
             <div className="flex items-center justify-between mb-6">
                 <h2 className="font-display font-bold text-2xl text-white">{t('dashboard.upcoming')}</h2>
-                <Link to="/schedule" className="text-white/50 hover:text-white transition-colors">View All</Link>
+                <Link to="/schedule" className="text-white/50 hover:text-white transition-colors">{t('dashboard.viewAll')}</Link>
             </div>
 
             <div className="space-y-4">

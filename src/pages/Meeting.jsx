@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { UserPlus, LayoutGrid, MicOff, Mic, Video, MonitorUp, PhoneOff, Info, Send, Sparkles, Bot, ListTodo, FileText } from 'lucide-react';
+import { UserPlus, LayoutGrid, MicOff, Mic, Video, MonitorUp, PhoneOff, Info, Send, Sparkles, Bot, ListTodo, FileText, AlertTriangle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import NebulaLogo from '../components/NebulaLogo';
 
@@ -18,6 +18,7 @@ export default function Meeting() {
     ]);
     const [newMessage, setNewMessage] = useState("");
     const [isAiThinking, setIsAiThinking] = useState(false);
+    const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = () => {
@@ -68,8 +69,8 @@ export default function Meeting() {
     };
 
     const aiActions = [
-        { id: 'summary', icon: <FileText className="w-3 h-3" />, label: "Summarize", response: "Here is a quick summary: David presented the new glassmorphism UI. Elena agreed it looks great. Next step: Finalize the color palette." },
-        { id: 'action', icon: <ListTodo className="w-3 h-3" />, label: "Action Items", response: "1. David: Share the Figma link.\n2. You: Update the CSS variables.\n3. Elena: Review the mobile layout." },
+        { id: 'summary', icon: <FileText className="w-3 h-3" />, label: t('meeting.aiActionSummarize'), response: "Here is a quick summary: David presented the new glassmorphism UI. Elena agreed it looks great. Next step: Finalize the color palette." },
+        { id: 'action', icon: <ListTodo className="w-3 h-3" />, label: t('meeting.aiActionItems'), response: "1. David: Share the Figma link.\n2. You: Update the CSS variables.\n3. Elena: Review the mobile layout." },
     ];
 
     return (
@@ -85,7 +86,7 @@ export default function Meeting() {
             </div>
             <div className="flex-1 min-w-0">
                 <div className="text-sm font-bold text-white truncate">Elena Rodriguez</div>
-                <div className="text-xs text-white/50 truncate">Joined the meeting</div>
+                <div className="text-xs text-white/50 truncate">{t('meeting.joinedMeeting')}</div>
             </div>
         </div>
     </div>
@@ -103,7 +104,7 @@ export default function Meeting() {
                     <div className="flex items-center gap-2 text-[11px] text-white/50 font-bold tracking-wider uppercase mt-0.5">
                         <span className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></div> 01:24:39</span>
                         <span>•</span>
-                        <span>Room ID: NBL-8X92-K</span>
+                        <span>{t('meeting.roomIdLabel', { id: 'NBL-8X92-K' })}</span>
                     </div>
                 </div>
             </div>
@@ -337,7 +338,10 @@ export default function Meeting() {
                 <button className="glass-button active w-12 h-12 rounded-xl flex items-center justify-center text-white group hidden sm:flex" onClick={() => navigate('/screenshare')}>
                     <MonitorUp className="w-5 h-5 group-hover:-translate-y-1 transition-transform" />
                 </button>
-                <button className="glass-button danger px-6 h-12 rounded-xl flex items-center justify-center gap-2 font-bold tracking-wide shadow-lg shadow-red-900/20 ml-2" onClick={() => navigate('/home')}>
+                <button 
+                    className="glass-button danger px-6 h-12 rounded-xl flex items-center justify-center gap-2 font-bold tracking-wide shadow-lg shadow-red-900/20 ml-2 transition-all hover:scale-105" 
+                    onClick={() => setShowLeaveConfirm(true)}
+                >
                     <PhoneOff className="w-4 h-4" /> {t('meeting.leave')}
                 </button>
             </div>
@@ -350,7 +354,35 @@ export default function Meeting() {
         </footer>
     </div>
 
-    
+    {showLeaveConfirm && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in">
+            <div className="bg-nebula-900 border border-white/10 p-6 rounded-3xl shadow-2xl max-w-sm w-full mx-4 animate-scale-in">
+                <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center flex-shrink-0">
+                        <AlertTriangle className="w-6 h-6 text-red-500" />
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-display font-bold text-white">{t('meeting.leaveMeetingTitle')}</h3>
+                        <p className="text-sm text-white/60 mt-1">{t('meeting.leaveMeetingDesc')}</p>
+                    </div>
+                </div>
+                <div className="flex gap-3 mt-6">
+                    <button 
+                        onClick={() => setShowLeaveConfirm(false)}
+                        className="flex-1 py-3 rounded-xl font-bold text-sm text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
+                    >
+                        {t('meeting.cancelBtn')}
+                    </button>
+                    <button 
+                        onClick={() => navigate('/home')}
+                        className="flex-1 py-3 rounded-xl font-bold text-sm text-white bg-red-500 hover:bg-red-600 transition-colors shadow-lg shadow-red-500/20"
+                    >
+                        {t('meeting.confirmLeaveBtn')}
+                    </button>
+                </div>
+            </div>
+        </div>
+    )}
 
         </div>
     );

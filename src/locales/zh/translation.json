@@ -79,13 +79,35 @@
     "privacy": "隐私条款",
     "admin": "管理后台"
   },
+  "login": {
+    "returnToOrbit": "返回主页",
+    "authenticate": "登录验证",
+    "subtitle": "输入凭据以接入网状网络。",
+    "operatorId": "账号邮箱",
+    "emailPlaceholder": "name@company.com",
+    "passkey": "密码",
+    "lostKey": "忘记密码？",
+    "establishing": "连接中...",
+    "initializeConnection": "开始连接",
+    "newToNetwork": "还没有账号？",
+    "requestAccess": "申请权限",
+    "encryptedSession": "端到端加密会话"
+  },
   "sidebar": {
     "dashboard": "仪表盘",
     "meetings": "会议",
     "recordings": "录像",
     "profile": "个人资料",
     "contacts": "联系人",
-    "settings": "设置"
+    "settings": "设置",
+    "expandSidebar": "展开侧边栏",
+    "collapseSidebar": "收起侧边栏",
+    "switchToEnglish": "切换至英文",
+    "switchToChinese": "切换至中文",
+    "proPlan": "专业版",
+    "myProfile": "我的资料",
+    "billingAndPlan": "账单与套餐",
+    "signOut": "退出登录"
   },
   "dashboard": {
     "greeting": "欢迎回来",
@@ -100,7 +122,10 @@
     "joinMeeting": "加入会议",
     "enterId": "输入会议 ID 或链接",
     "schedule": "安排会议",
-    "planAhead": "提前规划"
+    "planAhead": "提前规划",
+    "searchPlaceholder": "搜索会议、联系人或录像...",
+    "meetingSummary": "你今天有 {{count}} 场会议安排。准备开始连接了吗？",
+    "viewAll": "查看全部"
   },
   "setup": {
     "title": "准备好加入了？",
@@ -108,7 +133,21 @@
     "displayName": "显示名称",
     "camera": "摄像头",
     "microphone": "麦克风",
-    "joinBtn": "加入会议"
+    "joinBtn": "加入会议",
+    "backToHome": "返回主页",
+    "virtualBackground": "虚拟背景",
+    "advancedSettings": "高级设置",
+    "networkLatency": "{{time}}ms",
+    "devices": {
+      "cameraBuiltIn": "内置摄像头 (FaceTime HD)",
+      "cameraLogitech": "罗技 Brio",
+      "micMacBook": "MacBook Pro 麦克风",
+      "micShure": "舒尔 SM7B"
+    },
+    "features": {
+      "hdVideo": "高清视频 (1080p)",
+      "aiNoiseCancellation": "AI 降噪"
+    }
   },
   "meeting": {
     "summary": "会议纪要",
@@ -118,7 +157,15 @@
     "speaking": "正在讲话...",
     "recording": "录制中",
     "leave": "离开",
-    "you": "你"
+    "you": "你",
+    "joinedMeeting": "已加入会议",
+    "roomIdLabel": "房间 ID：{{id}}",
+    "aiActionSummarize": "总结",
+    "aiActionItems": "行动项",
+    "leaveMeetingTitle": "离开会议？",
+    "leaveMeetingDesc": "确定要断开并离开当前会话吗？",
+    "cancelBtn": "取消",
+    "confirmLeaveBtn": "确认离开"
   },
   "schedule": {
     "title": "安排会议",
@@ -128,6 +175,13 @@
     "time": "时间",
     "timezone": "时区",
     "duration": "时长",
+    "inviteesLabel": "参会人",
+    "inviteesPlaceholder": "添加邮箱（用逗号分隔）...",
+    "timezoneOptions": {
+      "pst": "太平洋时间（美国和加拿大）",
+      "est": "东部时间（美国和加拿大）",
+      "utc": "UTC"
+    },
     "durationOptions": {
       "15m": "15 分钟",
       "30m": "30 分钟",
@@ -138,6 +192,13 @@
     "security": "安全",
     "requirePassword": "需要密码",
     "waitingRoom": "开启等候室",
+    "admitGuestsManually": "手动允许访客加入",
+    "pinRequired": "需要数字 PIN",
+    "advancedTitle": "高级",
+    "hostVideoOn": "主持人摄像头默认开启",
+    "hostVideoDesc": "进入会议时自动打开摄像头",
+    "autoRecord": "自动录制",
+    "autoRecordDesc": "保存到本地画布录制",
     "generateLink": "生成邀请链接",
     "cancel": "取消"
   },
@@ -147,12 +208,105 @@
     "duration": "时长",
     "time": "时间",
     "joinBtn": "加入等候室",
-    "decline": "拒绝"
+    "decline": "拒绝",
+    "namePlaceholder": "输入你的名字以加入...",
+    "e2eEncrypted": "端到端加密"
   },
   "screenshare": {
     "viewing": "您正在观看 {{name}} 的屏幕",
     "requestControl": "请求控制",
     "fitToScreen": "适应屏幕",
-    "exitFullscreen": "退出全屏"
+    "exitFullscreen": "退出全屏",
+    "viewAsParticipant": "以参会者视角查看",
+    "viewAsPresenter": "以主讲人视角查看",
+    "doubleClickToFullscreen": "双击进入系统全屏",
+    "doubleClickToExit": "双击退出系统全屏",
+    "theaterMode": "网页内全屏",
+    "exitTheaterMode": "退出网页内全屏",
+    "osFullscreen": "系统全屏",
+    "exitOsFullscreen": "退出系统全屏",
+    "infiniteMirrorDetected": "检测到无限镜像",
+    "infiniteMirrorWarning": "你正在共享会议所在的同一浏览器标签页。我们已暂时暂停视频流，以防止浏览器崩溃。",
+    "ignore": "忽略",
+    "stopSharing": "停止共享",
+    "speaking": "发言中",
+    "sharedScreenAlt": "共享屏幕",
+    "leaveMeetingTitle": "离开会议？",
+    "leaveMeetingConfirm": "确定要断开并离开当前会话吗？",
+    "cancel": "取消",
+    "yesLeave": "确认离开"
+  },
+  "annotation": {
+    "clearCanvas": "清空画布"
+  },
+  "settings": {
+    "title": "音视频设置",
+    "subtitle": "配置默认硬件与会议偏好。",
+    "camera": "摄像头",
+    "device": "设备",
+    "changeBackground": "更换背景",
+    "mirrorVideo": "镜像我的视频",
+    "mirrorVideoDesc": "水平翻转摄像头画面",
+    "audio": "音频",
+    "microphone": "麦克风",
+    "noiseCancellation": "降噪",
+    "noiseCancellationDesc": "抑制背景噪音",
+    "discardChanges": "放弃更改",
+    "saveSettings": "保存设置"
+  },
+  "profile": {
+    "title": "个人资料与安全",
+    "subtitle": "管理你的身份与加密密钥。",
+    "update": "更新",
+    "activeNode": "节点在线",
+    "myMeetingQr": "我的会议二维码",
+    "copyP2pLink": "复制 P2P 链接",
+    "proPlan": "专业版",
+    "billedAnnually": "按年计费",
+    "manageBilling": "管理账单",
+    "identity": "身份信息",
+    "firstName": "名",
+    "lastName": "姓",
+    "operatorEmailReadOnly": "账号邮箱（只读）",
+    "timezone": "时区",
+    "personalMeetingId": "个人会议 ID",
+    "discard": "放弃",
+    "saveChanges": "保存更改",
+    "dangerZone": "危险区域",
+    "dangerZoneDesc": "关于密钥与账号的不可逆操作。",
+    "regenerateKeys": "重新生成 P2P 密钥",
+    "invalidateLinks": "这将使当前所有会议链接失效。",
+    "rotateKeys": "轮换密钥",
+    "deleteAccount": "删除账号",
+    "deleteAccountDesc": "永久删除所有录像与设置。",
+    "delete": "删除"
+  },
+  "contacts": {
+    "title": "通讯录",
+    "subtitle": "管理团队成员与安全连接。",
+    "addConnection": "添加联系人",
+    "searchPlaceholder": "按姓名、角色或 ID 搜索..."
+  },
+  "recording": {
+    "share": "分享",
+    "downloadMp4": "下载 MP4",
+    "aiSummary": "AI 总结",
+    "transcript": "字幕稿",
+    "executiveSummary": "摘要",
+    "actionItems": "行动项",
+    "keyMoments": "关键节点",
+    "participantsSummary": "{{names}} 参与了会议"
+  },
+  "whiteboard": {
+    "collaborating": "{{count}} 人协作中",
+    "closeBoard": "关闭白板",
+    "minimap": "小地图"
+  },
+  "designSystem": {
+    "badge": "NEBULA 设计系统 v1.0",
+    "title": "极简 · 高级\n科技感",
+    "subtitle": "统一的设计语言，强调极致清晰、深度层次与克制的审美选择。零杂乱，纯专注。",
+    "foundations": "基础规范",
+    "coreComponents": "核心组件"
   }
 }

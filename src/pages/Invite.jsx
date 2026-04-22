@@ -49,7 +49,7 @@ export default function Invite() {
                         <input 
                             type="text" 
                             required 
-                            placeholder="Enter your name to join..." 
+                            placeholder={t('invite.namePlaceholder')} 
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             className="w-full bg-black/40 border border-white/10 rounded-xl py-3.5 pl-11 pr-4 text-white placeholder-gray-600 focus:outline-none focus:border-nebula-cyan/50 focus:ring-1 focus:ring-nebula-cyan/50 transition-all font-medium" 
@@ -73,7 +73,7 @@ export default function Invite() {
             <div className="mt-8 flex items-center justify-center gap-6">
                 <div className="flex items-center gap-2 text-xs font-mono text-gray-500">
                     <ShieldCheck className="w-4 h-4 text-green-400" />
-                    <span>E2E Encrypted</span>
+                    <span>{t('invite.e2eEncrypted')}</span>
                 </div>
                 <div className="w-1 h-1 bg-white/20 rounded-full"></div>
                 <div className="flex items-center gap-3 text-gray-500">

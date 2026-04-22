@@ -1,9 +1,11 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Share2, Download, Play, Volume2, Maximize, Sparkles, FileText, CheckSquare, Clock } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function Recording() {
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     return (
         <div className="bg-nebula-base text-white antialiased h-[100dvh] overflow-hidden flex flex-col relative">
@@ -23,10 +25,10 @@ export default function Recording() {
         </div>
         <div className="flex items-center gap-4">
             <button className="px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 border border-white/10">
-                <Share2 className="w-4 h-4" /> Share
+                <Share2 className="w-4 h-4" /> {t('recording.share')}
             </button>
             <button className="px-4 py-2 bg-nebula-cyan text-black hover:bg-cyan-400 rounded-lg text-sm font-bold transition-colors flex items-center gap-2 shadow-[0_0_15px_rgba(0,240,255,0.3)]">
-                <Download className="w-4 h-4" /> Download MP4
+                <Download className="w-4 h-4" /> {t('recording.downloadMp4')}
             </button>
         </div>
     </header>
@@ -77,7 +79,7 @@ export default function Recording() {
                     <img src="https://i.pravatar.cc/100?img=3" className="w-12 h-12 rounded-full border-2 border-[#030108]" />
                     <img src="https://i.pravatar.cc/100?img=5" className="w-12 h-12 rounded-full border-2 border-[#030108]" />
                 </div>
-                <div className="text-sm font-medium text-gray-400">Sarah, David, and Alex participated</div>
+                <div className="text-sm font-medium text-gray-400">{t('recording.participantsSummary', { names: 'Sarah, David, and Alex' })}</div>
             </div>
         </main>
 
@@ -86,21 +88,21 @@ export default function Recording() {
             {/*  Tabs  */}
             <div className="flex border-b border-white/10 p-2 gap-2 shrink-0">
                 <button className="flex-1 py-2 px-4 rounded-lg bg-white/10 text-white font-bold text-sm shadow-md flex items-center justify-center gap-2">
-                    <Sparkles className="w-4 h-4 text-nebula-cyan" /> AI Summary
+                    <Sparkles className="w-4 h-4 text-nebula-cyan" /> {t('recording.aiSummary')}
                 </button>
-                <button className="flex-1 py-2 px-4 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white font-medium text-sm transition-colors">Transcript</button>
+                <button className="flex-1 py-2 px-4 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white font-medium text-sm transition-colors">{t('recording.transcript')}</button>
             </div>
 
             <div className="flex-1 overflow-y-auto scroll-hidden p-6 space-y-8">
                 {/*  Executive Summary  */}
                 <div className="ai-border bg-white/5 p-5 rounded-3xl">
-                    <h3 className="font-display font-bold text-lg mb-3 flex items-center gap-2"><FileText className="w-4 h-4 text-nebula-purple" /> Executive Summary</h3>
+                    <h3 className="font-display font-bold text-lg mb-3 flex items-center gap-2"><FileText className="w-4 h-4 text-nebula-purple" /> {t('recording.executiveSummary')}</h3>
                     <p className="text-sm text-gray-300 leading-relaxed font-medium">The team reviewed the Q3 roadmap, focusing on the new WebRTC mesh architecture. David confirmed the canvas recording feature is on track. Sarah highlighted potential mobile performance bottlenecks which require further testing next week.</p>
                 </div>
 
                 {/*  Action Items  */}
                 <div>
-                    <h3 className="font-display font-bold text-lg mb-4 flex items-center gap-2"><CheckSquare className="w-4 h-4 text-nebula-emerald" /> Action Items</h3>
+                    <h3 className="font-display font-bold text-lg mb-4 flex items-center gap-2"><CheckSquare className="w-4 h-4 text-nebula-emerald" /> {t('recording.actionItems')}</h3>
                     <ul className="space-y-3">
                         <li className="flex items-start gap-3 bg-white/5 p-3 rounded-xl border border-white/5">
                             <input type="checkbox" className="mt-1 w-4 h-4 rounded border-white/20 bg-black/50 text-nebula-emerald focus:ring-nebula-emerald cursor-pointer" />
@@ -121,7 +123,7 @@ export default function Recording() {
 
                 {/*  Key Moments  */}
                 <div>
-                    <h3 className="font-display font-bold text-lg mb-4 flex items-center gap-2"><Clock className="w-4 h-4 text-nebula-magenta" /> Key Moments</h3>
+                    <h3 className="font-display font-bold text-lg mb-4 flex items-center gap-2"><Clock className="w-4 h-4 text-nebula-magenta" /> {t('recording.keyMoments')}</h3>
                     <div className="space-y-4 border-l-2 border-white/10 ml-2 pl-4">
                         <div className="relative cursor-pointer group">
                             <div className="absolute -left-[21px] top-1.5 w-2 h-2 rounded-full bg-nebula-cyan group-hover:scale-150 transition-transform"></div>

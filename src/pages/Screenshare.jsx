@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { MonitorUp, LayoutList, Eye, MousePointer2, Maximize, Minimize, MicOff, Mic, Video, PhoneOff } from 'lucide-react';
+import { MonitorUp, LayoutList, Eye, MousePointer2, Maximize, Minimize, Expand, Shrink, MicOff, Mic, Video, PhoneOff, AlertTriangle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ResizableSplitPane from '../components/ResizableSplitPane';
 import FloatingPresenterBar from '../components/FloatingPresenterBar';
@@ -12,9 +12,11 @@ export default function Screenshare() {
     const { t } = useTranslation();
     const screenshareRef = useRef(null);
     const [isFullscreen, setIsFullscreen] = useState(false);
+    const [isTheaterMode, setIsTheaterMode] = useState(false);
     const [isPresenter, setIsPresenter] = useState(true); // Toggle to simulate presenter/viewer
     const [isAnnotating, setIsAnnotating] = useState(false);
     const [infiniteMirrorWarning, setInfiniteMirrorWarning] = useState(true);
+    const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
 
     useEffect(() => {
         const handleFullscreenChange = () => {
@@ -42,52 +44,54 @@ export default function Screenshare() {
     <div className="bg-mesh"></div>
     <div className="bg-noise"></div>
 
-    <div className="relative z-10 flex flex-col h-full w-full p-4 lg:p-6 gap-4 lg:gap-6">
+    <div className={`relative z-10 flex flex-col h-full w-full ${isTheaterMode || isFullscreen ? 'p-0' : 'p-4 lg:p-6'} gap-4 lg:gap-6 transition-all duration-300`}>
         
         {/*  Header  */}
-        <header className={`flex justify-between items-center w-full glass-panel rounded-2xl px-6 py-4 flex-shrink-0 transition-all duration-500 ${isPresenter && infiniteMirrorWarning ? 'opacity-20 pointer-events-none' : ''}`}>
-            <div className="flex items-center gap-4">
-                <NebulaLogo showText={false} className="scale-90 origin-left" />
-                <div className="-ml-2">
-                    <h1 className="font-display font-bold text-xl text-white">Design Sync</h1>
-                    <div className="flex items-center gap-2 text-xs text-white/50 uppercase font-bold">
-                        <span className="text-emerald-400">●</span> 01:24:39
+        {!isTheaterMode && !isFullscreen && (
+            <header className={`flex justify-between items-center w-full glass-panel rounded-2xl px-6 py-4 flex-shrink-0 transition-all duration-500 ${isPresenter && infiniteMirrorWarning ? 'opacity-20 pointer-events-none' : ''}`}>
+                <div className="flex items-center gap-4">
+                    <NebulaLogo showText={false} className="scale-90 origin-left" />
+                    <div className="-ml-2">
+                        <h1 className="font-display font-bold text-xl text-white">Design Sync</h1>
+                        <div className="flex items-center gap-2 text-xs text-white/50 uppercase font-bold">
+                            <span className="text-emerald-400">●</span> 01:24:39
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div className="flex items-center gap-3">
-                {/*  Role Toggle Mock Button  */}
+                
+                <div className="flex items-center gap-3">
+                    {/*  Role Toggle Mock Button  */}
                 <button 
                     onClick={() => setIsPresenter(!isPresenter)} 
                     className="glass-button px-4 h-10 rounded-xl flex items-center justify-center text-xs font-bold mr-4 text-nebula-cyan border-nebula-cyan/30"
                 >
-                    {isPresenter ? 'View as Participant' : 'View as Presenter'}
+                    {isPresenter ? t('screenshare.viewAsParticipant') : t('screenshare.viewAsPresenter')}
                 </button>
-                
-                <button className="glass-button active w-10 h-10 rounded-xl flex items-center justify-center text-white">
-                    <MonitorUp className="w-5 h-5" />
-                </button>
-                <button className="glass-button w-10 h-10 rounded-xl flex items-center justify-center text-white/70">
-                    <LayoutList className="w-5 h-5" />
-                </button>
-            </div>
-        </header>
+                    
+                    <button className="glass-button active w-10 h-10 rounded-xl flex items-center justify-center text-white">
+                        <MonitorUp className="w-5 h-5" />
+                    </button>
+                    <button className="glass-button w-10 h-10 rounded-xl flex items-center justify-center text-white/70">
+                        <LayoutList className="w-5 h-5" />
+                    </button>
+                </div>
+            </header>
+        )}
 
         {/*  Main Content  */}
         <main className={`flex-1 flex gap-4 lg:gap-6 min-h-0 relative ${isPresenter && infiniteMirrorWarning ? 'opacity-20 pointer-events-none blur-sm transition-all duration-500' : ''}`}>
             
             <ResizableSplitPane 
-                defaultLeftWidth={75}
+                defaultLeftWidth={isTheaterMode || isFullscreen ? 100 : 75}
                 minLeftWidth={50}
-                maxLeftWidth={85}
+                maxLeftWidth={isTheaterMode || isFullscreen ? 100 : 85}
                 leftContent={
                     /*  Shared Screen Area (Priority space)  */
                     <div 
                         ref={screenshareRef} 
                         onDoubleClick={toggleFullscreen}
                         className={`w-full h-full screenshare-container relative flex items-center justify-center group/screen bg-black overflow-hidden shadow-2xl transition-all duration-300 ${isFullscreen ? 'rounded-none border-none' : 'rounded-3xl cursor-pointer'} ${isPresenter ? 'border-2 border-emerald-500 shadow-[0_0_30px_rgba(16,185,129,0.3)]' : ''}`}
-                        title={!isFullscreen ? "双击全屏 (Double click to fullscreen)" : "双击退出全屏 (Double click to exit)"}
+                        title={!isFullscreen ? t('screenshare.doubleClickToFullscreen') : t('screenshare.doubleClickToExit')}
                     >
                         {/* Presenter Green Border Indicator */}
                         {isPresenter && (
@@ -101,26 +105,37 @@ export default function Screenshare() {
                         )}
                         
                         {/*  Floating Screen Controls (Show on hover)  */}
-                        <div className="absolute top-4 right-4 glass-panel px-4 py-2.5 rounded-xl flex items-center gap-3 opacity-0 -translate-y-2 group-hover/screen:translate-y-0 group-hover/screen:opacity-100 transition-all duration-300 z-[60] pointer-events-none group-hover/screen:pointer-events-auto border-white/10 shadow-xl">
+                        <div className="absolute top-4 right-4 glass-panel px-3 py-2 rounded-xl flex items-center gap-2 opacity-0 -translate-y-2 group-hover/screen:translate-y-0 group-hover/screen:opacity-100 transition-all duration-300 z-[60] pointer-events-none group-hover/screen:pointer-events-auto border-white/10 shadow-xl">
                             {!isPresenter && (
                                 <>
                                     <button className="text-sm font-bold text-white/80 hover:text-nebula-cyan hover:bg-white/10 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-2" title={t('screenshare.requestControl')}>
                                         <MousePointer2 className="w-4 h-4" /> {t('screenshare.requestControl')}
                                     </button>
-                                    <div className="w-px h-6 bg-white/20"></div>
+                                    <div className="w-px h-6 bg-white/20 mx-1"></div>
                                 </>
                             )}
+                            
+                            <button 
+                                onClick={(e) => { e.stopPropagation(); setIsTheaterMode(!isTheaterMode); }}
+                                className="w-9 h-9 rounded-lg hover:bg-white/10 flex items-center justify-center text-white/80 hover:text-white transition-colors group/btn relative" 
+                                title={isTheaterMode ? t('screenshare.exitTheaterMode') : t('screenshare.theaterMode')}
+                            >
+                                {isTheaterMode ? <Shrink className="w-4 h-4 group-hover/btn:scale-90 transition-transform" /> : <Expand className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />}
+                            </button>
+
+                            <div className="w-px h-6 bg-white/20 mx-1"></div>
+
                             <button 
                                 onClick={(e) => { e.stopPropagation(); toggleFullscreen(); }}
-                                className="w-10 h-10 rounded-lg hover:bg-white/10 flex items-center justify-center text-white/80 hover:text-white transition-colors group/btn" 
-                                title={isFullscreen ? t('screenshare.exitFullscreen') : t('screenshare.fitToScreen')}
+                                className="w-9 h-9 rounded-lg hover:bg-white/10 flex items-center justify-center text-white/80 hover:text-white transition-colors group/btn relative" 
+                                title={isFullscreen ? t('screenshare.exitOsFullscreen') : t('screenshare.osFullscreen')}
                             >
                                 {isFullscreen ? <Minimize className="w-4 h-4 group-hover/btn:scale-90 transition-transform" /> : <Maximize className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />}
                             </button>
                         </div>
                         
                         {/* CRITICAL: object-contain ensures shared content is NEVER cropped */}
-                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=2000" className="w-full h-full object-contain relative z-10" alt="Shared Screen" />
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=2000" className="w-full h-full object-contain relative z-10" alt={t('screenshare.sharedScreenAlt')} />
                         
                         {/* Mock Cursor from Presenter */}
                         {!isPresenter && (
@@ -145,7 +160,7 @@ export default function Screenshare() {
                             <div className="absolute bottom-3 left-3 flex items-center gap-2">
                                 <div className="font-display font-bold text-white text-sm">David Chen</div>
                                 <div className="bg-emerald-500/20 text-emerald-400 text-[10px] px-1.5 py-0.5 rounded flex items-center gap-1 border border-emerald-500/30">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></div> Speaking
+                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></div> {t('screenshare.speaking')}
                                 </div>
                             </div>
                         </div>
@@ -180,20 +195,25 @@ export default function Screenshare() {
         </main>
 
         {/*  Minimal Control Bar  */}
-        <footer className={`glass-panel rounded-2xl px-6 py-4 flex justify-center items-center relative z-20 flex-shrink-0 transition-all duration-500 ${isPresenter && infiniteMirrorWarning ? 'opacity-20 pointer-events-none blur-sm' : ''}`}>
-            <div className="flex items-center gap-3">
-                <button className="glass-button w-12 h-12 rounded-xl flex items-center justify-center text-white">
-                    <Mic className="w-5 h-5 text-emerald-400" />
-                </button>
-                <button className="glass-button w-12 h-12 rounded-xl flex items-center justify-center text-white">
-                    <Video className="w-5 h-5" />
-                </button>
-                <div className="w-px h-8 bg-white/10 mx-2"></div>
-                <button className="glass-button danger px-6 h-12 rounded-xl flex items-center gap-2 font-bold" onClick={() => navigate('/meeting')}>
-                    <PhoneOff className="w-4 h-4" /> {t('meeting.leave')}
-                </button>
-            </div>
-        </footer>
+        {!isTheaterMode && !isFullscreen && (
+            <footer className={`glass-panel rounded-2xl px-6 py-4 flex justify-center items-center relative z-20 flex-shrink-0 transition-all duration-500 ${isPresenter && infiniteMirrorWarning ? 'opacity-20 pointer-events-none blur-sm' : ''}`}>
+                <div className="flex items-center gap-3">
+                    <button className="glass-button w-12 h-12 rounded-xl flex items-center justify-center text-white">
+                        <Mic className="w-5 h-5 text-emerald-400" />
+                    </button>
+                    <button className="glass-button w-12 h-12 rounded-xl flex items-center justify-center text-white">
+                        <Video className="w-5 h-5" />
+                    </button>
+                    <div className="w-px h-8 bg-white/10 mx-2"></div>
+                    <button 
+                        className="glass-button danger px-6 h-12 rounded-xl flex items-center gap-2 font-bold transition-all hover:scale-105" 
+                        onClick={() => setShowLeaveConfirm(true)}
+                    >
+                        <PhoneOff className="w-4 h-4" /> {t('meeting.leave')}
+                    </button>
+                </div>
+            </footer>
+        )}
 
         {/* Presenter Floating Bar */}
         {isPresenter && (
@@ -211,16 +231,14 @@ export default function Screenshare() {
                     <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-6">
                         <MonitorUp className="w-8 h-8 text-red-500" />
                     </div>
-                    <h2 className="text-2xl font-bold text-white mb-4">Infinite Mirror Detected</h2>
-                    <p className="text-white/70 mb-8 leading-relaxed">
-                        You are sharing the same browser tab where the meeting is running. We've temporarily paused the video feed to prevent your browser from crashing.
-                    </p>
+                    <h2 className="text-2xl font-bold text-white mb-4">{t('screenshare.infiniteMirrorDetected')}</h2>
+                    <p className="text-white/70 mb-8 leading-relaxed">{t('screenshare.infiniteMirrorWarning')}</p>
                     <div className="flex gap-4">
                         <button 
                             onClick={() => setInfiniteMirrorWarning(false)}
                             className="flex-1 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white font-bold transition-colors"
                         >
-                            Ignore
+                            {t('screenshare.ignore')}
                         </button>
                         <button 
                             onClick={() => {
@@ -229,7 +247,7 @@ export default function Screenshare() {
                             }}
                             className="flex-1 py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold transition-colors shadow-lg shadow-red-500/20"
                         >
-                            Stop Sharing
+                            {t('screenshare.stopSharing')}
                         </button>
                     </div>
                 </div>
@@ -238,7 +256,35 @@ export default function Screenshare() {
 
     </div>
 
-    
+    {showLeaveConfirm && (
+        <div className="fixed inset-0 z-[300] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in">
+            <div className="bg-nebula-900 border border-white/10 p-6 rounded-3xl shadow-2xl max-w-sm w-full mx-4 animate-scale-in">
+                <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center flex-shrink-0">
+                        <AlertTriangle className="w-6 h-6 text-red-500" />
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-display font-bold text-white">{t('screenshare.leaveMeetingTitle')}</h3>
+                        <p className="text-sm text-white/60 mt-1">{t('screenshare.leaveMeetingConfirm')}</p>
+                    </div>
+                </div>
+                <div className="flex gap-3 mt-6">
+                    <button 
+                        onClick={() => setShowLeaveConfirm(false)}
+                        className="flex-1 py-3 rounded-xl font-bold text-sm text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
+                    >
+                        {t('screenshare.cancel')}
+                    </button>
+                    <button 
+                        onClick={() => navigate('/home')}
+                        className="flex-1 py-3 rounded-xl font-bold text-sm text-white bg-red-500 hover:bg-red-600 transition-colors shadow-lg shadow-red-500/20"
+                    >
+                        {t('screenshare.yesLeave')}
+                    </button>
+                </div>
+            </div>
+        </div>
+    )}
 
         </div>
     );

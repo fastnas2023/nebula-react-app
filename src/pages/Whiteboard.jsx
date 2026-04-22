@@ -1,9 +1,11 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Users, Download, X, MousePointer2, Hand, PenTool, Eraser, StickyNote, Edit2, Copy, Trash2, Mic, Video } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function Whiteboard() {
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     return (
         <div className="h-[100dvh] w-full font-sans antialiased flex flex-col relative">
@@ -29,13 +31,13 @@ export default function Whiteboard() {
             
             <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-bold text-white/70">
-                    <Users className="w-3.5 h-3.5 text-nebula-purple" /> 4 Collaborating
+                    <Users className="w-3.5 h-3.5 text-nebula-purple" /> {t('whiteboard.collaborating', { count: 4 })}
                 </div>
                 <button className="glass-button w-10 h-10 rounded-xl flex items-center justify-center text-white/70">
                     <Download className="w-5 h-5" />
                 </button>
                 <button onClick={() => navigate('/meeting')} className="bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 px-4 h-10 rounded-xl flex items-center gap-2 font-bold transition-colors text-sm">
-                    <X className="w-4 h-4" /> Close Board
+                    <X className="w-4 h-4" /> {t('whiteboard.closeBoard')}
                 </button>
             </div>
         </header>
@@ -124,7 +126,7 @@ export default function Whiteboard() {
                         <div className="absolute top-[30%] left-[30%] w-4 h-4 bg-yellow-400 rotate-2 shadow-sm"></div>
                         <div className="absolute top-[40%] left-[50%] w-4 h-4 bg-pink-400 -rotate-3 shadow-sm"></div>
                     </div>
-                    <div className="absolute bottom-3 right-3 text-[10px] text-white/80 font-bold">Minimap</div>
+                    <div className="absolute bottom-3 right-3 text-[10px] text-white/80 font-bold">{t('whiteboard.minimap')}</div>
                 </div>
                 
             </div>
