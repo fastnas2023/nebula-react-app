@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { UserPlus, LayoutGrid, MicOff, Mic, Video, VideoOff, MonitorUp, PhoneOff, Info, Send, Sparkles, Bot, ListTodo, FileText, AlertTriangle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import NebulaLogo from '../components/NebulaLogo';
+import useMediaStore from '../store/useMediaStore';
 
 export default function Meeting() {
     const navigate = useNavigate();
@@ -21,9 +22,16 @@ export default function Meeting() {
     const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
     const [showNotification, setShowNotification] = useState(true);
     
+    // Global Media States
+    const displayName = useMediaStore(state => state.displayName);
+    const selectedVideoId = useMediaStore(state => state.selectedVideoId);
+    const selectedAudioId = useMediaStore(state => state.selectedAudioId);
+    const isMuted = useMediaStore(state => state.isAudioMuted);
+    const isVideoOff = useMediaStore(state => state.isVideoMuted);
+    const toggleAudio = useMediaStore(state => state.toggleAudio);
+    const toggleVideo = useMediaStore(state => state.toggleVideo);
+    
     // UI Interaction States
-    const [isMuted, setIsMuted] = useState(false);
-    const [isVideoOff, setIsVideoOff] = useState(false);
     const [isGalleryView, setIsGalleryView] = useState(false);
     
     // Dynamic Mock Data States
@@ -32,6 +40,51 @@ export default function Meeting() {
     const [audioLevels, setAudioLevels] = useState([30, 60, 40]);
     
     const messagesEndRef = useRef(null);
+    const localVideoRef = useRef(null);
+    const [localStream, setLocalStream] = useState(null);
+
+    // Request WebRTC Media Stream
+    useEffect(() => {
+        let activeStream = null;
+
+        const getMedia = async () => {
+            try {
+                const constraints = {
+                    video: selectedVideoId ? { deviceId: { exact: selectedVideoId } } : true,
+                    audio: selectedAudioId ? { deviceId: { exact: selectedAudioId } } : true
+                };
+                
+                activeStream = await navigator.mediaDevices.getUserMedia(constraints);
+                
+                // Apply initial mute states
+                activeStream.getVideoTracks().forEach(t => t.enabled = !isVideoOff);
+                activeStream.getAudioTracks().forEach(t => t.enabled = !isMuted);
+
+                setLocalStream(activeStream);
+                if (localVideoRef.current) {
+                    localVideoRef.current.srcObject = activeStream;
+                }
+            } catch (err) {
+                console.error("Failed to get local stream in meeting", err);
+            }
+        };
+
+        getMedia();
+
+        return () => {
+            if (activeStream) {
+                activeStream.getTracks().forEach(track => track.stop());
+            }
+        };
+    }, [selectedVideoId, selectedAudioId]);
+
+    // Apply Mute State Changes to actual stream
+    useEffect(() => {
+        if (localStream) {
+            localStream.getVideoTracks().forEach(t => t.enabled = !isVideoOff);
+            localStream.getAudioTracks().forEach(t => t.enabled = !isMuted);
+        }
+    }, [isVideoOff, isMuted, localStream]);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -255,14 +308,30 @@ export default function Meeting() {
                     </div>
 
                     {/* Thumbnail 3 (Self) */}
-                    <div className={`video-tile relative group bg-black flex-shrink-0 ${isGalleryView ? 'w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] aspect-video' : 'w-[240px] lg:w-full aspect-video'} snap-center rounded-2xl overflow-hidden shadow-lg ${isGalleryView ? 'border-white/5' : 'border-emerald-500/30'} transition-all duration-500`}>
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-contain bg-[#030108] opacity-90" alt="You" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                    <div className={`video-tile relative group bg-black flex-shrink-0 ${isGalleryView ? 'w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] aspect-video' : 'w-[240px] lg:w-full aspect-video'} snap-center rounded-2xl overflow-hidden shadow-lg ${isGalleryView ? 'border-white/5' : 'border-emerald-500/30'} transition-all duration-500 flex items-center justify-center`}>
+                        
+                        <video 
+                            ref={localVideoRef}
+                            autoPlay 
+                            playsInline 
+                            muted // Always mute local playback to prevent echo
+                            className={`w-full h-full object-cover transition-opacity duration-300 ${isVideoOff ? 'opacity-0' : 'opacity-100'} scale-x-[-1] bg-[#030108]`} 
+                        />
+                        
+                        {isVideoOff && (
+                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0a0514]">
+                                <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center border border-white/10 mb-2">
+                                    <span className="text-lg font-display font-bold text-white/50">{displayName ? displayName.charAt(0).toUpperCase() : '?'}</span>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
                         <div className="absolute bottom-3 left-3">
-                            <div className="font-display font-bold text-white text-sm">{t('meeting.you')}</div>
+                            <div className="font-display font-bold text-white text-sm">{t('meeting.you')} ({displayName})</div>
                         </div>
-                        <div className="absolute top-3 right-3 glass-panel w-7 h-7 rounded-full flex items-center justify-center text-emerald-400 bg-emerald-500/10 border-emerald-500/20 backdrop-blur-md">
-                            <Mic className="w-3.5 h-3.5" />
+                        <div className={`absolute top-3 right-3 glass-panel w-7 h-7 rounded-full flex items-center justify-center backdrop-blur-md transition-colors ${isMuted ? 'text-red-400 bg-red-500/10 border-red-500/20' : 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'}`}>
+                            {isMuted ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
                         </div>
                     </div>
 
@@ -389,7 +458,7 @@ export default function Meeting() {
 
             <div className="flex items-center gap-3 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
                 <button 
-                    onClick={() => setIsMuted(!isMuted)}
+                    onClick={toggleAudio}
                     className={`glass-button w-12 h-12 rounded-xl flex items-center justify-center group relative transition-colors ${isMuted ? 'bg-red-500/20 text-red-500 border-red-500/30' : 'text-white hover:bg-white/10'}`}
                     title={isMuted ? "Unmute" : "Mute"}
                 >
@@ -402,7 +471,7 @@ export default function Meeting() {
                     )}
                 </button>
                 <button 
-                    onClick={() => setIsVideoOff(!isVideoOff)}
+                    onClick={toggleVideo}
                     className={`glass-button w-12 h-12 rounded-xl flex items-center justify-center group transition-colors ${isVideoOff ? 'bg-red-500/20 text-red-500 border-red-500/30' : 'text-white hover:bg-white/10'}`}
                     title={isVideoOff ? "Start Video" : "Stop Video"}
                 >

@@ -3,11 +3,17 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Mic, Video, Image, ChevronDown, ArrowRight, ArrowLeft, Settings2, MicOff, VideoOff } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import NebulaLogo from '../components/NebulaLogo';
+import useMediaStore from '../store/useMediaStore';
 
 export default function Setup() {
     const navigate = useNavigate();
     const { t } = useTranslation();
-    const [displayName, setDisplayName] = useState('Sarah Jenkins');
+    const setDisplayNameStore = useMediaStore(state => state.setDisplayName);
+    const setDevices = useMediaStore(state => state.setDevices);
+    const setMuteStates = useMediaStore(state => state.setMuteStates);
+    const initialDisplayName = useMediaStore(state => state.displayName);
+
+    const [displayName, setDisplayName] = useState(initialDisplayName);
     const [showAdvanced, setShowAdvanced] = useState(false);
 
     // WebRTC Real Device States
@@ -122,7 +128,11 @@ export default function Setup() {
     const handleJoin = (e) => {
         e.preventDefault();
         if (displayName.trim()) {
-            // In a real app, we would pass the stream or selected device IDs to a global store (Zustand) here
+            // Save settings to global store
+            setDisplayNameStore(displayName.trim());
+            setDevices(selectedVideoId, selectedAudioId);
+            setMuteStates(isVideoMuted, isAudioMuted);
+
             // Stop tracks before navigating away to release the camera light
             if (stream) {
                 stream.getTracks().forEach(track => track.stop());
