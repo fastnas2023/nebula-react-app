@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { X } from 'lucide-react';
 
-const AnnotationCanvas = ({ onClose }) => {
+const AnnotationCanvas = ({ onClose, clearTrigger }) => {
   const { t } = useTranslation();
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
@@ -86,10 +86,17 @@ const AnnotationCanvas = ({ onClose }) => {
 
   const clearCanvas = () => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
     const context = canvas.getContext('2d');
     // 清除整个画布（考虑到之前的scale，使用原始canvas的宽高）
     context.clearRect(0, 0, canvas.width, canvas.height);
   };
+
+  useEffect(() => {
+    if (clearTrigger > 0) {
+      clearCanvas();
+    }
+  }, [clearTrigger]);
 
   return (
     <div className="fixed inset-0 z-[150] pointer-events-none">
@@ -105,26 +112,10 @@ const AnnotationCanvas = ({ onClose }) => {
         onTouchCancel={stopDrawing}
         className="pointer-events-auto touch-none w-full h-full bg-transparent cursor-crosshair"
       />
-      <div className="absolute top-24 right-6 pointer-events-auto flex items-center gap-2 z-[200]">
-        <button
-          onClick={clearCanvas}
-          className="glass-panel text-white hover:text-red-400 hover:bg-white/10 font-bold py-2.5 px-5 rounded-xl shadow-2xl transition-all flex items-center gap-2 border border-white/20"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-          </svg>
-          {t('annotation.clearCanvas')}
-        </button>
-        {onClose && (
-          <button
-            onClick={onClose}
-            className="glass-panel text-white hover:bg-red-500/20 hover:text-red-400 hover:border-red-500/30 font-medium p-2.5 rounded-xl shadow-2xl transition-all flex items-center justify-center border border-white/20"
-            title={t('annotation.close')}
-          >
-            <X size={20} />
-          </button>
-        )}
-      </div>
+      {/* 
+        The Clear and Close buttons have been moved to the FloatingPresenterBar 
+        for a cleaner UX, next to the Pen tool.
+      */}
     </div>
   );
 };

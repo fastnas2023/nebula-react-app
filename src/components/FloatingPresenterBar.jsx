@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mic, MicOff, Video, VideoOff, Pen, Pause, Play, Square } from 'lucide-react';
+import { Mic, MicOff, Video, VideoOff, Pen, Pause, Play, Square, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-export default function FloatingPresenterBar({ onStopShare, onToggleAnnotate, isAnnotating }) {
+export default function FloatingPresenterBar({ onStopShare, onToggleAnnotate, isAnnotating, onClearAnnotation }) {
   const { t } = useTranslation();
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
@@ -40,14 +40,28 @@ export default function FloatingPresenterBar({ onStopShare, onToggleAnnotate, is
           <div className="w-px h-6 bg-white/20 mx-2"></div>
 
           {/* Annotate */}
-          <button
-            onClick={onToggleAnnotate}
-            className={`p-3 rounded-xl flex items-center justify-center transition-all ${
-              isAnnotating ? 'bg-nebula-cyan/20 text-nebula-cyan hover:bg-nebula-cyan/30' : 'text-white/80 hover:bg-white/10 hover:text-white'
-            }`}
-          >
-            <Pen size={20} />
-          </button>
+          <div className={`flex items-center transition-all duration-300 ${isAnnotating ? 'bg-nebula-cyan/10 rounded-2xl border border-nebula-cyan/20 p-1 mx-1' : ''}`}>
+            <button
+              onClick={onToggleAnnotate}
+              className={`p-3 rounded-xl flex items-center justify-center transition-all ${
+                isAnnotating ? 'bg-nebula-cyan/20 text-nebula-cyan hover:bg-nebula-cyan/30 shadow-[inset_0_0_15px_rgba(6,182,212,0.2)]' : 'text-white/80 hover:bg-white/10 hover:text-white'
+              }`}
+              title={isAnnotating ? t('annotation.close') || "Close Pen" : "Pen Tool"}
+            >
+              <Pen size={20} />
+            </button>
+            
+            {/* Contextual Clear Button when Annotating */}
+            {isAnnotating && (
+              <button
+                onClick={onClearAnnotation}
+                className="p-3 ml-1 rounded-xl flex items-center justify-center transition-all text-red-400 hover:bg-red-500/20 hover:text-red-300"
+                title={t('annotation.clearCanvas') || "Clear Canvas"}
+              >
+                <Trash2 size={20} />
+              </button>
+            )}
+          </div>
 
           {/* Pause Share */}
           <button

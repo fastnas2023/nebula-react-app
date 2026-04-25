@@ -197,17 +197,16 @@ export default function Whiteboard() {
                 <button className="w-10 h-10 rounded-xl flex items-center justify-center text-white/70 hover:bg-white/10 transition-colors">
                     <Eraser className="w-5 h-5" />
                 </button>
-                <div className="w-8 h-px bg-white/10 my-1"></div>
-                <button className="w-10 h-10 rounded-xl flex items-center justify-center text-white/70 hover:bg-white/10 transition-colors">
-                    <StickyNote className="w-5 h-5" />
-                </button>
-                <div className="w-8 h-px bg-white/10 my-1"></div>
                 <button 
                     className="w-10 h-10 rounded-xl flex items-center justify-center text-white/70 hover:bg-red-500/20 hover:text-red-400 transition-colors"
                     title={t('annotation.clearCanvas') || "Clear Canvas"}
                     onClick={() => setShowElements(false)}
                 >
                     <Trash2 className="w-5 h-5" />
+                </button>
+                <div className="w-8 h-px bg-white/10 my-1"></div>
+                <button className="w-10 h-10 rounded-xl flex items-center justify-center text-white/70 hover:bg-white/10 transition-colors">
+                    <StickyNote className="w-5 h-5" />
                 </button>
             </aside>
 

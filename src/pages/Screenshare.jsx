@@ -17,6 +17,7 @@ export default function Screenshare() {
     const [isAnnotating, setIsAnnotating] = useState(false);
     const [infiniteMirrorWarning, setInfiniteMirrorWarning] = useState(true);
     const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
+    const [clearCanvasTrigger, setClearCanvasTrigger] = useState(0);
     
     // Dynamic Mock Data States
     const [meetingSeconds, setMeetingSeconds] = useState(5079); // 01:24:39
@@ -174,7 +175,7 @@ export default function Screenshare() {
                         )}
                         
                         {/* Annotation Layer */}
-                        {isAnnotating && <AnnotationCanvas onClose={isPresenter ? null : () => setIsAnnotating(false)} />}
+                        {isAnnotating && <AnnotationCanvas clearTrigger={clearCanvasTrigger} onClose={isPresenter ? null : () => setIsAnnotating(false)} />}
                     </div>
                 }
                 rightContent={
@@ -249,6 +250,7 @@ export default function Screenshare() {
                 onStopShare={() => setIsPresenter(false)} 
                 isAnnotating={isAnnotating}
                 onToggleAnnotate={() => setIsAnnotating(!isAnnotating)}
+                onClearAnnotation={() => setClearCanvasTrigger(prev => prev + 1)}
             />
         )}
 
