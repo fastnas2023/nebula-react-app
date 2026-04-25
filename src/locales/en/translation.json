@@ -130,19 +130,20 @@
   "setup": {
     "title": "Ready to join?",
     "room": "Room",
-    "displayName": "Display Name",
+    "backToHome": "Back to Home",
+    "displayName": "Your Display Name",
     "camera": "Camera",
     "microphone": "Microphone",
+    "advancedSettings": "Advanced Audio & Video",
     "joinBtn": "Join Meeting",
-    "backToHome": "Back to Home",
     "virtualBackground": "Virtual Background",
-    "advancedSettings": "Advanced Settings",
-    "networkLatency": "{{time}}ms",
+    "networkLatency": "{{time}}ms Latency",
+    "cameraOff": "Camera is off",
     "devices": {
-      "cameraBuiltIn": "FaceTime HD Camera (Built-in)",
-      "cameraLogitech": "Logitech Brio",
+      "cameraBuiltIn": "FaceTime HD Camera",
+      "cameraLogitech": "Logitech Brio 4K",
       "micMacBook": "MacBook Pro Microphone",
-      "micShure": "Shure SM7B"
+      "micShure": "Shure MV7"
     },
     "features": {
       "hdVideo": "HD Video (1080p)",

@@ -56,6 +56,7 @@ const requiredKeys = [
   'setup.advancedSettings',
   'setup.features.hdVideo',
   'setup.features.aiNoiseCancellation',
+  'setup.cameraOff',
   'setup.devices.cameraBuiltIn',
   'setup.devices.cameraLogitech',
   'setup.devices.micMacBook',

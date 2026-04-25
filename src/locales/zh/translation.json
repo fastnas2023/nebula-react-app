@@ -138,6 +138,7 @@
     "virtualBackground": "虚拟背景",
     "advancedSettings": "高级设置",
     "networkLatency": "{{time}}ms",
+    "cameraOff": "摄像头已关闭",
     "devices": {
       "cameraBuiltIn": "内置摄像头 (FaceTime HD)",
       "cameraLogitech": "罗技 Brio",

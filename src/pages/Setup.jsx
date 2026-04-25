@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Mic, Video, Image, ChevronDown, ArrowRight, ArrowLeft, Settings2 } from 'lucide-react';
+import { Mic, Video, Image, ChevronDown, ArrowRight, ArrowLeft, Settings2, MicOff, VideoOff } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import NebulaLogo from '../components/NebulaLogo';
 
@@ -10,9 +10,123 @@ export default function Setup() {
     const [displayName, setDisplayName] = useState('Sarah Jenkins');
     const [showAdvanced, setShowAdvanced] = useState(false);
 
+    // WebRTC Real Device States
+    const videoRef = useRef(null);
+    const [stream, setStream] = useState(null);
+    const [videoDevices, setVideoDevices] = useState([]);
+    const [audioDevices, setAudioDevices] = useState([]);
+    const [selectedVideoId, setSelectedVideoId] = useState('');
+    const [selectedAudioId, setSelectedAudioId] = useState('');
+    const [isVideoMuted, setIsVideoMuted] = useState(false);
+    const [isAudioMuted, setIsAudioMuted] = useState(false);
+    const [hasPermission, setHasPermission] = useState(false);
+
+    // Initialize Media Devices
+    useEffect(() => {
+        let activeStream = null;
+
+        const initMedia = async () => {
+            try {
+                // Request initial permission to trigger browser prompt and unhide device labels
+                activeStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                setHasPermission(true);
+                
+                if (videoRef.current) {
+                    videoRef.current.srcObject = activeStream;
+                }
+                setStream(activeStream);
+
+                // Enumerate real devices after permission is granted
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const videoInputs = devices.filter(d => d.kind === 'videoinput');
+                const audioInputs = devices.filter(d => d.kind === 'audioinput');
+
+                setVideoDevices(videoInputs);
+                setAudioDevices(audioInputs);
+
+                if (videoInputs.length > 0) setSelectedVideoId(videoInputs[0].deviceId);
+                if (audioInputs.length > 0) setSelectedAudioId(audioInputs[0].deviceId);
+                
+            } catch (err) {
+                console.error("Failed to get local stream", err);
+                setHasPermission(false);
+            }
+        };
+
+        initMedia();
+
+        return () => {
+            if (activeStream) {
+                activeStream.getTracks().forEach(track => track.stop());
+            }
+        };
+    }, []);
+
+    // Change specific device streams when selection changes
+    useEffect(() => {
+        if (!selectedVideoId && !selectedAudioId) return;
+        if (!hasPermission) return;
+
+        const switchDevice = async () => {
+            try {
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                }
+                
+                const constraints = {
+                    video: selectedVideoId ? { deviceId: { exact: selectedVideoId } } : true,
+                    audio: selectedAudioId ? { deviceId: { exact: selectedAudioId } } : true
+                };
+                
+                const newStream = await navigator.mediaDevices.getUserMedia(constraints);
+                
+                // Maintain mute states during switch
+                newStream.getVideoTracks().forEach(t => t.enabled = !isVideoMuted);
+                newStream.getAudioTracks().forEach(t => t.enabled = !isAudioMuted);
+
+                setStream(newStream);
+                if (videoRef.current) {
+                    videoRef.current.srcObject = newStream;
+                }
+            } catch (err) {
+                console.error("Failed to switch device", err);
+            }
+        };
+
+        // We only switch if devices are already enumerated (skip initial mount to avoid double prompt)
+        if (videoDevices.length > 0) {
+            switchDevice();
+        }
+    }, [selectedVideoId, selectedAudioId]);
+
+    const toggleVideo = () => {
+        if (stream) {
+            const videoTrack = stream.getVideoTracks()[0];
+            if (videoTrack) {
+                videoTrack.enabled = !videoTrack.enabled;
+                setIsVideoMuted(!videoTrack.enabled);
+            }
+        }
+    };
+
+    const toggleAudio = () => {
+        if (stream) {
+            const audioTrack = stream.getAudioTracks()[0];
+            if (audioTrack) {
+                audioTrack.enabled = !audioTrack.enabled;
+                setIsAudioMuted(!audioTrack.enabled);
+            }
+        }
+    };
+
     const handleJoin = (e) => {
         e.preventDefault();
         if (displayName.trim()) {
+            // In a real app, we would pass the stream or selected device IDs to a global store (Zustand) here
+            // Stop tracks before navigating away to release the camera light
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
             navigate('/meeting');
         }
     };
@@ -40,9 +154,29 @@ export default function Setup() {
             
             {/*  Video Preview Side  */}
             <div className="w-full md:w-3/5">
-                <div className="video-preview aspect-video w-full bg-black relative group h-full min-h-[300px]">
-                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=1600" className="w-full h-full object-cover opacity-80" />
+                <div className="video-preview aspect-video w-full bg-[#030108] rounded-3xl relative group h-full min-h-[300px] overflow-hidden shadow-2xl border border-white/5 flex items-center justify-center">
                     
+                    {/* Local WebRTC Media Stream Preview */}
+                    <video 
+                        ref={videoRef}
+                        autoPlay 
+                        playsInline 
+                        muted // Always mute local preview to prevent echo
+                        className={`w-full h-full object-cover transition-opacity duration-300 ${isVideoMuted ? 'opacity-0' : 'opacity-100'} scale-x-[-1]`} // Mirror effect for selfie cam
+                    />
+
+                    {/* Placeholder when video is off */}
+                    {isVideoMuted && (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0a0514]">
+                            <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center border border-white/10 mb-4">
+                                <span className="text-3xl font-display font-bold text-white/50">{displayName ? displayName.charAt(0).toUpperCase() : '?'}</span>
+                            </div>
+                            <span className="text-white/50 font-medium text-sm">{t('setup.cameraOff', 'Camera is off')}</span>
+                        </div>
+                    )}
+                    
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none"></div>
+
                     {/*  Audio Visualizer Overlay & Network Status  */}
                     <div className="absolute bottom-6 left-6 flex items-center gap-4">
                         <div className="glass-panel px-4 py-2 rounded-xl flex items-end gap-1.5 h-10 w-24 justify-center">
@@ -59,11 +193,19 @@ export default function Setup() {
 
                     {/*  Quick Toggles inside video  */}
                     <div className="absolute bottom-6 right-6 flex gap-3">
-                        <button className="w-12 h-12 rounded-xl bg-black/50 hover:bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center text-white transition-all hover:scale-110 active:scale-95 group">
-                            <Mic className="w-5 h-5 text-emerald-400" />
+                        <button 
+                            type="button"
+                            onClick={toggleAudio}
+                            className={`w-12 h-12 rounded-xl backdrop-blur-md border flex items-center justify-center transition-all hover:scale-110 active:scale-95 group ${isAudioMuted ? 'bg-red-500/20 border-red-500/30 text-red-500' : 'bg-black/50 hover:bg-white/10 border-white/10 text-emerald-400'}`}
+                        >
+                            {isAudioMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
                         </button>
-                        <button className="w-12 h-12 rounded-xl bg-black/50 hover:bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center text-white transition-all hover:scale-110 active:scale-95 group">
-                            <Video className="w-5 h-5 text-emerald-400" />
+                        <button 
+                            type="button"
+                            onClick={toggleVideo}
+                            className={`w-12 h-12 rounded-xl backdrop-blur-md border flex items-center justify-center transition-all hover:scale-110 active:scale-95 group ${isVideoMuted ? 'bg-red-500/20 border-red-500/30 text-red-500' : 'bg-black/50 hover:bg-white/10 border-white/10 text-emerald-400'}`}
+                        >
+                            {isVideoMuted ? <VideoOff className="w-5 h-5" /> : <Video className="w-5 h-5" />}
                         </button>
                         <div className="relative tooltip">
                             <button className="w-12 h-12 rounded-xl bg-black/50 hover:bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center text-white transition-all hover:scale-110 active:scale-95 group">
@@ -96,9 +238,20 @@ export default function Setup() {
                         <div>
                             <label className="block text-xs font-bold text-white/50 mb-2 uppercase tracking-wider">{t('setup.camera')}</label>
                             <div className="relative">
-                                <select className="w-full appearance-none bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm font-medium focus:outline-none focus:border-white/20">
-                                    <option>{t('setup.devices.cameraBuiltIn')}</option>
-                                    <option>{t('setup.devices.cameraLogitech')}</option>
+                                <select 
+                                    value={selectedVideoId}
+                                    onChange={(e) => setSelectedVideoId(e.target.value)}
+                                    className="w-full appearance-none bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm font-medium focus:outline-none focus:border-white/20 truncate pr-10"
+                                >
+                                    {videoDevices.length > 0 ? (
+                                        videoDevices.map(device => (
+                                            <option key={device.deviceId} value={device.deviceId} className="bg-black text-white">
+                                                {device.label || `${t('setup.devices.cameraBuiltIn')} (${device.deviceId.substring(0, 5)}...)`}
+                                            </option>
+                                        ))
+                                    ) : (
+                                        <option className="bg-black text-white">{t('setup.devices.cameraBuiltIn')}</option>
+                                    )}
                                 </select>
                                 <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 pointer-events-none" />
                             </div>
@@ -106,9 +259,20 @@ export default function Setup() {
                         <div>
                             <label className="block text-xs font-bold text-white/50 mb-2 uppercase tracking-wider">{t('setup.microphone')}</label>
                             <div className="relative">
-                                <select className="w-full appearance-none bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm font-medium focus:outline-none focus:border-white/20">
-                                    <option>{t('setup.devices.micMacBook')}</option>
-                                    <option>{t('setup.devices.micShure')}</option>
+                                <select 
+                                    value={selectedAudioId}
+                                    onChange={(e) => setSelectedAudioId(e.target.value)}
+                                    className="w-full appearance-none bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm font-medium focus:outline-none focus:border-white/20 truncate pr-10"
+                                >
+                                    {audioDevices.length > 0 ? (
+                                        audioDevices.map(device => (
+                                            <option key={device.deviceId} value={device.deviceId} className="bg-black text-white">
+                                                {device.label || `${t('setup.devices.micMacBook')} (${device.deviceId.substring(0, 5)}...)`}
+                                            </option>
+                                        ))
+                                    ) : (
+                                        <option className="bg-black text-white">{t('setup.devices.micMacBook')}</option>
+                                    )}
                                 </select>
                                 <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 pointer-events-none" />
                             </div>
