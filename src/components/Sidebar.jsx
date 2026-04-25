@@ -139,7 +139,7 @@ export default function Sidebar() {
                     )}
                     
                     {/*  Dropdown Menu  */}
-                    <div className={`absolute ${isCollapsed ? 'left-full bottom-0 pl-3' : 'bottom-full left-0 pb-3'} w-48 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto z-[100] transition-all duration-200`}>
+                    <div className={`absolute ${isCollapsed ? 'left-full bottom-0 pl-3' : 'bottom-full left-0 pb-3'} w-56 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto z-[100] transition-all duration-200`}>
                         <div className="bg-[#0a0514] border border-white/10 rounded-xl py-2 shadow-[0_0_30px_rgba(0,0,0,1)]">
                             <button onClick={() => navigate('/profile')} className="w-full px-4 py-2 text-left text-sm text-white/90 hover:bg-white/10 flex items-center gap-3 transition-colors">
                                 <User className="w-4 h-4 text-white/50" /> {t('sidebar.myProfile')}
@@ -147,11 +147,12 @@ export default function Sidebar() {
                             <button onClick={() => navigate('/profile')} className="w-full px-4 py-2 text-left text-sm text-white/90 hover:bg-white/10 flex items-center gap-3 transition-colors">
                                 <CreditCard className="w-4 h-4 text-white/50" /> {t('sidebar.billingAndPlan')}
                             </button>
-                            <button onClick={toggleLanguage} className="w-full px-4 py-2 text-left text-sm text-white/90 hover:bg-white/10 flex items-center justify-between transition-colors">
+                            <button onClick={toggleLanguage} className="w-full px-4 py-2 text-left text-sm text-white/90 hover:bg-white/10 flex items-center justify-between transition-colors group/langbtn">
                                 <span className="flex items-center gap-3">
-                                    <Globe className="w-4 h-4 text-white/50" /> {isZh ? t('sidebar.switchToEnglish') : t('sidebar.switchToChinese')}
+                                    <Globe className="w-4 h-4 text-white/50 group-hover/langbtn:text-nebula-cyan transition-colors" /> 
+                                    <span className="truncate max-w-[100px] inline-block">{isZh ? t('sidebar.switchToEnglish') : t('sidebar.switchToChinese')}</span>
                                 </span>
-                                <span className="text-xs font-mono text-white/40">{isZh ? 'EN' : '中'}</span>
+                                <span className="text-xs font-mono text-white/40 ml-2 flex-shrink-0">{isZh ? 'EN' : '中'}</span>
                             </button>
                             <div className="w-full h-px bg-white/10 my-1"></div>
                             <button onClick={() => navigate('/login')} className="w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-red-500/10 flex items-center gap-3 transition-colors">

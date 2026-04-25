@@ -256,7 +256,7 @@ export default function Setup() {
             </div>
 
             {/*  Settings Side  */}
-            <div className="w-full md:w-2/5 glass-panel rounded-3xl p-8 flex flex-col justify-center border border-white/10">
+            <div className="w-full md:w-2/5 glass-panel rounded-3xl p-8 flex flex-col justify-center border border-white/10 relative z-10">
                 <form className="space-y-6" onSubmit={handleJoin}>
                     <div>
                         <label className="block text-sm font-bold text-white/70 mb-2">{t('setup.displayName')}</label>
