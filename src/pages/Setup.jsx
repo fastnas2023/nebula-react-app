@@ -105,12 +105,32 @@ export default function Setup() {
         }
     }, [selectedVideoId, selectedAudioId]);
 
-    const toggleVideo = () => {
+    const toggleVideo = async () => {
         if (stream) {
             const videoTrack = stream.getVideoTracks()[0];
-            if (videoTrack) {
-                videoTrack.enabled = !videoTrack.enabled;
-                setIsVideoMuted(!videoTrack.enabled);
+            
+            if (videoTrack && videoTrack.readyState === 'live') {
+                // Currently ON -> Turn OFF
+                videoTrack.stop(); // Stop hardware immediately
+                setIsVideoMuted(true);
+            } else {
+                // Currently OFF -> Turn ON
+                try {
+                    const constraints = { video: selectedVideoId ? { deviceId: { exact: selectedVideoId } } : true, audio: false };
+                    const newStream = await navigator.mediaDevices.getUserMedia(constraints);
+                    const newVideoTrack = newStream.getVideoTracks()[0];
+                    
+                    // Remove old dead track and add new live one
+                    if (videoTrack) stream.removeTrack(videoTrack);
+                    stream.addTrack(newVideoTrack);
+                    
+                    if (videoRef.current) {
+                        videoRef.current.srcObject = stream;
+                    }
+                    setIsVideoMuted(false);
+                } catch (err) {
+                    console.error("Failed to turn camera back on", err);
+                }
             }
         }
     };
@@ -188,18 +208,6 @@ export default function Setup() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none"></div>
 
                     {/*  Audio Visualizer Overlay & Network Status  */}
-                    <div className="absolute bottom-6 left-6 flex items-center gap-4">
-                        <div className="glass-panel px-4 py-2 rounded-xl flex items-end gap-1.5 h-10 w-24 justify-center">
-                            <div className="audio-bar animate h-full"></div>
-                            <div className="audio-bar animate h-full"></div>
-                            <div className="audio-bar animate h-full"></div>
-                            <div className="audio-bar animate h-full"></div>
-                            <div className="audio-bar animate h-full"></div>
-                        </div>
-                        <div className="glass-panel px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-bold text-emerald-400">
-                            <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div> {t('setup.networkLatency', { time: 32 })}
-                        </div>
-                    </div>
 
                     {/*  Quick Toggles inside video  */}
                     <div className="absolute bottom-6 right-6 flex gap-3">

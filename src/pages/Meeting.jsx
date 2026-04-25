@@ -53,6 +53,8 @@ export default function Meeting() {
         let activeStream = null;
 
         const getMedia = async () => {
+            if (isVideoOff) return; // Don't even request video if it's supposed to be off
+
             try {
                 const constraints = {
                     video: selectedVideoId ? { deviceId: { exact: selectedVideoId } } : true,
@@ -62,7 +64,6 @@ export default function Meeting() {
                 activeStream = await navigator.mediaDevices.getUserMedia(constraints);
                 
                 // Apply initial mute states
-                activeStream.getVideoTracks().forEach(t => t.enabled = !isVideoOff);
                 activeStream.getAudioTracks().forEach(t => t.enabled = !isMuted);
 
                 setLocalStream(activeStream);
@@ -81,13 +82,18 @@ export default function Meeting() {
                 activeStream.getTracks().forEach(track => track.stop());
             }
         };
-    }, [selectedVideoId, selectedAudioId]);
+    }, [selectedVideoId, selectedAudioId, isVideoOff]); // Re-run when isVideoOff changes to re-acquire camera
 
     // Apply Mute State Changes to actual stream
     useEffect(() => {
         if (localStream) {
             localStream.getVideoTracks().forEach(t => t.enabled = !isVideoOff);
             localStream.getAudioTracks().forEach(t => t.enabled = !isMuted);
+            
+            // Explicitly stop the video track when muted to release the camera hardware (turn off green light)
+            if (isVideoOff) {
+                localStream.getVideoTracks().forEach(t => t.stop());
+            }
         }
     }, [isVideoOff, isMuted, localStream]);
 
