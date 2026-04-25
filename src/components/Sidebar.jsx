@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Home as HomeIcon, Calendar, Clock, Users, Settings, ChevronUp, User, CreditCard, LogOut, FolderOpen, Video as VideoIcon, Globe, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { Home as HomeIcon, Calendar, Clock, Users, Settings, ChevronUp, User, CreditCard, LogOut, FolderOpen, Video as VideoIcon, Globe, PanelLeftClose, PanelLeftOpen, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import NebulaLogo from './NebulaLogo';
 
@@ -44,15 +44,15 @@ export default function Sidebar() {
         : `font-medium text-sm whitespace-nowrap transition-all duration-300 ${isCollapsed ? 'opacity-0 w-0 hidden' : 'opacity-100 w-auto block'}`;
 
     return (
-        <aside className={`${isCollapsed ? 'w-16' : 'w-56'} h-[100dvh] glass-panel flex flex-col relative z-50 border-r border-white/5 transition-all duration-300 flex-shrink-0`}>
+        <aside className={`${isCollapsed ? 'w-16' : 'w-56'} h-[100dvh] glass-panel flex flex-col relative z-50 border-r border-white/5 transition-all duration-300 flex-shrink-0 group/sidebar`}>
             
             {/* Collapse Toggle Button */}
             <button 
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="absolute -right-3 top-8 w-6 h-6 bg-[#0a0514] border border-white/10 rounded-full flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-colors z-50 shadow-lg"
+                className="absolute -right-3.5 top-[34px] w-7 h-7 bg-[#0a0514] border border-white/10 rounded-full flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all z-50 shadow-[0_0_15px_rgba(0,0,0,0.5)] opacity-0 group-hover/sidebar:opacity-100 focus:opacity-100 hover:scale-110"
                 title={isCollapsed ? t('sidebar.expandSidebar') : t('sidebar.collapseSidebar')}
             >
-                {isCollapsed ? <PanelLeftOpen className="w-3.5 h-3.5" /> : <PanelLeftClose className="w-3.5 h-3.5" />}
+                {isCollapsed ? <ChevronRight className="w-4 h-4 ml-0.5" /> : <ChevronLeft className="w-4 h-4 mr-0.5" />}
             </button>
 
             <div className={`h-20 flex items-center justify-center ${isCollapsed ? 'px-0' : 'px-4'} border-b border-white/5 overflow-hidden`}>
