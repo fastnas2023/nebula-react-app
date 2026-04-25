@@ -159,6 +159,7 @@
     "recording": "Recording",
     "leave": "Leave",
     "you": "You",
+    "participants": "Participants",
     "joinedMeeting": "Joined the meeting",
     "roomIdLabel": "Room ID: {{id}}",
     "aiActionSummarize": "Summarize",

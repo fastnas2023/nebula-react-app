@@ -70,6 +70,7 @@ const requiredKeys = [
   'meeting.leaveMeetingDesc',
   'meeting.cancelBtn',
   'meeting.confirmLeaveBtn',
+  'meeting.participants',
   'screenshare.viewAsParticipant',
   'screenshare.viewAsPresenter',
   'screenshare.doubleClickToFullscreen',

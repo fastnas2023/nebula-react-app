@@ -159,6 +159,7 @@
     "recording": "录制中",
     "leave": "离开",
     "you": "你",
+    "participants": "成员",
     "joinedMeeting": "已加入会议",
     "roomIdLabel": "房间 ID: {{id}}",
     "aiActionSummarize": "总结",

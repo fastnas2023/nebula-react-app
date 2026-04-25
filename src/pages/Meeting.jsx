@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { UserPlus, LayoutGrid, MicOff, Mic, Video, VideoOff, MonitorUp, PhoneOff, Info, Send, Sparkles, Bot, ListTodo, FileText, AlertTriangle } from 'lucide-react';
+import { UserPlus, LayoutGrid, MicOff, Mic, Video, VideoOff, MonitorUp, PhoneOff, Info, Send, Sparkles, Bot, ListTodo, FileText, AlertTriangle, MessageSquare, Users, X, Signal } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import NebulaLogo from '../components/NebulaLogo';
 import useMediaStore from '../store/useMediaStore';
@@ -34,6 +34,8 @@ export default function Meeting() {
     
     // UI Interaction States
     const [isGalleryView, setIsGalleryView] = useState(false);
+    const [activePanel, setActivePanel] = useState('chat'); // 'chat', 'participants', 'none'
+    const [unreadCount, setUnreadCount] = useState(1); // Start with 1 unread message
     
     // Dynamic Mock Data States
     const [meetingSeconds, setMeetingSeconds] = useState(5079); // 01:24:39
@@ -345,6 +347,15 @@ export default function Meeting() {
         );
     };
 
+    const togglePanel = (panel) => {
+        if (activePanel === panel) {
+            setActivePanel('none');
+        } else {
+            setActivePanel(panel);
+            if (panel === 'chat') setUnreadCount(0);
+        }
+    };
+
     return (
         <div className="h-[100dvh] w-full font-sans antialiased flex flex-col relative overflow-hidden selection:bg-nebula-accent selection:text-white">
             
@@ -427,109 +438,155 @@ export default function Meeting() {
                 )}
             </div>
 
-            {/*  Chat Sidebar  */}
-            <div className="flex flex-col gap-4 h-full relative z-10 hidden md:flex w-80 lg:w-96">
-                <div className="glass-panel rounded-3xl p-4 border-white/5 flex-shrink-0">
-                    <div className="flex justify-between items-start mb-3">
-                        <div>
-                            <h3 className="text-sm font-bold text-white">{t('meeting.summary')}</h3>
-                            <div className="text-[10px] text-emerald-400 font-bold flex items-center gap-1 mt-0.5">
-                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></div> {t('meeting.aiNotes')}
+            {/*  Right Sidebar Panel  */}
+            {activePanel !== 'none' && (
+                <div className="flex flex-col gap-4 h-full relative z-10 w-80 lg:w-96 flex-shrink-0 animate-slide-in-right">
+                    <aside className="flex-1 glass-panel rounded-3xl flex flex-col overflow-hidden min-h-0">
+                        {/* Panel Header */}
+                        <div className="p-4 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
+                            <div className="flex items-center gap-4">
+                                <button 
+                                    onClick={() => togglePanel('chat')}
+                                    className={`text-sm font-bold transition-colors relative pb-1 ${activePanel === 'chat' ? 'text-white' : 'text-gray-500 hover:text-gray-300'}`}
+                                >
+                                    {t('meeting.messages', 'Chat')}
+                                    {activePanel === 'chat' && <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-nebula-cyan rounded-t-full"></div>}
+                                </button>
+                                <button 
+                                    onClick={() => togglePanel('participants')}
+                                    className={`text-sm font-bold transition-colors relative pb-1 ${activePanel === 'participants' ? 'text-white' : 'text-gray-500 hover:text-gray-300'}`}
+                                >
+                                    {t('meeting.participants', 'Participants')} ({participants.length})
+                                    {activePanel === 'participants' && <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-nebula-cyan rounded-t-full"></div>}
+                                </button>
                             </div>
+                            <button onClick={() => togglePanel('none')} className="text-gray-400 hover:text-white transition-colors p-1 hover:bg-white/10 rounded-lg">
+                                <X className="w-4 h-4" />
+                            </button>
                         </div>
-                    </div>
-                    <div className="bg-black/50 rounded-xl p-3 border border-white/10">
-                        <p className="text-xs text-gray-300 leading-relaxed line-clamp-2">
-                            <span className="text-nebula-cyan font-bold">Sarah:</span> "So the consensus is we'll move forward with the Nebula aesthetic..."
-                        </p>
-                    </div>
-                </div>
 
-                <aside className="flex-1 glass-panel rounded-3xl flex flex-col overflow-hidden min-h-0">
-                    <div className="p-5 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
-                        <h2 className="font-display font-bold text-lg text-white">{t('meeting.messages')}</h2>
-                    </div>
-                    <div className="flex-1 overflow-y-auto p-5 space-y-6 flex flex-col relative hide-scrollbar">
-                        {messages.map((msg) => (
-                            <div key={msg.id} className={`flex gap-3 ${msg.isAi ? 'bg-emerald-500/5 p-4 rounded-2xl border border-emerald-500/10 shadow-[inset_0_0_20px_rgba(16,185,129,0.05)]' : ''}`}>
-                                {msg.isAi ? (
-                                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-500 to-nebula-cyan flex items-center justify-center flex-shrink-0 mt-1 shadow-lg shadow-emerald-500/20">
-                                        <Sparkles className="w-4 h-4 text-white" />
-                                    </div>
-                                ) : (
-                                    <img src={msg.avatar} className="w-8 h-8 rounded-full mt-1 opacity-80 flex-shrink-0 object-cover" />
-                                )}
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex items-baseline gap-2 mb-1">
-                                        <span className={`font-bold text-sm ${msg.isAi ? 'text-emerald-400 font-display' : 'text-white'}`}>{msg.sender}</span>
-                                        <span className="text-[10px] text-gray-400 font-bold">{msg.time}</span>
-                                    </div>
-                                    <div className={`text-sm leading-relaxed p-3 rounded-2xl rounded-tl-sm inline-block font-medium break-words w-full ${msg.isAi ? 'text-white bg-transparent p-0 whitespace-pre-line' : 'text-gray-200 bg-white/10 border border-white/10 max-w-[240px]'}`}>
-                                        {msg.text}
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                        {isAiThinking && (
-                            <div className="flex gap-3 bg-emerald-500/5 p-4 rounded-2xl border border-emerald-500/10">
-                                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-500 to-nebula-cyan flex items-center justify-center flex-shrink-0 shadow-lg shadow-emerald-500/20">
-                                    <Sparkles className="w-4 h-4 text-white animate-spin" style={{ animationDuration: '3s' }} />
-                                </div>
-                                <div>
-                                    <div className="flex items-baseline gap-2 mb-1">
-                                        <span className="font-bold text-sm text-emerald-400 font-display">Nebula AI</span>
-                                    </div>
-                                    <div className="flex gap-1.5 items-center h-5">
-                                        <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce"></div>
-                                        <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                                        <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
-                                    </div>
+                        {/* Participants List Content */}
+                        {activePanel === 'participants' && (
+                            <div className="flex-1 overflow-y-auto p-2 hide-scrollbar">
+                                <div className="space-y-1">
+                                    {participants.map(p => (
+                                        <div key={p.id} className="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors group">
+                                            <div className="flex items-center gap-3">
+                                                {p.avatar && p.avatar.length > 1 ? (
+                                                    <img src={p.avatar} className="w-8 h-8 rounded-full object-cover border border-white/10" />
+                                                ) : (
+                                                    <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center border border-white/10">
+                                                        <span className="font-display font-bold text-white/50 text-xs">{p.avatar || p.name.charAt(0)}</span>
+                                                    </div>
+                                                )}
+                                                <div>
+                                                    <div className="text-sm font-bold text-white/90">{p.name} {p.isLocal && <span className="text-xs font-normal text-white/40 ml-1">({t('meeting.you')})</span>}</div>
+                                                    <div className="text-[10px] text-emerald-400 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <Signal className="w-3 h-3" /> {Math.floor(Math.random() * 20 + 20)}ms
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${p.isMuted ? 'text-red-400 bg-red-500/10' : (p.id === activeSpeakerId ? 'text-emerald-400 bg-emerald-500/10' : 'text-white/50 bg-white/5')}`}>
+                                                    {p.isMuted ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
+                                                </div>
+                                                <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${p.isLocal && isVideoOff ? 'text-red-400 bg-red-500/10' : 'text-white/50 bg-white/5'}`}>
+                                                    {(p.isLocal && isVideoOff) ? <VideoOff className="w-3.5 h-3.5" /> : <Video className="w-3.5 h-3.5" />}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         )}
-                        <div ref={messagesEndRef} />
-                    </div>
-                    
-                    <div className="p-4 border-t border-white/5 bg-black/20 flex flex-col gap-3">
-                        {/* AI Quick Actions */}
-                        <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-1">
-                            <div className="flex items-center justify-center bg-white/10 rounded-full px-2 text-gray-300">
-                                <Bot className="w-3.5 h-3.5" />
-                            </div>
-                            {aiActions.map(action => (
-                                <button 
-                                    key={action.id}
-                                    onClick={() => handleAiAction(action)}
-                                    disabled={isAiThinking}
-                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-400 text-xs font-bold whitespace-nowrap transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    {action.icon} {action.label}
-                                </button>
-                            ))}
-                        </div>
 
-                        {/* Input Box */}
-                        <div className="relative flex items-center">
-                            <input 
-                                type="text" 
-                                placeholder={t('meeting.sendPlaceholder')} 
-                                value={newMessage}
-                                onChange={(e) => setNewMessage(e.target.value)}
-                                onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                                disabled={isAiThinking}
-                                className="w-full bg-white/10 border border-white/20 rounded-xl py-3.5 pl-4 pr-14 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-nebula-purple/50 transition-all disabled:opacity-50" 
-                            />
-                            <button 
-                                onClick={handleSendMessage}
-                                disabled={isAiThinking || !newMessage.trim()}
-                                className="absolute right-2 w-10 h-10 rounded-lg bg-nebula-cyan/20 hover:bg-nebula-cyan/40 text-nebula-cyan flex items-center justify-center transition-colors disabled:opacity-50 disabled:hover:bg-nebula-cyan/20"
-                            >
-                                <Send className="w-4 h-4" />
-                            </button>
-                        </div>
-                    </div>
-                </aside>
-            </div>
+                        {/* Chat Content */}
+                        {activePanel === 'chat' && (
+                            <>
+                                <div className="flex-1 overflow-y-auto p-5 space-y-6 flex flex-col relative hide-scrollbar">
+                                    {messages.map((msg) => (
+                                        <div key={msg.id} className={`flex gap-3 ${msg.isAi ? 'bg-emerald-500/5 p-4 rounded-2xl border border-emerald-500/10 shadow-[inset_0_0_20px_rgba(16,185,129,0.05)]' : ''}`}>
+                                            {msg.isAi ? (
+                                                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-500 to-nebula-cyan flex items-center justify-center flex-shrink-0 mt-1 shadow-lg shadow-emerald-500/20">
+                                                    <Sparkles className="w-4 h-4 text-white" />
+                                                </div>
+                                            ) : (
+                                                <img src={msg.avatar} className="w-8 h-8 rounded-full mt-1 opacity-80 flex-shrink-0 object-cover" />
+                                            )}
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-baseline gap-2 mb-1">
+                                                    <span className={`font-bold text-sm ${msg.isAi ? 'text-emerald-400 font-display' : 'text-white'}`}>{msg.sender}</span>
+                                                    <span className="text-[10px] text-gray-400 font-bold">{msg.time}</span>
+                                                </div>
+                                                <div className={`text-sm leading-relaxed p-3 rounded-2xl rounded-tl-sm inline-block font-medium break-words w-full ${msg.isAi ? 'text-white bg-transparent p-0 whitespace-pre-line' : 'text-gray-200 bg-white/10 border border-white/10 max-w-[240px]'}`}>
+                                                    {msg.text}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {isAiThinking && (
+                                        <div className="flex gap-3 bg-emerald-500/5 p-4 rounded-2xl border border-emerald-500/10">
+                                            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-500 to-nebula-cyan flex items-center justify-center flex-shrink-0 shadow-lg shadow-emerald-500/20">
+                                                <Sparkles className="w-4 h-4 text-white animate-spin" style={{ animationDuration: '3s' }} />
+                                            </div>
+                                            <div>
+                                                <div className="flex items-baseline gap-2 mb-1">
+                                                    <span className="font-bold text-sm text-emerald-400 font-display">Nebula AI</span>
+                                                </div>
+                                                <div className="flex gap-1.5 items-center h-5">
+                                                    <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce"></div>
+                                                    <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                                                    <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                    <div ref={messagesEndRef} />
+                                </div>
+                                
+                                <div className="p-4 border-t border-white/5 bg-black/20 flex flex-col gap-3">
+                                    {/* AI Quick Actions */}
+                                    <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-1">
+                                        <div className="flex items-center justify-center bg-white/10 rounded-full px-2 text-gray-300">
+                                            <Bot className="w-3.5 h-3.5" />
+                                        </div>
+                                        {aiActions.map(action => (
+                                            <button 
+                                                key={action.id}
+                                                onClick={() => handleAiAction(action)}
+                                                disabled={isAiThinking}
+                                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-400 text-xs font-bold whitespace-nowrap transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                            >
+                                                {action.icon} {action.label}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    {/* Input Box */}
+                                    <div className="relative flex items-center">
+                                        <input 
+                                            type="text" 
+                                            placeholder={t('meeting.sendPlaceholder')} 
+                                            value={newMessage}
+                                            onChange={(e) => setNewMessage(e.target.value)}
+                                            onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                                            disabled={isAiThinking}
+                                            className="w-full bg-white/10 border border-white/20 rounded-xl py-3.5 pl-4 pr-14 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-nebula-purple/50 transition-all disabled:opacity-50" 
+                                        />
+                                        <button 
+                                            onClick={handleSendMessage}
+                                            disabled={isAiThinking || !newMessage.trim()}
+                                            className="absolute right-2 w-10 h-10 rounded-lg bg-nebula-cyan/20 hover:bg-nebula-cyan/40 text-nebula-cyan flex items-center justify-center transition-colors disabled:opacity-50 disabled:hover:bg-nebula-cyan/20"
+                                        >
+                                            <Send className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                </div>
+                            </>
+                        )}
+                    </aside>
+                </div>
+            )}
         </main>
 
         {/*  Control Bar  */}
@@ -579,7 +636,25 @@ export default function Meeting() {
             </div>
 
             <div className="flex items-center gap-3">
-                <button className="glass-button w-10 h-10 rounded-xl flex items-center justify-center text-gray-300 hover:text-white transition-colors">
+                <button 
+                    onClick={() => togglePanel('participants')}
+                    className={`glass-button w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${activePanel === 'participants' ? 'bg-white/20 text-white' : 'text-gray-300 hover:text-white hover:bg-white/10'}`}
+                    title={t('meeting.participants', 'Participants')}
+                >
+                    <Users className="w-4 h-4" />
+                </button>
+                <button 
+                    onClick={() => togglePanel('chat')}
+                    className={`glass-button w-10 h-10 rounded-xl flex items-center justify-center relative transition-colors ${activePanel === 'chat' ? 'bg-white/20 text-white' : 'text-gray-300 hover:text-white hover:bg-white/10'}`}
+                    title={t('meeting.messages', 'Chat')}
+                >
+                    <MessageSquare className="w-4 h-4" />
+                    {unreadCount > 0 && activePanel !== 'chat' && (
+                        <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-[#030108]"></span>
+                    )}
+                </button>
+                <div className="w-px h-6 bg-white/10 mx-1"></div>
+                <button className="glass-button w-10 h-10 rounded-xl flex items-center justify-center text-gray-300 hover:text-white hover:bg-white/10 transition-colors">
                     <Info className="w-4 h-4" />
                 </button>
             </div>
