@@ -39,6 +39,7 @@ export default function Meeting() {
     const [meetingSeconds, setMeetingSeconds] = useState(5079); // 01:24:39
     const [latency, setLatency] = useState(32);
     const [audioLevels, setAudioLevels] = useState([30, 60, 40]);
+    const [activeSpeakerId, setActiveSpeakerId] = useState('p1');
     
     const messagesEndRef = useRef(null);
     const localVideoRef = useRef(null);
@@ -130,12 +131,23 @@ export default function Meeting() {
             ]);
         }, 150);
 
+        // 4. Random Active Speaker Generator
+        const speakerInterval = setInterval(() => {
+            const candidates = ['p1', 'p2', 'p3'];
+            // Add local user to candidates if not muted
+            if (!isMuted) candidates.push('local');
+            
+            const nextSpeaker = candidates[Math.floor(Math.random() * candidates.length)];
+            setActiveSpeakerId(nextSpeaker);
+        }, 8000);
+
         return () => {
             clearInterval(timeInterval);
             clearInterval(latencyInterval);
             clearInterval(audioInterval);
+            clearInterval(speakerInterval);
         };
-    }, []);
+    }, [isMuted]);
 
     const formatTime = (totalSeconds) => {
         const h = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
@@ -187,6 +199,94 @@ export default function Meeting() {
         { id: 'summary', icon: <FileText className="w-3 h-3" />, label: t('meeting.aiActionSummarize'), response: "Here is a quick summary: David presented the new glassmorphism UI. Elena agreed it looks great. Next step: Finalize the color palette." },
         { id: 'action', icon: <ListTodo className="w-3 h-3" />, label: t('meeting.aiActionItems'), response: "1. David: Share the Figma link.\n2. You: Update the CSS variables.\n3. Elena: Review the mobile layout." },
     ];
+
+    const participants = [
+        { id: 'p1', name: 'Sarah Jenkins', isMuted: false, avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=100', videoBg: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=1600' },
+        { id: 'p2', name: 'David Chen', isMuted: true, avatar: null, videoBg: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=800' },
+        { id: 'p3', name: 'Elena Rodriguez', isMuted: false, avatar: null, videoBg: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=800' },
+        { id: 'local', name: `${t('meeting.you')} (${displayName})`, isMuted: isMuted, isLocal: true, avatar: displayName ? displayName.charAt(0).toUpperCase() : '?' }
+    ];
+
+    const activeSpeaker = participants.find(p => p.id === activeSpeakerId) || participants[0];
+    const thumbnailParticipants = participants.filter(p => p.id !== activeSpeakerId);
+
+    const renderParticipantTile = (p, isMain = false) => {
+        const isSpeaking = p.id === activeSpeakerId;
+        
+        return (
+            <div 
+                key={p.id}
+                className={`video-tile relative group bg-black flex-shrink-0 rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 flex items-center justify-center ${isMain ? (isGalleryView ? '' : 'h-full w-full') : (isGalleryView ? '' : 'w-[240px] lg:w-full aspect-video')} ${isSpeaking ? 'border-2 border-emerald-500/80 shadow-[0_0_30px_rgba(16,185,129,0.2)]' : 'border border-white/5'}`}
+                style={isGalleryView && galleryLayout.width > 0 ? { width: `${galleryLayout.width}px`, height: `${galleryLayout.height}px`, borderRadius: '1.5rem' } : {}}
+            >
+                {isSpeaking && !isGalleryView && <div className="voice-reactive-border"></div>}
+                
+                {p.isLocal ? (
+                    <>
+                        <video 
+                            ref={localVideoRef}
+                            autoPlay 
+                            playsInline 
+                            muted // Always mute local playback to prevent echo
+                            className={`w-full h-full object-cover transition-opacity duration-300 ${isVideoOff ? 'opacity-0' : 'opacity-100'} scale-x-[-1] bg-[#030108]`} 
+                        />
+                        {isVideoOff && (
+                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0a0514]">
+                                <div className={`${isMain && !isGalleryView ? 'w-24 h-24 text-4xl' : 'w-12 h-12 text-lg'} rounded-full bg-white/5 flex items-center justify-center border border-white/10 mb-2`}>
+                                    <span className="font-display font-bold text-white/50">{p.avatar}</span>
+                                </div>
+                            </div>
+                        )}
+                    </>
+                ) : (
+                    <img src={p.videoBg} className={`w-full h-full object-contain bg-[#030108] ${isMain && !isGalleryView ? 'opacity-90' : 'opacity-90'}`} alt={p.name} />
+                )}
+
+                <div className={`absolute inset-0 bg-gradient-to-t ${isMain && !isGalleryView ? 'from-black/80 via-transparent to-black/20' : 'from-black/80 via-transparent to-transparent'} pointer-events-none`}></div>
+                
+                {/* User Info Badge */}
+                <div className={`absolute ${isMain && !isGalleryView ? 'bottom-6 left-6' : 'bottom-3 left-3'} flex items-center gap-3 z-10`}>
+                    {isMain && !isGalleryView && p.avatar && p.avatar.length > 1 && (
+                        <div className="rounded-full glass-panel p-1 relative w-12 h-12">
+                            {isSpeaking && <div className="absolute inset-0 rounded-full border-2 border-emerald-400 animate-ping opacity-50"></div>}
+                            <img src={p.avatar} className="w-full h-full rounded-full object-cover relative z-10" />
+                        </div>
+                    )}
+                    <div>
+                        <div className={`font-display font-bold text-white drop-shadow-md ${isMain && !isGalleryView ? 'text-lg' : 'text-sm'}`}>{p.name}</div>
+                        {isSpeaking && isMain && !isGalleryView && (
+                            <div className="text-emerald-300 font-bold drop-shadow flex items-center gap-1.5 text-sm mt-1">
+                                <div className="flex items-end gap-[1px] h-2.5">
+                                    <div className="w-[3px] bg-emerald-400 rounded-full transition-all duration-100" style={{ height: `${audioLevels[0]}%` }}></div>
+                                    <div className="w-[3px] bg-emerald-400 rounded-full transition-all duration-100" style={{ height: `${audioLevels[1]}%` }}></div>
+                                    <div className="w-[3px] bg-emerald-400 rounded-full transition-all duration-100" style={{ height: `${audioLevels[2]}%` }}></div>
+                                </div>
+                                {t('meeting.speaking')}
+                            </div>
+                        )}
+                    </div>
+                </div>
+                
+                {/* Top Right Status Icons */}
+                <div className={`absolute ${isMain && !isGalleryView ? 'top-6 right-6' : 'top-3 right-3'} flex gap-2 z-10`}>
+                    {(!isMain || isGalleryView) && (
+                        <div className={`glass-panel ${isMain ? 'w-9 h-9' : 'w-7 h-7'} rounded-full flex items-center justify-center backdrop-blur-md transition-colors ${p.isMuted ? 'text-red-400 bg-red-500/10 border-red-500/20' : (isSpeaking ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' : 'text-white/70')}`}>
+                            {p.isMuted ? <MicOff className={isMain ? "w-4 h-4" : "w-3.5 h-3.5"} /> : <Mic className={isMain ? "w-4 h-4" : "w-3.5 h-3.5"} />}
+                        </div>
+                    )}
+                </div>
+
+                {/* Recording Badge on Main View Only */}
+                {isMain && !isGalleryView && (
+                    <div className="absolute top-6 left-6 flex gap-2 z-10">
+                        <div className="glass-panel px-3 py-1.5 rounded-full flex items-center gap-2 text-[10px] font-bold text-white/90 border-red-500/30 bg-red-500/10">
+                            <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]"></div> {t('meeting.recording')}
+                        </div>
+                    </div>
+                )}
+            </div>
+        );
+    };
 
     return (
         <div className="h-[100dvh] w-full font-sans antialiased flex flex-col relative overflow-hidden selection:bg-nebula-accent selection:text-white">
@@ -251,110 +351,23 @@ export default function Meeting() {
                 ref={galleryContainerRef}
                 className={`flex-1 flex gap-4 h-full relative z-10 ${isGalleryView ? 'flex-wrap justify-center content-center overflow-y-auto hide-scrollbar' : 'flex-col lg:flex-row'}`}
             >
-                
-                {/*  Active Speaker / Main Video (Takes up majority of space)  */}
-                <div 
-                    className={`${isGalleryView ? 'flex-shrink-0' : 'flex-[3] min-h-0'} relative transition-all duration-500`}
-                    style={isGalleryView && galleryLayout.width > 0 ? { width: `${galleryLayout.width}px`, height: `${galleryLayout.height}px` } : {}}
-                >
-                    <div className="voice-reactive-border"></div>
-                    <div className="video-tile speaking relative group h-full w-full bg-[#030108] rounded-3xl overflow-hidden shadow-2xl border border-white/5 flex items-center justify-center">
-                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=1600" className="w-full h-full object-contain opacity-90" alt="Main speaker" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20"></div>
-                        
-                        <div className="absolute bottom-6 left-6 flex items-center gap-3 z-10">
-                            <div className={`rounded-full glass-panel p-1 relative ${isGalleryView ? 'w-8 h-8' : 'w-12 h-12'}`}>
-                                <div className="absolute inset-0 rounded-full border-2 border-emerald-400 animate-ping opacity-50"></div>
-                                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=100" className="w-full h-full rounded-full object-cover relative z-10" />
-                            </div>
-                            <div>
-                                <div className={`font-display font-bold text-white drop-shadow-md ${isGalleryView ? 'text-sm' : 'text-lg'}`}>Sarah Jenkins</div>
-                                <div className={`text-emerald-300 font-bold drop-shadow flex items-center gap-1.5 ${isGalleryView ? 'text-xs' : 'text-sm'}`}>
-                                    <div className="flex items-end gap-[1px] h-2.5">
-                                        <div className="w-[3px] bg-emerald-400 rounded-full transition-all duration-100" style={{ height: `${audioLevels[0]}%` }}></div>
-                                        <div className="w-[3px] bg-emerald-400 rounded-full transition-all duration-100" style={{ height: `${audioLevels[1]}%` }}></div>
-                                        <div className="w-[3px] bg-emerald-400 rounded-full transition-all duration-100" style={{ height: `${audioLevels[2]}%` }}></div>
-                                    </div>
-                                    {t('meeting.speaking')}
-                                </div>
-                            </div>
+                {isGalleryView ? (
+                    // Gallery View: Render everyone equally
+                    participants.map(p => renderParticipantTile(p, true))
+                ) : (
+                    // Speaker View: Render active speaker as main, others as thumbnails
+                    <>
+                        <div 
+                            className={`flex-[3] min-h-0 relative transition-all duration-500`}
+                        >
+                            {renderParticipantTile(activeSpeaker, true)}
                         </div>
-                        
-                        <div className="absolute top-6 left-6 flex gap-2 z-10">
-                            <div className="glass-panel px-3 py-1.5 rounded-full flex items-center gap-2 text-[10px] font-bold text-white/90 border-red-500/30 bg-red-500/10">
-                                <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]"></div> {t('meeting.recording')}
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                {/*  Thumbnail Strip (Stack vertically on desktop, horizontally on mobile)  */}
-                <div className={`${isGalleryView ? 'contents' : 'flex-1 flex lg:flex-col gap-4 overflow-x-auto lg:overflow-y-auto min-h-0 snap-x lg:snap-y snap-mandatory pb-2 lg:pb-0 lg:pr-2 hide-scrollbar'}`}>
-                    
-                    {/* Thumbnail 1 */}
-                    <div 
-                        className={`video-tile relative group bg-black flex-shrink-0 ${isGalleryView ? '' : 'w-[240px] lg:w-full aspect-video'} snap-center rounded-2xl overflow-hidden shadow-lg border border-white/5 transition-all duration-500`}
-                        style={isGalleryView && galleryLayout.width > 0 ? { width: `${galleryLayout.width}px`, height: `${galleryLayout.height}px` } : {}}
-                    >
-                        <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-contain bg-[#030108] opacity-90" alt="Participant 1" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                        <div className="absolute bottom-3 left-3">
-                            <div className="font-display font-bold text-white text-sm">David Chen</div>
+                        <div className={`flex-1 flex lg:flex-col gap-4 overflow-x-auto lg:overflow-y-auto min-h-0 snap-x lg:snap-y snap-mandatory pb-2 lg:pb-0 lg:pr-2 hide-scrollbar`}>
+                            {thumbnailParticipants.map(p => renderParticipantTile(p, false))}
                         </div>
-                        <div className="absolute top-3 right-3 flex gap-2">
-                            <div className="glass-panel w-7 h-7 rounded-full flex items-center justify-center text-red-400 bg-red-500/10 border-red-500/20 backdrop-blur-md">
-                                <MicOff className="w-3.5 h-3.5" />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Thumbnail 2 */}
-                    <div 
-                        className={`video-tile relative group bg-black flex-shrink-0 ${isGalleryView ? '' : 'w-[240px] lg:w-full aspect-video'} snap-center rounded-2xl overflow-hidden shadow-lg border border-white/5 transition-all duration-500`}
-                        style={isGalleryView && galleryLayout.width > 0 ? { width: `${galleryLayout.width}px`, height: `${galleryLayout.height}px` } : {}}
-                    >
-                        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-contain bg-[#030108] opacity-90" alt="Participant 2" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                        <div className="absolute bottom-3 left-3">
-                            <div className="font-display font-bold text-white text-sm">Elena Rodriguez</div>
-                        </div>
-                        <div className="absolute top-3 right-3 glass-panel w-7 h-7 rounded-full flex items-center justify-center text-white/70">
-                            <Mic className="w-3.5 h-3.5" />
-                        </div>
-                    </div>
-
-                    {/* Thumbnail 3 (Self) */}
-                    <div 
-                        className={`video-tile relative group bg-black flex-shrink-0 ${isGalleryView ? '' : 'w-[240px] lg:w-full aspect-video'} snap-center rounded-2xl overflow-hidden shadow-lg ${isGalleryView ? 'border-white/5' : 'border-emerald-500/30'} transition-all duration-500 flex items-center justify-center`}
-                        style={isGalleryView && galleryLayout.width > 0 ? { width: `${galleryLayout.width}px`, height: `${galleryLayout.height}px` } : {}}
-                    >
-                        
-                        <video 
-                            ref={localVideoRef}
-                            autoPlay 
-                            playsInline 
-                            muted // Always mute local playback to prevent echo
-                            className={`w-full h-full object-cover transition-opacity duration-300 ${isVideoOff ? 'opacity-0' : 'opacity-100'} scale-x-[-1] bg-[#030108]`} 
-                        />
-                        
-                        {isVideoOff && (
-                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0a0514]">
-                                <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center border border-white/10 mb-2">
-                                    <span className="text-lg font-display font-bold text-white/50">{displayName ? displayName.charAt(0).toUpperCase() : '?'}</span>
-                                </div>
-                            </div>
-                        )}
-
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
-                        <div className="absolute bottom-3 left-3">
-                            <div className="font-display font-bold text-white text-sm">{t('meeting.you')} ({displayName})</div>
-                        </div>
-                        <div className={`absolute top-3 right-3 glass-panel w-7 h-7 rounded-full flex items-center justify-center backdrop-blur-md transition-colors ${isMuted ? 'text-red-400 bg-red-500/10 border-red-500/20' : 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'}`}>
-                            {isMuted ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
-                        </div>
-                    </div>
-
-                </div>
+                    </>
+                )}
             </div>
 
             {/*  Chat Sidebar  */}
