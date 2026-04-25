@@ -80,9 +80,9 @@ export default function Sidebar() {
                         </div>
                     )}
                 </Link>
-                <Link to="/recording" className={`${navLinkClass('/recording')} relative group/tooltip`}>
-                    <FolderOpen className={iconClass('/recording')} />
-                    <span className={textClass('/recording')}>{t('sidebar.recordings')}</span>
+                <Link to="/recordings" className={`${navLinkClass('/recordings')} relative group/tooltip`}>
+                    <FolderOpen className={iconClass('/recordings')} />
+                    <span className={textClass('/recordings')}>{t('sidebar.recordings')}</span>
                     {isCollapsed && (
                         <div className="absolute left-full ml-4 px-3 py-1.5 bg-black/90 border border-white/10 text-white text-xs font-bold rounded-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition-opacity duration-200 whitespace-nowrap z-[100] shadow-xl">
                             {t('sidebar.recordings')}

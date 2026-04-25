@@ -8,6 +8,7 @@ import Meeting from './pages/Meeting';
 import Profile from './pages/Profile';
 import Contacts from './pages/Contacts';
 import Recording from './pages/Recording';
+import Recordings from './pages/Recordings';
 import Schedule from './pages/Schedule';
 import Screenshare from './pages/Screenshare';
 import Settings from './pages/Settings';
@@ -26,6 +27,7 @@ export default function App() {
                 <Route path="/meeting" element={<Meeting />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/contacts" element={<Contacts />} />
+                <Route path="/recordings" element={<Recordings />} />
                 <Route path="/recording" element={<Recording />} />
                 <Route path="/schedule" element={<Schedule />} />
                 <Route path="/screenshare" element={<Screenshare />} />
