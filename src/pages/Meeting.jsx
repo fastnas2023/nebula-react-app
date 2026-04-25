@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { UserPlus, LayoutGrid, MicOff, Mic, Video, VideoOff, MonitorUp, PhoneOff, Info, Send, Sparkles, Bot, ListTodo, FileText, AlertTriangle, MessageSquare, Users, X, Signal, ChevronUp, Hand, Smile, Maximize, Minimize, MoreVertical, Pin, EyeOff } from 'lucide-react';
+import { UserPlus, LayoutGrid, MicOff, Mic, Video, VideoOff, MonitorUp, PhoneOff, Info, Send, Sparkles, Bot, ListTodo, FileText, AlertTriangle, MessageSquare, Users, X, Signal, ChevronUp, Hand, Smile, Maximize, Minimize, MoreVertical, Pin, EyeOff, Link as LinkIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import NebulaLogo from '../components/NebulaLogo';
 import useMediaStore from '../store/useMediaStore';
@@ -36,6 +36,9 @@ export default function Meeting() {
     const [isGalleryView, setIsGalleryView] = useState(false);
     const [activePanel, setActivePanel] = useState('chat'); // 'chat', 'participants', 'none'
     const [unreadCount, setUnreadCount] = useState(1); // Start with 1 unread message
+    const [isFullscreen, setIsFullscreen] = useState(false);
+    const [showRecordingToast, setShowRecordingToast] = useState(true);
+    const [showLinkCopiedToast, setShowLinkCopiedToast] = useState(false);
     
     // Dynamic Mock Data States
     const [meetingSeconds, setMeetingSeconds] = useState(5079); // 01:24:39
@@ -356,6 +359,26 @@ export default function Meeting() {
         }
     };
 
+    const toggleFullscreen = () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(err => {
+                console.error(`Error attempting to enable fullscreen: ${err.message}`);
+            });
+            setIsFullscreen(true);
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+                setIsFullscreen(false);
+            }
+        }
+    };
+
+    const copyInviteLink = () => {
+        navigator.clipboard.writeText('https://nebula.meeting/room/NBL-8X92-K');
+        setShowLinkCopiedToast(true);
+        setTimeout(() => setShowLinkCopiedToast(false), 3000);
+    };
+
     return (
         <div className="h-[100dvh] w-full font-sans antialiased flex flex-col relative overflow-hidden selection:bg-nebula-accent selection:text-white">
             
@@ -376,6 +399,39 @@ export default function Meeting() {
         </div>
     )}
 
+    {showRecordingToast && (
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[60] animate-slide-in pointer-events-auto flex items-center gap-3">
+            <div className="glass-panel rounded-full py-2 px-4 flex items-center gap-3 border-red-500/30 bg-red-500/10 shadow-lg shadow-red-500/10">
+                <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                <span className="text-sm font-bold text-white/90">{t('meeting.recordingStarted')}</span>
+                <div className="w-px h-4 bg-white/20 mx-1"></div>
+                <button 
+                    onClick={() => setShowRecordingToast(false)} 
+                    className="text-xs text-white/60 hover:text-white transition-colors"
+                >
+                    <X className="w-3.5 h-3.5" />
+                </button>
+            </div>
+            <button 
+                onClick={() => setShowLeaveConfirm(true)}
+                className="glass-panel py-2 px-4 rounded-full text-sm font-bold text-red-400 hover:bg-red-500/20 hover:text-red-300 border border-red-500/30 transition-all shadow-lg shadow-red-500/10"
+            >
+                {t('meeting.leave')}
+            </button>
+        </div>
+    )}
+
+    {showLinkCopiedToast && (
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[70] animate-slide-in pointer-events-auto">
+            <div className="glass-panel rounded-full py-2 px-4 flex items-center gap-2 border-emerald-500/30 bg-emerald-500/10 shadow-lg shadow-emerald-500/10">
+                <div className="w-4 h-4 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                    <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
+                </div>
+                <span className="text-sm font-bold text-white/90">{t('meeting.linkCopied')}</span>
+            </div>
+        </div>
+    )}
+
     <div className="relative z-10 flex flex-col h-full w-full p-4 lg:p-6 gap-6">
         
         {/*  Header  */}
@@ -390,6 +446,13 @@ export default function Meeting() {
                         <span className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></div> {formatTime(meetingSeconds)}</span>
                         <span>•</span>
                         <span>{t('meeting.roomIdLabel', { id: 'NBL-8X92-K' })}</span>
+                        <button 
+                            onClick={copyInviteLink} 
+                            className="ml-1 text-white/40 hover:text-white transition-colors"
+                            title={t('meeting.copyLink')}
+                        >
+                            <LinkIcon className="w-3 h-3" />
+                        </button>
                     </div>
                 </div>
             </div>
@@ -407,6 +470,13 @@ export default function Meeting() {
                     title={isGalleryView ? "Speaker View" : "Gallery View"}
                 >
                     <LayoutGrid className="w-4 h-4" />
+                </button>
+                <button 
+                    onClick={toggleFullscreen}
+                    className="glass-button w-9 h-9 rounded-xl flex items-center justify-center text-gray-300 hover:text-white transition-colors"
+                    title={isFullscreen ? t('meeting.exitOsFullscreen') : t('meeting.osFullscreen')}
+                >
+                    {isFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
                 </button>
             </div>
         </header>

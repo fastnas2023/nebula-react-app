@@ -125,7 +125,11 @@
     "planAhead": "Plan ahead",
     "searchPlaceholder": "Search meetings, contacts, or recordings...",
     "meetingSummary": "You have {{count}} meetings scheduled for today. Ready to connect?",
-    "viewAll": "View All"
+    "viewAll": "View All",
+    "history": "Recordings & History",
+    "duration": "Duration",
+    "participants": "Participants",
+    "play": "Play Recording"
   },
   "setup": {
     "title": "Ready to join?",
@@ -136,6 +140,7 @@
     "microphone": "Microphone",
     "advancedSettings": "Advanced Audio & Video",
     "joinBtn": "Join Meeting",
+    "waitingRoom": "Waiting for the host to let you in...",
     "virtualBackground": "Virtual Background",
     "networkLatency": "{{time}}ms Latency",
     "cameraOff": "Camera is off",
@@ -157,6 +162,11 @@
     "sendPlaceholder": "Send a message...",
     "speaking": "Speaking...",
     "recording": "Recording",
+    "recordingStarted": "Meeting recording has started. Please be aware of your privacy.",
+    "copyLink": "Copy Link",
+    "linkCopied": "Invite link copied to clipboard!",
+    "osFullscreen": "OS Fullscreen",
+    "exitOsFullscreen": "Exit OS Fullscreen",
     "leave": "Leave",
     "you": "You",
     "participants": "Participants",

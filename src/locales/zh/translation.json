@@ -125,7 +125,11 @@
     "planAhead": "提前规划",
     "searchPlaceholder": "搜索会议、联系人或录像...",
     "meetingSummary": "你今天有 {{count}} 场会议安排。准备开始连接了吗？",
-    "viewAll": "查看全部"
+    "viewAll": "查看全部",
+    "history": "历史会议与录像",
+    "duration": "时长",
+    "participants": "参会人数",
+    "play": "播放录像"
   },
   "setup": {
     "title": "准备好加入了？",
@@ -134,6 +138,7 @@
     "camera": "摄像头",
     "microphone": "麦克风",
     "joinBtn": "加入会议",
+    "waitingRoom": "正在等待主持人允许您加入...",
     "backToHome": "返回主页",
     "virtualBackground": "虚拟背景",
     "advancedSettings": "高级设置",
@@ -157,6 +162,11 @@
     "sendPlaceholder": "发送消息...",
     "speaking": "正在讲话...",
     "recording": "录制中",
+    "recordingStarted": "会议录制已开始，请注意隐私。",
+    "copyLink": "复制链接",
+    "linkCopied": "邀请链接已复制到剪贴板！",
+    "osFullscreen": "全屏模式",
+    "exitOsFullscreen": "退出全屏",
     "leave": "离开",
     "you": "你",
     "participants": "成员",
