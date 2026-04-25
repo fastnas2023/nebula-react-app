@@ -4,6 +4,7 @@ import { UserPlus, LayoutGrid, MicOff, Mic, Video, VideoOff, MonitorUp, PhoneOff
 import { useTranslation } from 'react-i18next';
 import NebulaLogo from '../components/NebulaLogo';
 import useMediaStore from '../store/useMediaStore';
+import useGalleryLayout from '../hooks/useGalleryLayout';
 
 export default function Meeting() {
     const navigate = useNavigate();
@@ -42,6 +43,9 @@ export default function Meeting() {
     const messagesEndRef = useRef(null);
     const localVideoRef = useRef(null);
     const [localStream, setLocalStream] = useState(null);
+    
+    // Dynamic Layout Engine for Gallery View
+    const { containerRef: galleryContainerRef, layout: galleryLayout } = useGalleryLayout(4, 16 / 9, 16);
 
     // Request WebRTC Media Stream
     useEffect(() => {
@@ -243,10 +247,16 @@ export default function Meeting() {
         <main className="flex-1 flex gap-6 min-h-0 relative">
             
             {/*  Video Grid (Dynamic Flex/Grid based on content)  */}
-            <div className={`flex-1 flex gap-4 h-full relative z-10 ${isGalleryView ? 'flex-wrap content-start overflow-y-auto hide-scrollbar' : 'flex-col lg:flex-row'}`}>
+            <div 
+                ref={galleryContainerRef}
+                className={`flex-1 flex gap-4 h-full relative z-10 ${isGalleryView ? 'flex-wrap justify-center content-center overflow-y-auto hide-scrollbar' : 'flex-col lg:flex-row'}`}
+            >
                 
                 {/*  Active Speaker / Main Video (Takes up majority of space)  */}
-                <div className={`${isGalleryView ? 'w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] aspect-video' : 'flex-[3] min-h-0'} relative transition-all duration-500`}>
+                <div 
+                    className={`${isGalleryView ? 'flex-shrink-0' : 'flex-[3] min-h-0'} relative transition-all duration-500`}
+                    style={isGalleryView && galleryLayout.width > 0 ? { width: `${galleryLayout.width}px`, height: `${galleryLayout.height}px` } : {}}
+                >
                     <div className="voice-reactive-border"></div>
                     <div className="video-tile speaking relative group h-full w-full bg-[#030108] rounded-3xl overflow-hidden shadow-2xl border border-white/5 flex items-center justify-center">
                         <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=1600" className="w-full h-full object-contain opacity-90" alt="Main speaker" />
@@ -282,7 +292,10 @@ export default function Meeting() {
                 <div className={`${isGalleryView ? 'contents' : 'flex-1 flex lg:flex-col gap-4 overflow-x-auto lg:overflow-y-auto min-h-0 snap-x lg:snap-y snap-mandatory pb-2 lg:pb-0 lg:pr-2 hide-scrollbar'}`}>
                     
                     {/* Thumbnail 1 */}
-                    <div className={`video-tile relative group bg-black flex-shrink-0 ${isGalleryView ? 'w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] aspect-video' : 'w-[240px] lg:w-full aspect-video'} snap-center rounded-2xl overflow-hidden shadow-lg border border-white/5 transition-all duration-500`}>
+                    <div 
+                        className={`video-tile relative group bg-black flex-shrink-0 ${isGalleryView ? '' : 'w-[240px] lg:w-full aspect-video'} snap-center rounded-2xl overflow-hidden shadow-lg border border-white/5 transition-all duration-500`}
+                        style={isGalleryView && galleryLayout.width > 0 ? { width: `${galleryLayout.width}px`, height: `${galleryLayout.height}px` } : {}}
+                    >
                         <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-contain bg-[#030108] opacity-90" alt="Participant 1" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                         <div className="absolute bottom-3 left-3">
@@ -296,7 +309,10 @@ export default function Meeting() {
                     </div>
 
                     {/* Thumbnail 2 */}
-                    <div className={`video-tile relative group bg-black flex-shrink-0 ${isGalleryView ? 'w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] aspect-video' : 'w-[240px] lg:w-full aspect-video'} snap-center rounded-2xl overflow-hidden shadow-lg border border-white/5 transition-all duration-500`}>
+                    <div 
+                        className={`video-tile relative group bg-black flex-shrink-0 ${isGalleryView ? '' : 'w-[240px] lg:w-full aspect-video'} snap-center rounded-2xl overflow-hidden shadow-lg border border-white/5 transition-all duration-500`}
+                        style={isGalleryView && galleryLayout.width > 0 ? { width: `${galleryLayout.width}px`, height: `${galleryLayout.height}px` } : {}}
+                    >
                         <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-contain bg-[#030108] opacity-90" alt="Participant 2" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                         <div className="absolute bottom-3 left-3">
@@ -308,7 +324,10 @@ export default function Meeting() {
                     </div>
 
                     {/* Thumbnail 3 (Self) */}
-                    <div className={`video-tile relative group bg-black flex-shrink-0 ${isGalleryView ? 'w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] aspect-video' : 'w-[240px] lg:w-full aspect-video'} snap-center rounded-2xl overflow-hidden shadow-lg ${isGalleryView ? 'border-white/5' : 'border-emerald-500/30'} transition-all duration-500 flex items-center justify-center`}>
+                    <div 
+                        className={`video-tile relative group bg-black flex-shrink-0 ${isGalleryView ? '' : 'w-[240px] lg:w-full aspect-video'} snap-center rounded-2xl overflow-hidden shadow-lg ${isGalleryView ? 'border-white/5' : 'border-emerald-500/30'} transition-all duration-500 flex items-center justify-center`}
+                        style={isGalleryView && galleryLayout.width > 0 ? { width: `${galleryLayout.width}px`, height: `${galleryLayout.height}px` } : {}}
+                    >
                         
                         <video 
                             ref={localVideoRef}
