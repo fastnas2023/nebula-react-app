@@ -53,18 +53,19 @@ export default function Meeting() {
         let activeStream = null;
 
         const getMedia = async () => {
-            if (isVideoOff) return; // Don't even request video if it's supposed to be off
-
             try {
                 const constraints = {
-                    video: selectedVideoId ? { deviceId: { exact: selectedVideoId } } : true,
-                    audio: selectedAudioId ? { deviceId: { exact: selectedAudioId } } : true
+                    video: isVideoOff ? false : (selectedVideoId ? { deviceId: { exact: selectedVideoId } } : true),
+                    audio: isMuted ? false : (selectedAudioId ? { deviceId: { exact: selectedAudioId } } : true)
                 };
                 
-                activeStream = await navigator.mediaDevices.getUserMedia(constraints);
-                
-                // Apply initial mute states
-                activeStream.getAudioTracks().forEach(t => t.enabled = !isMuted);
+                // Only request hardware if at least one is needed
+                if (constraints.video || constraints.audio) {
+                    activeStream = await navigator.mediaDevices.getUserMedia(constraints);
+                } else {
+                    // Create an empty MediaStream if both are off initially, so we have a container to add tracks to later
+                    activeStream = new MediaStream();
+                }
 
                 setLocalStream(activeStream);
                 if (localVideoRef.current) {
@@ -82,20 +83,70 @@ export default function Meeting() {
                 activeStream.getTracks().forEach(track => track.stop());
             }
         };
-    }, [selectedVideoId, selectedAudioId, isVideoOff]); // Re-run when isVideoOff changes to re-acquire camera
+    }, [selectedVideoId, selectedAudioId]); // ONLY run on mount or device ID change
 
-    // Apply Mute State Changes to actual stream
+    // Dynamically handle video toggle (hardware camera light)
     useEffect(() => {
-        if (localStream) {
-            localStream.getVideoTracks().forEach(t => t.enabled = !isVideoOff);
-            localStream.getAudioTracks().forEach(t => t.enabled = !isMuted);
-            
-            // Explicitly stop the video track when muted to release the camera hardware (turn off green light)
+        if (!localStream) return;
+
+        const manageVideoTrack = async () => {
+            const videoTrack = localStream.getVideoTracks()[0];
+
             if (isVideoOff) {
-                localStream.getVideoTracks().forEach(t => t.stop());
+                if (videoTrack && videoTrack.readyState === 'live') {
+                    videoTrack.stop(); // Stop hardware immediately
+                    localStream.removeTrack(videoTrack);
+                }
+            } else {
+                if (!videoTrack || videoTrack.readyState === 'ended') {
+                    try {
+                        const constraints = { video: selectedVideoId ? { deviceId: { exact: selectedVideoId } } : true, audio: false };
+                        const newStream = await navigator.mediaDevices.getUserMedia(constraints);
+                        const newVideoTrack = newStream.getVideoTracks()[0];
+                        
+                        localStream.addTrack(newVideoTrack);
+                        if (localVideoRef.current) {
+                            localVideoRef.current.srcObject = localStream; // Force video element to pick up new track
+                        }
+                    } catch (err) {
+                        console.error("Failed to turn camera back on in meeting", err);
+                    }
+                }
             }
-        }
-    }, [isVideoOff, isMuted, localStream]);
+        };
+
+        manageVideoTrack();
+    }, [isVideoOff, localStream, selectedVideoId]);
+
+    // Dynamically handle audio toggle (hardware mic indicator)
+    useEffect(() => {
+        if (!localStream) return;
+
+        const manageAudioTrack = async () => {
+            const audioTrack = localStream.getAudioTracks()[0];
+
+            if (isMuted) {
+                if (audioTrack && audioTrack.readyState === 'live') {
+                    audioTrack.stop(); // Stop hardware immediately
+                    localStream.removeTrack(audioTrack);
+                }
+            } else {
+                if (!audioTrack || audioTrack.readyState === 'ended') {
+                    try {
+                        const constraints = { video: false, audio: selectedAudioId ? { deviceId: { exact: selectedAudioId } } : true };
+                        const newStream = await navigator.mediaDevices.getUserMedia(constraints);
+                        const newAudioTrack = newStream.getAudioTracks()[0];
+                        
+                        localStream.addTrack(newAudioTrack);
+                    } catch (err) {
+                        console.error("Failed to turn microphone back on in meeting", err);
+                    }
+                }
+            }
+        };
+
+        manageAudioTrack();
+    }, [isMuted, localStream, selectedAudioId]);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

@@ -135,12 +135,29 @@ export default function Setup() {
         }
     };
 
-    const toggleAudio = () => {
+    const toggleAudio = async () => {
         if (stream) {
             const audioTrack = stream.getAudioTracks()[0];
-            if (audioTrack) {
-                audioTrack.enabled = !audioTrack.enabled;
-                setIsAudioMuted(!audioTrack.enabled);
+            
+            if (audioTrack && audioTrack.readyState === 'live') {
+                // Currently ON -> Turn OFF
+                audioTrack.stop(); // Stop hardware immediately
+                setIsAudioMuted(true);
+            } else {
+                // Currently OFF -> Turn ON
+                try {
+                    const constraints = { video: false, audio: selectedAudioId ? { deviceId: { exact: selectedAudioId } } : true };
+                    const newStream = await navigator.mediaDevices.getUserMedia(constraints);
+                    const newAudioTrack = newStream.getAudioTracks()[0];
+                    
+                    // Remove old dead track and add new live one
+                    if (audioTrack) stream.removeTrack(audioTrack);
+                    stream.addTrack(newAudioTrack);
+                    
+                    setIsAudioMuted(false);
+                } catch (err) {
+                    console.error("Failed to turn microphone back on", err);
+                }
             }
         }
     };

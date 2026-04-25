@@ -1,116 +1,73 @@
-# 🐶 Dogfood QA Report
+# Dogfood Report: {APP_NAME}
 
-**Target URL:** [TARGET URL]
-**Date:** [DATE]
-**Scope:** [SCOPE]
-**Environment:** `agent-browser` (macOS, Chrome)
+| Field | Value |
+|-------|-------|
+| **Date** | {DATE} |
+| **App URL** | {URL} |
+| **Session** | {SESSION_NAME} |
+| **Scope** | {SCOPE} |
 
 ## Summary
 
-- **Critical:** 1
-- **High:** 2
-- **Medium:** 2
-- **Low:** 0
-- **Total Issues:** 5
+| Severity | Count |
+|----------|-------|
+| Critical | 0 |
+| High | 0 |
+| Medium | 0 |
+| Low | 0 |
+| **Total** | **0** |
+
+## Issues
+
+<!-- Copy this block for each issue found. Interactive issues need video + step-by-step screenshots. Static issues (typos, visual glitches) only need a single screenshot -- set Repro Video to N/A. -->
+
+### ISSUE-001: {Short title}
+
+| Field | Value |
+|-------|-------|
+| **Severity** | critical / high / medium / low |
+| **Category** | visual / functional / ux / content / performance / console / accessibility |
+| **URL** | {page URL where issue was found} |
+| **Repro Video** | {path to video, or N/A for static issues} |
+
+**Description**
+
+{What is wrong, what was expected, and what actually happened.}
+
+**Repro Steps**
+
+<!-- Each step has a screenshot. A reader should be able to follow along visually. -->
+
+1. Navigate to {URL}
+   ![Step 1](screenshots/issue-001-step-1.png)
+
+2. {Action -- e.g., click "Settings" in the sidebar}
+   ![Step 2](screenshots/issue-001-step-2.png)
+
+3. {Action -- e.g., type "test" in the search field and press Enter}
+   ![Step 3](screenshots/issue-001-step-3.png)
+
+4. **Observe:** {what goes wrong -- e.g., the page shows a blank white screen instead of search results}
+   ![Result](screenshots/issue-001-result.png)
 
 ---
+### ISSUE-001: Profile dropdown menu text overlap/truncation
 
-## Findings
+| Field | Value |
+|-------|-------|
+| **Severity** | medium |
+| **Category** | visual |
+| **URL** | /home |
+| **Repro Video** | N/A |
 
-*(Issues will be appended below during the exploration session)*
+**Description**
 
-### ISSUE-001: "Join Meeting" button is completely unresponsive
+The text in the profile dropdown menu (specifically "切换至英文 EN") is overlapping or tightly squeezed with its icon or layout container, making it look broken. This seems to be a visual/layout issue where the text is too long for the allocated space in the dropdown, or padding/margin is insufficient.
 
-- **Severity:** Critical
-- **URL:** `/setup` (or current path)
-- **Repro Video:** `N/A` (Captured via screenshots)
+**Repro Steps**
 
-**Description:**
-After entering a display name on the setup page, clicking the "Join Meeting" button (`@e4`) does not trigger any action. There is no page navigation, no loading state, and no errors in the console or network. The user is entirely blocked from proceeding.
+1. Navigate to /home
+2. Click on the user profile at the bottom left to open the dropdown menu.
+   ![Home Page Dropdown](screenshots/home.png)
 
-**Repro Steps:**
-1. Navigate to the setup page.
-2. Enter a name in the "Display Name" field (e.g., "Alex") [Screenshot `issue-017.png`].
-3. Click the "Join Meeting" button [Screenshot `issue-018.png`].
-4. Observe that nothing happens (no navigation, no console error) [Screenshot `issue-061.png`].
-
-**Evidence:**
-- Start: `screenshots/issue-017.png`
-- Click: `screenshots/issue-018.png`
-- Result: `screenshots/issue-061.png`
-
-### ISSUE-002: Chat messages cannot be sent
-
-- **Severity:** Medium
-- **URL:** `/meeting`
-- **Repro Video:** `N/A` (Captured via screenshots)
-
-**Description:**
-In the meeting room, the chat interface provides a text input for sending messages. However, there is no "Send" button, and pressing the `Enter` key does not submit the message. As a result, users cannot participate in the text chat.
-
-**Repro Steps:**
-1. Navigate to the `/meeting` route.
-2. Locate the "Send a message..." input field (`@e12`).
-3. Type a message (e.g., "This is a test").
-4. Press the `Enter` key.
-5. Observe that the text remains in the input field and no message is added to the chat history.
-
-**Evidence:**
-- Before: `screenshots/meeting-route.png`
-- After pressing Enter: `screenshots/chat-sent-3.png`
-
-### ISSUE-003: "Join Now" button for upcoming meetings is unresponsive
-
-- **Severity:** High
-- **URL:** `/home`
-- **Repro Video:** `N/A` (Captured via screenshots)
-
-**Description:**
-On the dashboard page (`/home`), clicking the "Join Now" button for an upcoming meeting (e.g., "Design System Sync") does nothing. It does not navigate to the meeting room or the setup page, and no errors appear in the console.
-
-**Repro Steps:**
-1. Navigate to the dashboard (`/home`).
-2. Locate an upcoming meeting under the "Upcoming" section.
-3. Click the "Join Now" button (`@e22`).
-4. Observe that the page does not change.
-
-**Evidence:**
-- Before: `screenshots/leave-click.png`
-- After: `screenshots/upcoming-join-click.png`
-
-### ISSUE-004: "Generate Invite Link" button on Schedule page is unresponsive
-
-- **Severity:** High
-- **URL:** `/schedule`
-- **Repro Video:** `N/A` (Captured via screenshots)
-
-**Description:**
-On the Schedule Meeting page (`/schedule`), after filling out the meeting details, clicking the "Generate Invite Link" button (`@e18`) does not produce any visible result. It does not navigate, does not show a success message or generated link, and no action appears to occur.
-
-**Repro Steps:**
-1. Navigate to the Schedule Meeting page (`/schedule`).
-2. Fill in meeting topic or use default.
-3. Click the "Generate Invite Link" button (`@e18`).
-4. Observe that the page remains unchanged and no link is generated.
-
-**Evidence:**
-- Before: `screenshots/schedule-click.png`
-- After click: `screenshots/schedule-generate-click.png`
-
-### ISSUE-005: Sidebar navigation links are broken
-
-- **Severity:** Medium
-- **URL:** `/schedule` (and likely all pages with sidebar)
-- **Repro Video:** `N/A` (Captured via screenshots)
-
-**Description:**
-The sidebar navigation menu items (such as "Meetings", "History", "Profile", etc.) do not navigate to their respective pages. Clicking them produces no result.
-
-**Repro Steps:**
-1. Navigate to any page with the sidebar (e.g., `/schedule`).
-2. Click on a sidebar link (e.g., "Meetings", `@e4`).
-3. Observe that the URL does not change and the page does not reload.
-
-**Evidence:**
-- Before: `screenshots/schedule-click.png`
-- After: `screenshots/meetings-click.png` (Remains on `/schedule`)
+3. **Observe:** The text "切换至英文 EN" appears cramped or misaligned within the dropdown menu item.
