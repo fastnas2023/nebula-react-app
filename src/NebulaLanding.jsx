@@ -161,6 +161,7 @@ const NebulaLanding = () => {
   const isZh = i18n.language.startsWith('zh');
   const [isScrolled, setIsScrolled] = useState(false);
   const { scrollYProgress } = useScroll();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleLanguage = () => {
     i18n.changeLanguage(isZh ? 'en' : 'zh');
@@ -258,9 +259,41 @@ const NebulaLanding = () => {
                 <span className="relative z-10 text-sm font-bold tracking-wide text-white">{t('nav.startMeeting')}</span>
               </div>
             </MagneticLink>
-            <button className="md:hidden text-white"><Menu className="w-6 h-6" /></button>
+            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden text-white hover:text-nebula-cyan transition-colors p-2 -mr-2">
+              <Menu className="w-6 h-6" />
+            </button>
           </div>
         </div>
+
+        {/* Mobile Menu Overlay */}
+        {isMobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="absolute top-full left-0 right-0 glass-panel border-b border-white/10 md:hidden overflow-hidden"
+          >
+            <div className="flex flex-col p-6 gap-6">
+              <div className="flex flex-col gap-4 border-b border-white/10 pb-6">
+                <a href="#features" onClick={() => setIsMobileMenuOpen(false)} className="text-base font-medium text-gray-300 hover:text-white transition-colors">{t('nav.features')}</a>
+                <a href="#architecture" onClick={() => setIsMobileMenuOpen(false)} className="text-base font-medium text-gray-300 hover:text-white transition-colors">{t('nav.architecture')}</a>
+                <a href="#deployment" onClick={() => setIsMobileMenuOpen(false)} className="text-base font-medium text-gray-300 hover:text-white transition-colors">{t('nav.deployment')}</a>
+              </div>
+              <div className="flex items-center justify-between">
+                <button onClick={toggleLanguage} className="text-gray-300 hover:text-white transition-colors flex items-center gap-2 text-base font-medium">
+                  <Globe className="w-5 h-5" />
+                  {isZh ? 'English' : '中文'}
+                </button>
+                <Link 
+                  to="/home" 
+                  className="px-6 py-2.5 bg-gradient-to-r from-nebula-cyan to-nebula-purple rounded-full text-sm font-bold tracking-wide text-white shadow-lg shadow-nebula-cyan/20"
+                >
+                  {t('nav.startMeeting')}
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+        )}
       </nav>
 
       {/* 2. Hero Section (Holographic Space) */}

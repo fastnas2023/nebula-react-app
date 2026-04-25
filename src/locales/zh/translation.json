@@ -159,7 +159,7 @@
     "leave": "离开",
     "you": "你",
     "joinedMeeting": "已加入会议",
-    "roomIdLabel": "房间 ID：{{id}}",
+    "roomIdLabel": "房间 ID: {{id}}",
     "aiActionSummarize": "总结",
     "aiActionItems": "行动项",
     "leaveMeetingTitle": "离开会议？",

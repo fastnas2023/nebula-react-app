@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { UserPlus, LayoutGrid, MicOff, Mic, Video, MonitorUp, PhoneOff, Info, Send, Sparkles, Bot, ListTodo, FileText, AlertTriangle } from 'lucide-react';
+import { UserPlus, LayoutGrid, MicOff, Mic, Video, VideoOff, MonitorUp, PhoneOff, Info, Send, Sparkles, Bot, ListTodo, FileText, AlertTriangle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import NebulaLogo from '../components/NebulaLogo';
 
@@ -20,6 +20,17 @@ export default function Meeting() {
     const [isAiThinking, setIsAiThinking] = useState(false);
     const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
     const [showNotification, setShowNotification] = useState(true);
+    
+    // UI Interaction States
+    const [isMuted, setIsMuted] = useState(false);
+    const [isVideoOff, setIsVideoOff] = useState(false);
+    const [isGalleryView, setIsGalleryView] = useState(false);
+    
+    // Dynamic Mock Data States
+    const [meetingSeconds, setMeetingSeconds] = useState(5079); // 01:24:39
+    const [latency, setLatency] = useState(32);
+    const [audioLevels, setAudioLevels] = useState([30, 60, 40]);
+    
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = () => {
@@ -36,6 +47,45 @@ export default function Meeting() {
         }, 5000);
         return () => clearTimeout(timer);
     }, []);
+
+    // Dynamic Mock Data Generators
+    useEffect(() => {
+        // 1. Meeting Timer
+        const timeInterval = setInterval(() => {
+            setMeetingSeconds(s => s + 1);
+        }, 1000);
+        
+        // 2. Network Latency Jitter
+        const latencyInterval = setInterval(() => {
+            setLatency(prev => {
+                const jitter = Math.floor(Math.random() * 9) - 4; // -4 to +4 ms
+                let next = prev + jitter;
+                return next < 12 ? 12 : (next > 80 ? 80 : next);
+            });
+        }, 2500);
+
+        // 3. Audio Waveform Animation
+        const audioInterval = setInterval(() => {
+            setAudioLevels([
+                Math.random() * 50 + 20,
+                Math.random() * 80 + 20,
+                Math.random() * 60 + 20
+            ]);
+        }, 150);
+
+        return () => {
+            clearInterval(timeInterval);
+            clearInterval(latencyInterval);
+            clearInterval(audioInterval);
+        };
+    }, []);
+
+    const formatTime = (totalSeconds) => {
+        const h = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
+        const m = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
+        const s = (totalSeconds % 60).toString().padStart(2, '0');
+        return `${h}:${m}:${s}`;
+    };
 
     const handleSendMessage = () => {
         if (!newMessage.trim()) return;
@@ -112,7 +162,7 @@ export default function Meeting() {
                         Nebula <span className="text-white/40 font-light">|</span> <span className="gradient-text">Design Sync</span>
                     </h1>
                     <div className="flex items-center gap-2 text-[11px] text-white/50 font-bold tracking-wider uppercase mt-0.5">
-                        <span className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></div> 01:24:39</span>
+                        <span className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></div> {formatTime(meetingSeconds)}</span>
                         <span>•</span>
                         <span>{t('meeting.roomIdLabel', { id: 'NBL-8X92-K' })}</span>
                     </div>
@@ -126,7 +176,11 @@ export default function Meeting() {
                     <img src="https://i.pravatar.cc/100?img=3" className="w-7 h-7 rounded-full border-2 border-nebula-800 object-cover" />
                     <div className="w-7 h-7 rounded-full border-2 border-nebula-800 bg-white/10 flex items-center justify-center text-[10px] font-bold">+4</div>
                 </div>
-                <button className="glass-button w-9 h-9 rounded-xl flex items-center justify-center text-white/70">
+                <button 
+                    onClick={() => setIsGalleryView(!isGalleryView)}
+                    className={`glass-button w-9 h-9 rounded-xl flex items-center justify-center transition-colors ${isGalleryView ? 'bg-nebula-cyan/20 text-nebula-cyan border-nebula-cyan/30' : 'text-gray-300 hover:text-white'}`}
+                    title={isGalleryView ? "Speaker View" : "Gallery View"}
+                >
                     <LayoutGrid className="w-4 h-4" />
                 </button>
             </div>
@@ -136,27 +190,27 @@ export default function Meeting() {
         <main className="flex-1 flex gap-6 min-h-0 relative">
             
             {/*  Video Grid (Dynamic Flex/Grid based on content)  */}
-            <div className="flex-1 flex flex-col lg:flex-row gap-4 h-full relative z-10">
+            <div className={`flex-1 flex gap-4 h-full relative z-10 ${isGalleryView ? 'flex-wrap content-start overflow-y-auto hide-scrollbar' : 'flex-col lg:flex-row'}`}>
                 
                 {/*  Active Speaker / Main Video (Takes up majority of space)  */}
-                <div className="flex-[3] relative min-h-0">
+                <div className={`${isGalleryView ? 'w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] aspect-video' : 'flex-[3] min-h-0'} relative transition-all duration-500`}>
                     <div className="voice-reactive-border"></div>
                     <div className="video-tile speaking relative group h-full w-full bg-[#030108] rounded-3xl overflow-hidden shadow-2xl border border-white/5 flex items-center justify-center">
                         <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=1600" className="w-full h-full object-contain opacity-90" alt="Main speaker" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20"></div>
                         
                         <div className="absolute bottom-6 left-6 flex items-center gap-3 z-10">
-                            <div className="w-12 h-12 rounded-full glass-panel p-1 relative">
+                            <div className={`rounded-full glass-panel p-1 relative ${isGalleryView ? 'w-8 h-8' : 'w-12 h-12'}`}>
                                 <div className="absolute inset-0 rounded-full border-2 border-emerald-400 animate-ping opacity-50"></div>
                                 <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=100" className="w-full h-full rounded-full object-cover relative z-10" />
                             </div>
                             <div>
-                                <div className="font-display font-bold text-lg text-white drop-shadow-md">Sarah Jenkins</div>
-                                <div className="text-sm text-emerald-300 font-bold drop-shadow flex items-center gap-1.5">
-                                    <div className="flex items-end gap-0.5 h-2">
-                                        <div className="w-0.5 bg-emerald-400 h-1 rounded-full animate-bounce"></div>
-                                        <div className="w-0.5 bg-emerald-400 h-2 rounded-full animate-bounce" style={{"animationDelay":"0.1s"}}></div>
-                                        <div className="w-0.5 bg-emerald-400 h-1.5 rounded-full animate-bounce" style={{"animationDelay":"0.2s"}}></div>
+                                <div className={`font-display font-bold text-white drop-shadow-md ${isGalleryView ? 'text-sm' : 'text-lg'}`}>Sarah Jenkins</div>
+                                <div className={`text-emerald-300 font-bold drop-shadow flex items-center gap-1.5 ${isGalleryView ? 'text-xs' : 'text-sm'}`}>
+                                    <div className="flex items-end gap-[1px] h-2.5">
+                                        <div className="w-[3px] bg-emerald-400 rounded-full transition-all duration-100" style={{ height: `${audioLevels[0]}%` }}></div>
+                                        <div className="w-[3px] bg-emerald-400 rounded-full transition-all duration-100" style={{ height: `${audioLevels[1]}%` }}></div>
+                                        <div className="w-[3px] bg-emerald-400 rounded-full transition-all duration-100" style={{ height: `${audioLevels[2]}%` }}></div>
                                     </div>
                                     {t('meeting.speaking')}
                                 </div>
@@ -164,18 +218,18 @@ export default function Meeting() {
                         </div>
                         
                         <div className="absolute top-6 left-6 flex gap-2 z-10">
-                            <div className="glass-panel px-3 py-1.5 rounded-full flex items-center gap-2 text-xs font-bold text-white/90 border-red-500/30 bg-red-500/10">
-                                <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]"></div> {t('meeting.recording')}
+                            <div className="glass-panel px-3 py-1.5 rounded-full flex items-center gap-2 text-[10px] font-bold text-white/90 border-red-500/30 bg-red-500/10">
+                                <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]"></div> {t('meeting.recording')}
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/*  Thumbnail Strip (Stack vertically on desktop, horizontally on mobile)  */}
-                <div className="flex-1 flex lg:flex-col gap-4 overflow-x-auto lg:overflow-y-auto min-h-0 snap-x lg:snap-y snap-mandatory pb-2 lg:pb-0 lg:pr-2 hide-scrollbar">
+                <div className={`${isGalleryView ? 'contents' : 'flex-1 flex lg:flex-col gap-4 overflow-x-auto lg:overflow-y-auto min-h-0 snap-x lg:snap-y snap-mandatory pb-2 lg:pb-0 lg:pr-2 hide-scrollbar'}`}>
                     
                     {/* Thumbnail 1 */}
-                    <div className="video-tile relative group bg-black flex-shrink-0 w-[240px] lg:w-full aspect-video snap-center rounded-2xl overflow-hidden shadow-lg border border-white/5">
+                    <div className={`video-tile relative group bg-black flex-shrink-0 ${isGalleryView ? 'w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] aspect-video' : 'w-[240px] lg:w-full aspect-video'} snap-center rounded-2xl overflow-hidden shadow-lg border border-white/5 transition-all duration-500`}>
                         <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-contain bg-[#030108] opacity-90" alt="Participant 1" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                         <div className="absolute bottom-3 left-3">
@@ -189,7 +243,7 @@ export default function Meeting() {
                     </div>
 
                     {/* Thumbnail 2 */}
-                    <div className="video-tile relative group bg-black flex-shrink-0 w-[240px] lg:w-full aspect-video snap-center rounded-2xl overflow-hidden shadow-lg border border-white/5">
+                    <div className={`video-tile relative group bg-black flex-shrink-0 ${isGalleryView ? 'w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] aspect-video' : 'w-[240px] lg:w-full aspect-video'} snap-center rounded-2xl overflow-hidden shadow-lg border border-white/5 transition-all duration-500`}>
                         <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-contain bg-[#030108] opacity-90" alt="Participant 2" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                         <div className="absolute bottom-3 left-3">
@@ -201,7 +255,7 @@ export default function Meeting() {
                     </div>
 
                     {/* Thumbnail 3 (Self) */}
-                    <div className="video-tile relative group bg-black flex-shrink-0 w-[240px] lg:w-full aspect-video snap-center rounded-2xl overflow-hidden shadow-lg border border-emerald-500/30">
+                    <div className={`video-tile relative group bg-black flex-shrink-0 ${isGalleryView ? 'w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] aspect-video' : 'w-[240px] lg:w-full aspect-video'} snap-center rounded-2xl overflow-hidden shadow-lg ${isGalleryView ? 'border-white/5' : 'border-emerald-500/30'} transition-all duration-500`}>
                         <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-contain bg-[#030108] opacity-90" alt="You" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                         <div className="absolute bottom-3 left-3">
@@ -226,8 +280,8 @@ export default function Meeting() {
                             </div>
                         </div>
                     </div>
-                    <div className="bg-black/40 rounded-xl p-3 border border-white/5">
-                        <p className="text-xs text-white/70 leading-relaxed line-clamp-2">
+                    <div className="bg-black/50 rounded-xl p-3 border border-white/10">
+                        <p className="text-xs text-gray-300 leading-relaxed line-clamp-2">
                             <span className="text-nebula-cyan font-bold">Sarah:</span> "So the consensus is we'll move forward with the Nebula aesthetic..."
                         </p>
                     </div>
@@ -249,10 +303,10 @@ export default function Meeting() {
                                 )}
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-baseline gap-2 mb-1">
-                                        <span className={`font-bold text-sm ${msg.isAi ? 'text-emerald-400 font-display' : 'text-white/90'}`}>{msg.sender}</span>
-                                        <span className="text-[10px] text-white/40 font-bold">{msg.time}</span>
+                                        <span className={`font-bold text-sm ${msg.isAi ? 'text-emerald-400 font-display' : 'text-white'}`}>{msg.sender}</span>
+                                        <span className="text-[10px] text-gray-400 font-bold">{msg.time}</span>
                                     </div>
-                                    <div className={`text-sm leading-relaxed p-3 rounded-2xl rounded-tl-sm inline-block font-medium break-words w-full ${msg.isAi ? 'text-white/90 bg-transparent p-0 whitespace-pre-line' : 'text-white/70 bg-white/5 border border-white/5 max-w-[240px]'}`}>
+                                    <div className={`text-sm leading-relaxed p-3 rounded-2xl rounded-tl-sm inline-block font-medium break-words w-full ${msg.isAi ? 'text-white bg-transparent p-0 whitespace-pre-line' : 'text-gray-200 bg-white/10 border border-white/10 max-w-[240px]'}`}>
                                         {msg.text}
                                     </div>
                                 </div>
@@ -281,7 +335,7 @@ export default function Meeting() {
                     <div className="p-4 border-t border-white/5 bg-black/20 flex flex-col gap-3">
                         {/* AI Quick Actions */}
                         <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-1">
-                            <div className="flex items-center justify-center bg-white/5 rounded-full px-2 text-white/40">
+                            <div className="flex items-center justify-center bg-white/10 rounded-full px-2 text-gray-300">
                                 <Bot className="w-3.5 h-3.5" />
                             </div>
                             {aiActions.map(action => (
@@ -305,7 +359,7 @@ export default function Meeting() {
                                 onChange={(e) => setNewMessage(e.target.value)}
                                 onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
                                 disabled={isAiThinking}
-                                className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-4 pr-14 text-sm text-white placeholder-white/30 focus:outline-none focus:border-nebula-purple/50 transition-all disabled:opacity-50" 
+                                className="w-full bg-white/10 border border-white/20 rounded-xl py-3.5 pl-4 pr-14 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-nebula-purple/50 transition-all disabled:opacity-50" 
                             />
                             <button 
                                 onClick={handleSendMessage}
@@ -323,26 +377,36 @@ export default function Meeting() {
         {/*  Control Bar  */}
         <footer className="glass-panel rounded-2xl px-6 py-4 flex justify-between items-center relative z-20">
             <div className="flex items-center gap-4">
-                <button className="glass-button px-3 py-1.5 rounded-xl flex items-center gap-2 group relative">
+                <button className="glass-button px-3 py-1.5 rounded-xl flex items-center gap-2 group relative" title="Network Latency">
                     <div className="flex items-end gap-0.5 h-3">
                         <div className="w-0.5 bg-emerald-400 h-1.5 rounded-full"></div>
                         <div className="w-0.5 bg-emerald-400 h-2.5 rounded-full"></div>
                         <div className="w-0.5 bg-emerald-400 h-3 rounded-full animate-pulse"></div>
                     </div>
-                    <span className="text-xs font-bold text-emerald-400 tracking-wide">32ms</span>
+                    <span className="text-xs font-bold text-emerald-400 tracking-wide transition-all duration-300">{latency}ms</span>
                 </button>
             </div>
 
             <div className="flex items-center gap-3 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                <button className="glass-button w-12 h-12 rounded-xl flex items-center justify-center text-white group relative">
-                    <Mic className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                    <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 border-2 border-[#030108]"></span>
-                    </span>
+                <button 
+                    onClick={() => setIsMuted(!isMuted)}
+                    className={`glass-button w-12 h-12 rounded-xl flex items-center justify-center group relative transition-colors ${isMuted ? 'bg-red-500/20 text-red-500 border-red-500/30' : 'text-white hover:bg-white/10'}`}
+                    title={isMuted ? "Unmute" : "Mute"}
+                >
+                    {isMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5 group-hover:scale-110 transition-transform" />}
+                    {!isMuted && (
+                        <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 border-2 border-[#030108]"></span>
+                        </span>
+                    )}
                 </button>
-                <button className="glass-button w-12 h-12 rounded-xl flex items-center justify-center text-white group">
-                    <Video className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                <button 
+                    onClick={() => setIsVideoOff(!isVideoOff)}
+                    className={`glass-button w-12 h-12 rounded-xl flex items-center justify-center group transition-colors ${isVideoOff ? 'bg-red-500/20 text-red-500 border-red-500/30' : 'text-white hover:bg-white/10'}`}
+                    title={isVideoOff ? "Start Video" : "Stop Video"}
+                >
+                    {isVideoOff ? <VideoOff className="w-5 h-5" /> : <Video className="w-5 h-5 group-hover:scale-110 transition-transform" />}
                 </button>
                 <div className="w-px h-8 bg-white/10 mx-2 hidden sm:block"></div>
                 <button className="glass-button active w-12 h-12 rounded-xl flex items-center justify-center text-white group hidden sm:flex" onClick={() => navigate('/screenshare')}>
@@ -357,7 +421,7 @@ export default function Meeting() {
             </div>
 
             <div className="flex items-center gap-3">
-                <button className="glass-button w-10 h-10 rounded-xl flex items-center justify-center text-white/70">
+                <button className="glass-button w-10 h-10 rounded-xl flex items-center justify-center text-gray-300 hover:text-white transition-colors">
                     <Info className="w-4 h-4" />
                 </button>
             </div>
