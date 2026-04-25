@@ -8,9 +8,42 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', '"HarmonyOS Sans SC"', '"Noto Sans SC"', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'sans-serif'],
-        display: ['"Space Grotesk"', '"HarmonyOS Sans SC"', '"Noto Sans SC"', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'sans-serif'],
-        mono: ['"JetBrains Mono"', '"Fira Code"', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+        sans: [
+          '-apple-system', 
+          'BlinkMacSystemFont', 
+          '"SF Pro Text"',
+          '"Segoe UI"', 
+          'Roboto', 
+          '"Helvetica Neue"', 
+          'Arial', 
+          '"PingFang SC"', 
+          '"Hiragino Sans GB"', 
+          '"Microsoft YaHei"', 
+          'sans-serif'
+        ],
+        display: [
+          '-apple-system', 
+          'BlinkMacSystemFont', 
+          '"SF Pro Display"',
+          '"Segoe UI"', 
+          'Roboto', 
+          '"Helvetica Neue"', 
+          'Arial', 
+          '"PingFang SC"', 
+          '"Hiragino Sans GB"', 
+          '"Microsoft YaHei"', 
+          'sans-serif'
+        ],
+        mono: [
+          '"SF Mono"',
+          'ui-monospace',
+          'Menlo',
+          'Monaco',
+          'Consolas',
+          '"Liberation Mono"',
+          '"Courier New"',
+          'monospace'
+        ],
       },
       colors: {
         nebula: {
