@@ -4,10 +4,20 @@ import { Camera, QrCode, Copy, Zap, Check, Fingerprint, ChevronDown, RefreshCw, 
 import { useTranslation } from 'react-i18next';
 import Sidebar from '../components/Sidebar';
 import Background from '../components/Background';
+import useMediaStore from '../store/useMediaStore';
 
 export default function Profile() {
     const navigate = useNavigate();
     const { t } = useTranslation();
+    
+    const displayName = useMediaStore(state => state.displayName);
+    const avatarUrl = useMediaStore(state => state.avatarUrl);
+    const email = useMediaStore(state => state.email);
+    
+    // Split display name into first and last for the form
+    const nameParts = displayName.split(' ');
+    const firstName = nameParts[0] || '';
+    const lastName = nameParts.slice(1).join(' ') || '';
 
     return (
         <div className="h-[100dvh] w-full font-sans antialiased flex relative">
@@ -28,7 +38,13 @@ export default function Profile() {
                         {/*  Interactive Avatar  */}
                         <div className="relative w-32 h-32 mb-6 avatar-container cursor-pointer group">
                             <div className="absolute inset-0 bg-nebula-cyan/20 rounded-full blur-xl group-hover:bg-nebula-cyan/40 transition-colors"></div>
-                            <img src="https://i.pravatar.cc/150?img=3" alt="User Avatar" className="w-32 h-32 rounded-full border-2 border-white/20 object-cover relative z-10" />
+                            {avatarUrl ? (
+                                <img src={avatarUrl} alt="User Avatar" className="w-32 h-32 rounded-full border-2 border-white/20 object-cover relative z-10" />
+                            ) : (
+                                <div className="w-32 h-32 rounded-full border-2 border-white/20 bg-white/10 flex items-center justify-center text-white font-bold text-4xl relative z-10">
+                                    {displayName.charAt(0)}
+                                </div>
+                            )}
                             
                             {/*  Hover Overlay  */}
                             <div className="absolute inset-0 z-20 rounded-full flex flex-col items-center justify-center avatar-upload-overlay border-2 border-nebula-cyan">
@@ -37,7 +53,7 @@ export default function Profile() {
                             </div>
                         </div>
 
-                        <h2 className="font-display text-2xl font-bold text-white mb-1">David Chen</h2>
+                        <h2 className="font-display text-2xl font-bold text-white mb-1">{displayName}</h2>
                         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-nebula-emerald/10 border border-nebula-emerald/20 text-nebula-emerald text-xs font-mono font-bold mb-6">
                             <div className="w-1.5 h-1.5 bg-nebula-emerald rounded-full animate-pulse"></div> {t('profile.activeNode')}
                         </div>
@@ -88,17 +104,17 @@ export default function Profile() {
                             <div className="grid grid-cols-2 gap-6">
                                 <div className="space-y-2">
                                     <label className="text-xs font-mono text-gray-400 uppercase tracking-widest flex items-center gap-2">{t('profile.firstName')}</label>
-                                    <input type="text" defaultValue="David" className="w-full input-cyber rounded-xl px-4 py-3.5 text-sm focus:bg-black/50"  />
+                                    <input type="text" defaultValue={firstName} className="w-full input-cyber rounded-xl px-4 py-3.5 text-sm focus:bg-black/50"  />
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-xs font-mono text-gray-400 uppercase tracking-widest flex items-center gap-2">{t('profile.lastName')}</label>
-                                    <input type="text" defaultValue="Chen" className="w-full input-cyber rounded-xl px-4 py-3.5 text-sm focus:bg-black/50"  />
+                                    <input type="text" defaultValue={lastName} className="w-full input-cyber rounded-xl px-4 py-3.5 text-sm focus:bg-black/50"  />
                                 </div>
                             </div>
 
                             <div className="space-y-2">
                                 <label className="text-xs font-mono text-gray-400 uppercase tracking-widest flex items-center gap-2">{t('profile.operatorEmailReadOnly')}</label>
-                                <input type="email" defaultValue="david.chen@nebula.io" readOnly className="w-full bg-white/5 border border-white/5 text-gray-400 rounded-xl px-4 py-3.5 text-sm cursor-not-allowed"  />
+                                <input type="email" defaultValue={email} readOnly className="w-full bg-white/5 border border-white/5 text-gray-400 rounded-xl px-4 py-3.5 text-sm cursor-not-allowed"  />
                             </div>
 
                             <div className="space-y-2">

@@ -3,12 +3,17 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Home as HomeIcon, Calendar, Clock, Users, Settings, ChevronUp, User, CreditCard, LogOut, FolderOpen, Video as VideoIcon, Globe, PanelLeftClose, PanelLeftOpen, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import NebulaLogo from './NebulaLogo';
+import useMediaStore from '../store/useMediaStore';
 
 export default function Sidebar() {
     const navigate = useNavigate();
     const location = useLocation();
     const { t, i18n } = useTranslation();
     const isZh = i18n.language === 'zh';
+    
+    // Get user info from global store
+    const displayName = useMediaStore(state => state.displayName);
+    const avatarUrl = useMediaStore(state => state.avatarUrl);
     
     // Auto-collapse on small screens, but allow manual toggle
     const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 1024);
@@ -125,13 +130,19 @@ export default function Sidebar() {
                 {/*  Profile Dropdown  */}
                 <div className={`relative group cursor-pointer glass-panel ${isCollapsed ? 'p-1.5 justify-center' : 'p-3'} rounded-2xl flex items-center gap-3 hover:bg-white/5 transition-colors mt-2 z-[60]`}>
                     <div className={`relative flex-shrink-0 ${isCollapsed ? 'w-8 h-8' : 'w-10 h-10'}`}>
-                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=100" className="w-full h-full rounded-full border border-nebula-800 object-cover" />
+                        {avatarUrl ? (
+                            <img src={avatarUrl} className="w-full h-full rounded-full border border-nebula-800 object-cover" />
+                        ) : (
+                            <div className="w-full h-full rounded-full border border-nebula-800 bg-white/10 flex items-center justify-center text-white font-bold text-sm">
+                                {displayName.charAt(0)}
+                            </div>
+                        )}
                         <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-nebula-900"></div>
                     </div>
                     {!isCollapsed && (
                         <>
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-bold text-white truncate">Sarah Jenkins</p>
+                                <p className="text-sm font-bold text-white truncate">{displayName}</p>
                                 <p className="text-xs text-white/50 truncate">{t('sidebar.proPlan')}</p>
                             </div>
                             <ChevronUp className="w-4 h-4 text-white/50 group-hover:text-white transition-colors flex-shrink-0" />
