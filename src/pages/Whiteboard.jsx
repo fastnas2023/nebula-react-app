@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Users, Download, X, MousePointer2, Hand, PenTool, Eraser, StickyNote, Edit2, Copy, Trash2, Mic, Video } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -6,6 +6,26 @@ import { useTranslation } from 'react-i18next';
 export default function Whiteboard() {
     const navigate = useNavigate();
     const { t } = useTranslation();
+    
+    // Dynamic Mock Data States
+    const [meetingSeconds, setMeetingSeconds] = useState(5079); // 01:24:39
+
+    useEffect(() => {
+        const timeInterval = setInterval(() => {
+            setMeetingSeconds(s => s + 1);
+        }, 1000);
+
+        return () => {
+            clearInterval(timeInterval);
+        };
+    }, []);
+
+    const formatTime = (totalSeconds) => {
+        const h = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
+        const m = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
+        const s = (totalSeconds % 60).toString().padStart(2, '0');
+        return `${h}:${m}:${s}`;
+    };
 
     return (
         <div className="h-[100dvh] w-full font-sans antialiased flex flex-col relative">
@@ -24,7 +44,7 @@ export default function Whiteboard() {
                 <div>
                     <h1 className="font-display font-bold text-xl text-white">{t('whiteboard.mockTitle')}</h1>
                     <div className="flex items-center gap-2 text-xs text-white/50 uppercase font-bold">
-                        <span className="text-emerald-400">●</span> {t('whiteboard.mockSubtitle')}
+                        <span className="text-emerald-400">●</span> {formatTime(meetingSeconds)}
                     </div>
                 </div>
             </div>

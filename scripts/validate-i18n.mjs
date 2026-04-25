@@ -157,7 +157,6 @@ const requiredKeys = [
   'whiteboard.closeBoard',
   'whiteboard.minimap',
   'whiteboard.mockTitle',
-  'whiteboard.mockSubtitle',
   'whiteboard.mockNote1Topic',
   'whiteboard.mockNote1Desc',
   'whiteboard.mockNote2Topic',

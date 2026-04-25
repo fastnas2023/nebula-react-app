@@ -17,6 +17,9 @@ export default function Screenshare() {
     const [isAnnotating, setIsAnnotating] = useState(false);
     const [infiniteMirrorWarning, setInfiniteMirrorWarning] = useState(true);
     const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
+    
+    // Dynamic Mock Data States
+    const [meetingSeconds, setMeetingSeconds] = useState(5079); // 01:24:39
 
     useEffect(() => {
         const handleFullscreenChange = () => {
@@ -38,6 +41,25 @@ export default function Screenshare() {
         }
     };
 
+    // Dynamic Mock Data Generators
+    useEffect(() => {
+        // 1. Meeting Timer
+        const timeInterval = setInterval(() => {
+            setMeetingSeconds(s => s + 1);
+        }, 1000);
+
+        return () => {
+            clearInterval(timeInterval);
+        };
+    }, []);
+
+    const formatTime = (totalSeconds) => {
+        const h = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
+        const m = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
+        const s = (totalSeconds % 60).toString().padStart(2, '0');
+        return `${h}:${m}:${s}`;
+    };
+
     return (
         <div className="h-[100dvh] w-full font-sans antialiased flex flex-col relative">
             
@@ -54,7 +76,7 @@ export default function Screenshare() {
                     <div className="-ml-2">
                         <h1 className="font-display font-bold text-xl text-white">Design Sync</h1>
                         <div className="flex items-center gap-2 text-xs text-white/50 uppercase font-bold">
-                            <span className="text-emerald-400">●</span> 01:24:39
+                            <span className="text-emerald-400">●</span> {formatTime(meetingSeconds)}
                         </div>
                     </div>
                 </div>
