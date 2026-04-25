@@ -1,12 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Users, Download, X, MousePointer2, Hand, PenTool, Eraser, StickyNote, Edit2, Copy, Trash2, Mic, Video } from 'lucide-react';
+import { Users, Download, X, MousePointer2, Hand, PenTool, Eraser, StickyNote, Edit2, Copy, Trash2, Mic, Video, MicOff, VideoOff } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import useMediaStore from '../store/useMediaStore';
 
 export default function Whiteboard() {
     const navigate = useNavigate();
     const { t } = useTranslation();
     
+    // Global Media States
+    const displayName = useMediaStore(state => state.displayName);
+    const selectedVideoId = useMediaStore(state => state.selectedVideoId);
+    const selectedAudioId = useMediaStore(state => state.selectedAudioId);
+    const isMuted = useMediaStore(state => state.isAudioMuted);
+    const isVideoOff = useMediaStore(state => state.isVideoMuted);
+    const toggleAudio = useMediaStore(state => state.toggleAudio);
+    const toggleVideo = useMediaStore(state => state.toggleVideo);
+    
+    // Local Media Stream
+    const localVideoRef = useRef(null);
+    const [localStream, setLocalStream] = useState(null);
+
     // Dynamic Mock Data States
     const [meetingSeconds, setMeetingSeconds] = useState(5079); // 01:24:39
 
@@ -19,6 +33,108 @@ export default function Whiteboard() {
             clearInterval(timeInterval);
         };
     }, []);
+
+    // Request WebRTC Media Stream
+    useEffect(() => {
+        let activeStream = null;
+
+        const getMedia = async () => {
+            try {
+                const constraints = {
+                    video: isVideoOff ? false : (selectedVideoId ? { deviceId: { exact: selectedVideoId } } : true),
+                    audio: isMuted ? false : (selectedAudioId ? { deviceId: { exact: selectedAudioId } } : true)
+                };
+                
+                // Only request hardware if at least one is needed
+                if (constraints.video || constraints.audio) {
+                    activeStream = await navigator.mediaDevices.getUserMedia(constraints);
+                } else {
+                    // Create an empty MediaStream if both are off initially, so we have a container to add tracks to later
+                    activeStream = new MediaStream();
+                }
+
+                setLocalStream(activeStream);
+                if (localVideoRef.current) {
+                    localVideoRef.current.srcObject = activeStream;
+                }
+            } catch (err) {
+                console.error("Failed to get local stream in whiteboard", err);
+            }
+        };
+
+        getMedia();
+
+        return () => {
+            if (activeStream) {
+                activeStream.getTracks().forEach(track => track.stop());
+            }
+        };
+    }, [selectedVideoId, selectedAudioId]); // ONLY run on mount or device ID change
+
+    // Dynamically handle video toggle (hardware camera light)
+    useEffect(() => {
+        if (!localStream) return;
+
+        const manageVideoTrack = async () => {
+            const videoTrack = localStream.getVideoTracks()[0];
+
+            if (isVideoOff) {
+                if (videoTrack && videoTrack.readyState === 'live') {
+                    videoTrack.stop(); // Stop hardware immediately
+                    localStream.removeTrack(videoTrack);
+                }
+            } else {
+                if (!videoTrack || videoTrack.readyState === 'ended') {
+                    try {
+                        const constraints = { video: selectedVideoId ? { deviceId: { exact: selectedVideoId } } : true, audio: false };
+                        const newStream = await navigator.mediaDevices.getUserMedia(constraints);
+                        const newVideoTrack = newStream.getVideoTracks()[0];
+                        
+                        localStream.addTrack(newVideoTrack);
+                        if (localVideoRef.current) {
+                            localVideoRef.current.srcObject = localStream; // Force video element to pick up new track
+                        }
+                    } catch (err) {
+                        console.error("Failed to turn camera back on in whiteboard", err);
+                    }
+                }
+            }
+        };
+
+        manageVideoTrack();
+    }, [isVideoOff, localStream, selectedVideoId]);
+
+    // Dynamically handle audio toggle (hardware mic indicator)
+    useEffect(() => {
+        if (!localStream) return;
+
+        const manageAudioTrack = async () => {
+            const audioTrack = localStream.getAudioTracks()[0];
+
+            if (isMuted) {
+                if (audioTrack && audioTrack.readyState === 'live') {
+                    audioTrack.stop(); // Stop hardware immediately
+                    localStream.removeTrack(audioTrack);
+                }
+            } else {
+                if (!audioTrack || audioTrack.readyState === 'ended') {
+                    try {
+                        const constraints = { video: false, audio: selectedAudioId ? { deviceId: { exact: selectedAudioId } } : true };
+                        const newStream = await navigator.mediaDevices.getUserMedia(constraints);
+                        const newAudioTrack = newStream.getAudioTracks()[0];
+                        
+                        localStream.addTrack(newAudioTrack);
+                    } catch (err) {
+                        console.error("Failed to turn microphone back on in whiteboard", err);
+                    }
+                }
+            }
+        };
+
+        manageAudioTrack();
+    }, [isMuted, localStream, selectedAudioId]);
+
+    const [showElements, setShowElements] = useState(true);
 
     const formatTime = (totalSeconds) => {
         const h = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
@@ -85,16 +201,26 @@ export default function Whiteboard() {
                 <button className="w-10 h-10 rounded-xl flex items-center justify-center text-white/70 hover:bg-white/10 transition-colors">
                     <StickyNote className="w-5 h-5" />
                 </button>
+                <div className="w-8 h-px bg-white/10 my-1"></div>
+                <button 
+                    className="w-10 h-10 rounded-xl flex items-center justify-center text-white/70 hover:bg-red-500/20 hover:text-red-400 transition-colors"
+                    title={t('annotation.clearCanvas') || "Clear Canvas"}
+                    onClick={() => setShowElements(false)}
+                >
+                    <Trash2 className="w-5 h-5" />
+                </button>
             </aside>
 
             {/*  Canvas Area  */}
             <div className="flex-1 whiteboard-canvas relative cursor-crosshair">
                 
-                <svg className="absolute inset-0 w-full h-full pointer-events-none">
-                    <path d="M 300 150 Q 400 50 500 200 T 700 250" className="mock-path" />
-                </svg>
+                {showElements && (
+                    <React.Fragment>
+                        <svg className="absolute inset-0 w-full h-full pointer-events-none">
+                            <path d="M 300 150 Q 400 50 500 200 T 700 250" className="mock-path" />
+                        </svg>
 
-                {/*  Sticky Note 1  */}
+                        {/*  Sticky Note 1  */}
                 <div className="sticky-note group/note cursor-grab active:cursor-grabbing" style={{"top":"250px","left":"350px"}}>
                     {/*  Context Menu Toolbar (Hover to reveal)  */}
                     <div className="absolute -top-12 left-0 right-0 glass-panel bg-black/80 text-white rounded-lg p-2 flex items-center justify-around opacity-0 group-hover/note:opacity-100 transition-opacity pointer-events-none group-hover/note:pointer-events-auto shadow-xl border border-white/20">
@@ -108,7 +234,7 @@ export default function Whiteboard() {
                 </div>
 
                 {/*  Sticky Note 2  */}
-                <div className="sticky-note group/note cursor-grab active:cursor-grabbing" style={{"top":"150px","left":"650px","background":"linear-gradient(135deg, rgba(255, 138, 203, 0.95) 0%, rgba(255, 46, 147, 0.9) 100%)","borderLeftColor":"#9D174D","color":"white","transform":"rotate(3deg)"}}>
+                <div className="sticky-note group/note cursor-grab active:cursor-grabbing" style={{"top":"120px","left":"650px","background":"linear-gradient(135deg, rgba(255, 138, 203, 0.95) 0%, rgba(255, 46, 147, 0.9) 100%)","borderLeftColor":"#9D174D","color":"white","transform":"rotate(3deg)"}}>
                     <div className="absolute -top-12 left-0 right-0 glass-panel bg-black/80 text-white rounded-lg p-2 flex items-center justify-around opacity-0 group-hover/note:opacity-100 transition-opacity pointer-events-none group-hover/note:pointer-events-auto shadow-xl border border-white/20">
                         <button className="hover:text-nebula-cyan transition-colors"><Edit2 className="w-4 h-4" /></button>
                         <button className="hover:text-white transition-colors"><Copy className="w-4 h-4" /></button>
@@ -120,10 +246,12 @@ export default function Whiteboard() {
                 </div>
 
                 {/*  Cursor Indicator  */}
-                <div className="absolute top-[280px] left-[650px] pointer-events-none flex flex-col items-center">
+                <div className="absolute top-[320px] left-[700px] pointer-events-none flex flex-col items-center z-10">
                     <MousePointer2 className="w-6 h-6 text-nebula-cyan drop-shadow-md -ml-2 -mt-1" />
                     <div className="bg-nebula-cyan text-black text-[10px] px-2 py-0.5 rounded-full mt-1 shadow-lg shadow-nebula-cyan/50 whitespace-nowrap font-bold">{t('whiteboard.mockCursorLabel')}</div>
                 </div>
+                </React.Fragment>
+                )}
 
                 {/*  Floating Videos  */}
                 <div className="absolute right-6 top-6 flex flex-col gap-3 z-30">
@@ -133,9 +261,23 @@ export default function Whiteboard() {
                             <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></div> Sarah
                         </div>
                     </div>
-                    <div className="floating-video group">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover opacity-70" />
-                        <div className="absolute bottom-1.5 left-1.5 bg-black/60 backdrop-blur px-1.5 py-0.5 rounded text-[9px] text-white/80 font-bold">David</div>
+                    <div className="floating-video group relative">
+                        <video 
+                            ref={localVideoRef}
+                            autoPlay 
+                            playsInline 
+                            muted // Always mute local playback to prevent echo
+                            className={`w-full h-full object-cover transition-opacity duration-300 ${isVideoOff ? 'opacity-0' : 'opacity-100'} scale-x-[-1] bg-[#030108]`} 
+                        />
+                        
+                        {isVideoOff && (
+                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0a0514]">
+                                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
+                                    <span className="text-xs font-display font-bold text-white/50">{displayName ? displayName.charAt(0).toUpperCase() : '?'}</span>
+                                </div>
+                            </div>
+                        )}
+                        <div className="absolute bottom-1.5 left-1.5 bg-black/60 backdrop-blur px-1.5 py-0.5 rounded text-[9px] text-white/80 font-bold">{t('meeting.you')}</div>
                     </div>
                 </div>
                 
@@ -154,11 +296,19 @@ export default function Whiteboard() {
 
         <footer className="glass-panel rounded-2xl px-6 py-3 flex justify-center items-center relative z-20 flex-shrink-0">
             <div className="flex items-center gap-3">
-                <button className="glass-button active w-10 h-10 rounded-xl flex items-center justify-center text-white">
-                    <Mic className="w-4 h-4 text-emerald-400" />
+                <button 
+                    onClick={toggleAudio}
+                    className={`glass-button w-10 h-10 rounded-xl flex items-center justify-center group relative transition-colors ${isMuted ? 'bg-red-500/20 text-red-500 border-red-500/30' : 'text-white hover:bg-white/10'}`}
+                    title={isMuted ? "Unmute" : "Mute"}
+                >
+                    {isMuted ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
                 </button>
-                <button className="glass-button w-10 h-10 rounded-xl flex items-center justify-center text-white">
-                    <Video className="w-4 h-4" />
+                <button 
+                    onClick={toggleVideo}
+                    className={`glass-button w-10 h-10 rounded-xl flex items-center justify-center group transition-colors ${isVideoOff ? 'bg-red-500/20 text-red-500 border-red-500/30' : 'text-white hover:bg-white/10'}`}
+                    title={isVideoOff ? "Start Video" : "Stop Video"}
+                >
+                    {isVideoOff ? <VideoOff className="w-4 h-4" /> : <Video className="w-4 h-4" />}
                 </button>
             </div>
         </footer>
