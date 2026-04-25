@@ -1,18 +1,35 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Mail, Key, Eye, ArrowRight, ShieldCheck, Loader2 } from 'lucide-react';
+import { ArrowLeft, Mail, Key, Eye, ArrowRight, ShieldCheck, Loader2, Info } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import useMediaStore from '../store/useMediaStore';
 
 export default function Login() {
     const navigate = useNavigate();
     const { t } = useTranslation();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    
+    const defaultEmail = useMediaStore(state => state.email);
+    const setEmailStore = useMediaStore(state => state.setEmail);
+    const setDisplayNameStore = useMediaStore(state => state.setDisplayName);
+
+    const [email, setEmail] = useState(defaultEmail || 'sarah.jenkins@nebula.io');
+    const [password, setPassword] = useState('nebula2026');
     const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         setIsLoading(true);
+        
+        // Update global store based on login
+        setEmailStore(email);
+        
+        // Simple mock: extract display name from email if it's a new email
+        if (email !== defaultEmail) {
+            const namePart = email.split('@')[0];
+            const formattedName = namePart.split('.').map(part => part.charAt(0).toUpperCase() + part.slice(1)).join(' ');
+            setDisplayNameStore(formattedName || 'Guest User');
+        }
+
         setTimeout(() => {
             navigate("/home");
         }, 1200);
@@ -49,6 +66,15 @@ export default function Login() {
             <div className="text-center mb-10 mt-4">
                 <h2 className="font-display text-3xl font-bold mb-2">{t('login.authenticate')}</h2>
                 <p className="text-gray-400 text-sm font-medium">{t('login.subtitle')}</p>
+            </div>
+
+            {/*  Demo Account Indicator  */}
+            <div className="bg-nebula-cyan/10 border border-nebula-cyan/20 rounded-xl p-4 mb-8 flex items-start gap-3">
+                <Info className="w-5 h-5 text-nebula-cyan shrink-0 mt-0.5" />
+                <div className="text-left">
+                    <p className="text-sm text-nebula-cyan font-bold">{t('login.demoAccount')}</p>
+                    <p className="text-xs text-white/50 mt-1">{t('login.demoAccountDesc')}</p>
+                </div>
             </div>
 
             <form className="space-y-6" onSubmit={handleSubmit} method="POST">

@@ -91,7 +91,9 @@
     "initializeConnection": "开始连接",
     "newToNetwork": "还没有账号？",
     "requestAccess": "申请权限",
-    "encryptedSession": "端到端加密会话"
+    "encryptedSession": "端到端加密会话",
+    "demoAccount": "测试账号已准备",
+    "demoAccountDesc": "为方便演示，系统已安全填充了测试账号信息。直接点击下方按钮初始化连接即可。"
   },
   "sidebar": {
     "dashboard": "仪表盘",

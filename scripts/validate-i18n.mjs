@@ -39,6 +39,8 @@ const requiredKeys = [
   'login.initializeConnection',
   'login.newToNetwork',
   'login.requestAccess',
+  'login.demoAccount',
+  'login.demoAccountDesc',
   'login.encryptedSession',
   'sidebar.expandSidebar',
   'sidebar.collapseSidebar',

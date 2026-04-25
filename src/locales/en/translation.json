@@ -90,8 +90,10 @@
     "establishing": "Establishing...",
     "initializeConnection": "Initialize Connection",
     "newToNetwork": "New to the network?",
-    "requestAccess": "Request Access",
-    "encryptedSession": "End-to-End Encrypted Session"
+    "requestAccess": "Request access",
+    "encryptedSession": "End-to-End Encrypted Session",
+    "demoAccount": "Test Account Ready",
+    "demoAccountDesc": "A demo account has been securely pre-populated for this session. Simply initialize the connection to proceed."
   },
   "sidebar": {
     "dashboard": "Dashboard",
