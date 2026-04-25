@@ -19,6 +19,7 @@ export default function Meeting() {
     const [newMessage, setNewMessage] = useState("");
     const [isAiThinking, setIsAiThinking] = useState(false);
     const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
+    const [showNotification, setShowNotification] = useState(true);
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = () => {
@@ -28,6 +29,13 @@ export default function Meeting() {
     useEffect(() => {
         scrollToBottom();
     }, [messages, isAiThinking]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowNotification(false);
+        }, 5000);
+        return () => clearTimeout(timer);
+    }, []);
 
     const handleSendMessage = () => {
         if (!newMessage.trim()) return;
@@ -79,17 +87,19 @@ export default function Meeting() {
     <div className="bg-mesh"></div>
     <div className="bg-noise"></div>
 
-    <div className="fixed top-24 right-6 z-50 flex flex-col gap-3 pointer-events-none">
-        <div className="glass-panel rounded-xl p-3 flex items-center gap-3 w-72 animate-slide-in shadow-xl shadow-black/50 pointer-events-auto cursor-pointer group">
-            <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0 border border-blue-500/30">
-                <UserPlus className="w-4 h-4 text-blue-400" />
-            </div>
-            <div className="flex-1 min-w-0">
-                <div className="text-sm font-bold text-white truncate">Elena Rodriguez</div>
-                <div className="text-xs text-white/50 truncate">{t('meeting.joinedMeeting')}</div>
+    {showNotification && (
+        <div className="fixed top-24 right-6 z-50 flex flex-col gap-3 pointer-events-none">
+            <div className="glass-panel rounded-xl p-3 flex items-center gap-3 w-72 animate-slide-in shadow-xl shadow-black/50 pointer-events-auto cursor-pointer group" onClick={() => setShowNotification(false)}>
+                <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0 border border-blue-500/30">
+                    <UserPlus className="w-4 h-4 text-blue-400" />
+                </div>
+                <div className="flex-1 min-w-0">
+                    <div className="text-sm font-bold text-white truncate">Elena Rodriguez</div>
+                    <div className="text-xs text-white/50 truncate">{t('meeting.joinedMeeting')}</div>
+                </div>
             </div>
         </div>
-    </div>
+    )}
 
     <div className="relative z-10 flex flex-col h-full w-full p-4 lg:p-6 gap-6">
         
@@ -131,8 +141,8 @@ export default function Meeting() {
                 {/*  Active Speaker / Main Video (Takes up majority of space)  */}
                 <div className="flex-[3] relative min-h-0">
                     <div className="voice-reactive-border"></div>
-                    <div className="video-tile speaking relative group h-full w-full bg-black rounded-3xl overflow-hidden shadow-2xl border border-white/5">
-                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=1600" className="w-full h-full object-cover object-top opacity-80" alt="Main speaker" />
+                    <div className="video-tile speaking relative group h-full w-full bg-[#030108] rounded-3xl overflow-hidden shadow-2xl border border-white/5 flex items-center justify-center">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=1600" className="w-full h-full object-contain opacity-90" alt="Main speaker" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20"></div>
                         
                         <div className="absolute bottom-6 left-6 flex items-center gap-3 z-10">
@@ -165,8 +175,8 @@ export default function Meeting() {
                 <div className="flex-1 flex lg:flex-col gap-4 overflow-x-auto lg:overflow-y-auto min-h-0 snap-x lg:snap-y snap-mandatory pb-2 lg:pb-0 lg:pr-2 hide-scrollbar">
                     
                     {/* Thumbnail 1 */}
-                    <div className="video-tile relative group bg-black flex-shrink-0 w-[240px] lg:w-full aspect-video lg:aspect-[4/3] snap-center rounded-2xl overflow-hidden shadow-lg border border-white/5">
-                        <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover object-top opacity-70" alt="Participant 1" />
+                    <div className="video-tile relative group bg-black flex-shrink-0 w-[240px] lg:w-full aspect-video snap-center rounded-2xl overflow-hidden shadow-lg border border-white/5">
+                        <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-contain bg-[#030108] opacity-90" alt="Participant 1" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                         <div className="absolute bottom-3 left-3">
                             <div className="font-display font-bold text-white text-sm">David Chen</div>
@@ -179,8 +189,8 @@ export default function Meeting() {
                     </div>
 
                     {/* Thumbnail 2 */}
-                    <div className="video-tile relative group bg-black flex-shrink-0 w-[240px] lg:w-full aspect-video lg:aspect-[4/3] snap-center rounded-2xl overflow-hidden shadow-lg border border-white/5">
-                        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover object-top opacity-70" alt="Participant 2" />
+                    <div className="video-tile relative group bg-black flex-shrink-0 w-[240px] lg:w-full aspect-video snap-center rounded-2xl overflow-hidden shadow-lg border border-white/5">
+                        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-contain bg-[#030108] opacity-90" alt="Participant 2" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                         <div className="absolute bottom-3 left-3">
                             <div className="font-display font-bold text-white text-sm">Elena Rodriguez</div>
@@ -191,8 +201,8 @@ export default function Meeting() {
                     </div>
 
                     {/* Thumbnail 3 (Self) */}
-                    <div className="video-tile relative group bg-black flex-shrink-0 w-[240px] lg:w-full aspect-video lg:aspect-[4/3] snap-center rounded-2xl overflow-hidden shadow-lg border border-emerald-500/30">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover object-top opacity-70" alt="You" />
+                    <div className="video-tile relative group bg-black flex-shrink-0 w-[240px] lg:w-full aspect-video snap-center rounded-2xl overflow-hidden shadow-lg border border-emerald-500/30">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-contain bg-[#030108] opacity-90" alt="You" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                         <div className="absolute bottom-3 left-3">
                             <div className="font-display font-bold text-white text-sm">{t('meeting.you')}</div>
