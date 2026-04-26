@@ -248,26 +248,37 @@ export default function Setup() {
                             {/*  Audio Visualizer Overlay & Network Status  */}
 
                             {/*  Quick Toggles inside video  */}
-                            <div className="absolute bottom-6 right-6 flex gap-3">
+                            <div className="absolute bottom-6 right-6 flex gap-3 z-20">
                                 <button 
                                     type="button"
                                     onClick={toggleAudio}
                                     className={`w-12 h-12 rounded-xl backdrop-blur-md border flex items-center justify-center transition-all hover:scale-110 active:scale-95 group ${isAudioMuted ? 'bg-red-500/20 border-red-500/30 text-red-500' : 'bg-black/50 hover:bg-white/10 border-white/10 text-emerald-400'}`}
+                                    title={isAudioMuted ? "Unmute Microphone" : "Mute Microphone"}
+                                    aria-label="Microphone Toggle"
+                                    aria-pressed={!isAudioMuted}
                                 >
-                                    {isAudioMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+                                    {isAudioMuted ? <MicOff className="w-5 h-5" aria-hidden="true" /> : <Mic className="w-5 h-5" aria-hidden="true" />}
                                 </button>
                                 <button 
                                     type="button"
                                     onClick={toggleVideo}
                                     className={`w-12 h-12 rounded-xl backdrop-blur-md border flex items-center justify-center transition-all hover:scale-110 active:scale-95 group ${isVideoMuted ? 'bg-red-500/20 border-red-500/30 text-red-500' : 'bg-black/50 hover:bg-white/10 border-white/10 text-emerald-400'}`}
+                                    title={isVideoMuted ? "Start Camera" : "Stop Camera"}
+                                    aria-label="Camera Toggle"
+                                    aria-pressed={!isVideoMuted}
                                 >
-                                    {isVideoMuted ? <VideoOff className="w-5 h-5" /> : <Video className="w-5 h-5" />}
+                                    {isVideoMuted ? <VideoOff className="w-5 h-5" aria-hidden="true" /> : <Video className="w-5 h-5" aria-hidden="true" />}
                                 </button>
                                 <div className="relative tooltip">
-                                    <button className="w-12 h-12 rounded-xl bg-black/50 hover:bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center text-white transition-all hover:scale-110 active:scale-95 group">
-                                        <Image className="w-5 h-5 text-nebula-cyan" />
+                                    <button 
+                                        type="button"
+                                        className="w-12 h-12 rounded-xl bg-black/50 hover:bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center text-white transition-all hover:scale-110 active:scale-95 group"
+                                        title={t('setup.virtualBackground')}
+                                        aria-label="Virtual Background Settings"
+                                    >
+                                        <Image className="w-5 h-5 text-nebula-cyan" aria-hidden="true" />
                                     </button>
-                                    <div className="tooltip-text absolute -top-10 left-1/2 -translate-x-1/2 bg-white text-black text-xs font-bold px-3 py-1.5 rounded-lg whitespace-nowrap shadow-xl">
+                                    <div className="tooltip-text absolute -top-10 left-1/2 -translate-x-1/2 bg-white text-black text-xs font-bold px-3 py-1.5 rounded-lg whitespace-nowrap shadow-xl" aria-hidden="true">
                                         {t('setup.virtualBackground')}
                                         <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-white rotate-45"></div>
                                     </div>

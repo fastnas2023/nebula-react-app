@@ -8,12 +8,14 @@ const useMediaStore = create((set) => ({
     selectedAudioId: '',
     isVideoMuted: false,
     isAudioMuted: false,
+    isSidebarCollapsed: window.innerWidth < 1024,
     
     setDisplayName: (name) => set({ displayName: name }),
     setAvatarUrl: (url) => set({ avatarUrl: url }),
     setEmail: (email) => set({ email: email }),
     setDevices: (videoId, audioId) => set({ selectedVideoId: videoId, selectedAudioId: audioId }),
     setMuteStates: (videoMuted, audioMuted) => set({ isVideoMuted: videoMuted, isAudioMuted: audioMuted }),
+    setSidebarCollapsed: (collapsed) => set({ isSidebarCollapsed: collapsed }),
     
     // Actions for the Meeting room to toggle states
     toggleVideo: () => set((state) => ({ isVideoMuted: !state.isVideoMuted })),

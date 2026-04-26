@@ -14,10 +14,10 @@ export default function Sidebar() {
     // Get user info from global store
     const displayName = useMediaStore(state => state.displayName);
     const avatarUrl = useMediaStore(state => state.avatarUrl);
+    const isCollapsed = useMediaStore(state => state.isSidebarCollapsed);
+    const setIsCollapsed = useMediaStore(state => state.setSidebarCollapsed);
     
     // Auto-collapse on small screens, but allow manual toggle
-    const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 1024);
-
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth < 1024) {
@@ -26,9 +26,10 @@ export default function Sidebar() {
                 setIsCollapsed(false);
             }
         };
+        // Only run on initial load or resize, but let user manually override
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    }, [setIsCollapsed]);
 
     const isActive = (path) => location.pathname === path;
 
@@ -67,47 +68,47 @@ export default function Sidebar() {
             </div>
             
             <nav className={`flex-1 py-8 ${isCollapsed ? 'px-2' : 'px-4'} flex flex-col gap-2 relative z-0 overflow-x-hidden overflow-y-auto hide-scrollbar`}>
-                <Link to="/home" className={`${navLinkClass('/home')} relative group/tooltip`}>
-                    <HomeIcon className={iconClass('/home')} />
-                    <span className={textClass('/home')}>{t('sidebar.dashboard')}</span>
+                <Link to="/home" className={`${navLinkClass('/home')} relative group/tooltip`} aria-label={t('sidebar.dashboard')}>
+                    <HomeIcon className={iconClass('/home')} aria-hidden="true" />
+                    <span className={textClass('/home')} aria-hidden={isCollapsed}>{t('sidebar.dashboard')}</span>
                     {isCollapsed && (
-                        <div className="absolute left-full ml-4 px-3 py-1.5 bg-black/90 border border-white/10 text-white text-xs font-bold rounded-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition-opacity duration-200 whitespace-nowrap z-[100] shadow-xl">
+                        <div className="absolute left-full ml-4 px-3 py-1.5 bg-black/90 border border-white/10 text-white text-xs font-bold rounded-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition-opacity duration-200 whitespace-nowrap z-[100] shadow-xl" aria-hidden="true">
                             {t('sidebar.dashboard')}
                         </div>
                     )}
                 </Link>
-                <Link to="/schedule" className={`${navLinkClass('/schedule')} relative group/tooltip`}>
-                    <VideoIcon className={iconClass('/schedule')} />
-                    <span className={textClass('/schedule')}>{t('sidebar.meetings')}</span>
+                <Link to="/schedule" className={`${navLinkClass('/schedule')} relative group/tooltip`} aria-label={t('sidebar.meetings')}>
+                    <VideoIcon className={iconClass('/schedule')} aria-hidden="true" />
+                    <span className={textClass('/schedule')} aria-hidden={isCollapsed}>{t('sidebar.meetings')}</span>
                     {isCollapsed && (
-                        <div className="absolute left-full ml-4 px-3 py-1.5 bg-black/90 border border-white/10 text-white text-xs font-bold rounded-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition-opacity duration-200 whitespace-nowrap z-[100] shadow-xl">
+                        <div className="absolute left-full ml-4 px-3 py-1.5 bg-black/90 border border-white/10 text-white text-xs font-bold rounded-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition-opacity duration-200 whitespace-nowrap z-[100] shadow-xl" aria-hidden="true">
                             {t('sidebar.meetings')}
                         </div>
                     )}
                 </Link>
-                <Link to="/recordings" className={`${navLinkClass('/recordings')} relative group/tooltip`}>
-                    <FolderOpen className={iconClass('/recordings')} />
-                    <span className={textClass('/recordings')}>{t('sidebar.recordings')}</span>
+                <Link to="/recordings" className={`${navLinkClass('/recordings')} relative group/tooltip`} aria-label={t('sidebar.recordings')}>
+                    <FolderOpen className={iconClass('/recordings')} aria-hidden="true" />
+                    <span className={textClass('/recordings')} aria-hidden={isCollapsed}>{t('sidebar.recordings')}</span>
                     {isCollapsed && (
-                        <div className="absolute left-full ml-4 px-3 py-1.5 bg-black/90 border border-white/10 text-white text-xs font-bold rounded-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition-opacity duration-200 whitespace-nowrap z-[100] shadow-xl">
+                        <div className="absolute left-full ml-4 px-3 py-1.5 bg-black/90 border border-white/10 text-white text-xs font-bold rounded-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition-opacity duration-200 whitespace-nowrap z-[100] shadow-xl" aria-hidden="true">
                             {t('sidebar.recordings')}
                         </div>
                     )}
                 </Link>
-                <Link to="/profile" className={`${navLinkClass('/profile')} relative group/tooltip`}>
-                    <User className={iconClass('/profile')} />
-                    <span className={textClass('/profile')}>{t('sidebar.profile')}</span>
+                <Link to="/profile" className={`${navLinkClass('/profile')} relative group/tooltip`} aria-label={t('sidebar.profile')}>
+                    <User className={iconClass('/profile')} aria-hidden="true" />
+                    <span className={textClass('/profile')} aria-hidden={isCollapsed}>{t('sidebar.profile')}</span>
                     {isCollapsed && (
-                        <div className="absolute left-full ml-4 px-3 py-1.5 bg-black/90 border border-white/10 text-white text-xs font-bold rounded-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition-opacity duration-200 whitespace-nowrap z-[100] shadow-xl">
+                        <div className="absolute left-full ml-4 px-3 py-1.5 bg-black/90 border border-white/10 text-white text-xs font-bold rounded-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition-opacity duration-200 whitespace-nowrap z-[100] shadow-xl" aria-hidden="true">
                             {t('sidebar.profile')}
                         </div>
                     )}
                 </Link>
-                <Link to="/contacts" className={`${navLinkClass('/contacts')} relative group/tooltip`}>
-                    <Users className={iconClass('/contacts')} />
-                    <span className={textClass('/contacts')}>{t('sidebar.contacts')}</span>
+                <Link to="/contacts" className={`${navLinkClass('/contacts')} relative group/tooltip`} aria-label={t('sidebar.contacts')}>
+                    <Users className={iconClass('/contacts')} aria-hidden="true" />
+                    <span className={textClass('/contacts')} aria-hidden={isCollapsed}>{t('sidebar.contacts')}</span>
                     {isCollapsed && (
-                        <div className="absolute left-full ml-4 px-3 py-1.5 bg-black/90 border border-white/10 text-white text-xs font-bold rounded-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition-opacity duration-200 whitespace-nowrap z-[100] shadow-xl">
+                        <div className="absolute left-full ml-4 px-3 py-1.5 bg-black/90 border border-white/10 text-white text-xs font-bold rounded-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition-opacity duration-200 whitespace-nowrap z-[100] shadow-xl" aria-hidden="true">
                             {t('sidebar.contacts')}
                         </div>
                     )}

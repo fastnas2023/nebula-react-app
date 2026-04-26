@@ -298,16 +298,20 @@ export default function Whiteboard() {
                 <button 
                     onClick={toggleAudio}
                     className={`glass-button w-10 h-10 rounded-xl flex items-center justify-center group relative transition-colors ${isMuted ? 'bg-red-500/20 text-red-500 border-red-500/30' : 'text-white hover:bg-white/10'}`}
-                    title={isMuted ? "Unmute" : "Mute"}
+                    title={isMuted ? "Unmute Microphone" : "Mute Microphone"}
+                    aria-label="Microphone Toggle"
+                    aria-pressed={!isMuted}
                 >
-                    {isMuted ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                    {isMuted ? <MicOff className="w-4 h-4" aria-hidden="true" /> : <Mic className="w-4 h-4" aria-hidden="true" />}
                 </button>
                 <button 
                     onClick={toggleVideo}
                     className={`glass-button w-10 h-10 rounded-xl flex items-center justify-center group transition-colors ${isVideoOff ? 'bg-red-500/20 text-red-500 border-red-500/30' : 'text-white hover:bg-white/10'}`}
-                    title={isVideoOff ? "Start Video" : "Stop Video"}
+                    title={isVideoOff ? "Start Camera" : "Stop Camera"}
+                    aria-label="Camera Toggle"
+                    aria-pressed={!isVideoOff}
                 >
-                    {isVideoOff ? <VideoOff className="w-4 h-4" /> : <Video className="w-4 h-4" />}
+                    {isVideoOff ? <VideoOff className="w-4 h-4" aria-hidden="true" /> : <Video className="w-4 h-4" aria-hidden="true" />}
                 </button>
             </div>
         </footer>

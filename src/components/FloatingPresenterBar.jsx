@@ -23,8 +23,11 @@ export default function FloatingPresenterBar({ onStopShare, onToggleAnnotate, is
             className={`p-3 rounded-xl flex items-center justify-center transition-all ${
               isMuted ? 'bg-red-500/20 text-red-400 hover:bg-red-500/30' : 'text-white/80 hover:bg-white/10 hover:text-white'
             }`}
+            title={isMuted ? "Unmute Microphone" : "Mute Microphone"}
+            aria-label="Microphone Toggle"
+            aria-pressed={!isMuted}
           >
-            {isMuted ? <MicOff size={20} /> : <Mic size={20} />}
+            {isMuted ? <MicOff size={20} aria-hidden="true" /> : <Mic size={20} aria-hidden="true" />}
           </button>
 
           {/* Video Button */}
@@ -33,8 +36,11 @@ export default function FloatingPresenterBar({ onStopShare, onToggleAnnotate, is
             className={`p-3 rounded-xl flex items-center justify-center transition-all ${
               isVideoOff ? 'bg-red-500/20 text-red-400 hover:bg-red-500/30' : 'text-white/80 hover:bg-white/10 hover:text-white'
             }`}
+            title={isVideoOff ? "Start Camera" : "Stop Camera"}
+            aria-label="Camera Toggle"
+            aria-pressed={!isVideoOff}
           >
-            {isVideoOff ? <VideoOff size={20} /> : <Video size={20} />}
+            {isVideoOff ? <VideoOff size={20} aria-hidden="true" /> : <Video size={20} aria-hidden="true" />}
           </button>
           
           <div className="w-px h-6 bg-white/20 mx-2"></div>

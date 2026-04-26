@@ -84,7 +84,7 @@ export default function Home() {
         <div className="mb-12">
             <div className="flex items-center justify-between mb-6">
                 <h2 className="font-display font-bold text-2xl text-white">{t('dashboard.upcoming')}</h2>
-                <Link to="/schedule" className="text-white/50 hover:text-white transition-colors">{t('dashboard.viewAll')}</Link>
+                <Link to="/recordings" className="text-white/50 hover:text-white transition-colors">{t('dashboard.viewAll')}</Link>
             </div>
 
             <div className="space-y-4">

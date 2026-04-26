@@ -338,6 +338,21 @@ export default function Meeting() {
                     )}
                 </div>
 
+                {/* Hidden Hover Menu (Accessibility & Advanced Management) */}
+                {!p.isLocal && (
+                    <div className="absolute inset-0 bg-black/40 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 z-20">
+                        <button className="glass-button w-10 h-10 rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-colors" title="Pin Video" aria-label={`Pin ${p.name}'s video`}>
+                            <Pin className="w-4 h-4" />
+                        </button>
+                        <button className="glass-button w-10 h-10 rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-colors" title={p.isMuted ? "Ask to Unmute" : "Mute Participant"} aria-label={p.isMuted ? `Ask ${p.name} to unmute` : `Mute ${p.name}`}>
+                            {p.isMuted ? <Mic className="w-4 h-4" /> : <MicOff className="w-4 h-4" />}
+                        </button>
+                        <button className="glass-button w-10 h-10 rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-colors" title="More Options" aria-label={`More options for ${p.name}`}>
+                            <MoreVertical className="w-4 h-4" />
+                        </button>
+                    </div>
+                )}
+
                 {/* Recording Badge on Main View Only */}
                 {isMain && !isGalleryView && (
                     <div className="absolute top-6 left-6 flex gap-2 z-10">
@@ -676,11 +691,13 @@ export default function Meeting() {
                 <button 
                     onClick={toggleAudio}
                     className={`glass-button w-12 h-12 rounded-xl flex items-center justify-center group relative transition-colors ${isMuted ? 'bg-red-500/20 text-red-500 border-red-500/30' : 'text-white hover:bg-white/10'}`}
-                    title={isMuted ? "Unmute" : "Mute"}
+                    title={isMuted ? "Unmute Microphone" : "Mute Microphone"}
+                    aria-label="Microphone Toggle"
+                    aria-pressed={!isMuted}
                 >
-                    {isMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5 group-hover:scale-110 transition-transform" />}
+                    {isMuted ? <MicOff className="w-5 h-5" aria-hidden="true" /> : <Mic className="w-5 h-5 group-hover:scale-110 transition-transform" aria-hidden="true" />}
                     {!isMuted && activeSpeakerId === 'local' && (
-                        <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                        <span className="absolute -top-1 -right-1 flex h-3 w-3" aria-hidden="true">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 border-2 border-[#030108]"></span>
                         </span>
@@ -689,19 +706,28 @@ export default function Meeting() {
                 <button 
                     onClick={toggleVideo}
                     className={`glass-button w-12 h-12 rounded-xl flex items-center justify-center group transition-colors ${isVideoOff ? 'bg-red-500/20 text-red-500 border-red-500/30' : 'text-white hover:bg-white/10'}`}
-                    title={isVideoOff ? "Start Video" : "Stop Video"}
+                    title={isVideoOff ? "Start Camera" : "Stop Camera"}
+                    aria-label="Camera Toggle"
+                    aria-pressed={!isVideoOff}
                 >
-                    {isVideoOff ? <VideoOff className="w-5 h-5" /> : <Video className="w-5 h-5 group-hover:scale-110 transition-transform" />}
+                    {isVideoOff ? <VideoOff className="w-5 h-5" aria-hidden="true" /> : <Video className="w-5 h-5 group-hover:scale-110 transition-transform" aria-hidden="true" />}
                 </button>
-                <div className="w-px h-8 bg-white/10 mx-2 hidden sm:block"></div>
-                <button className="glass-button active w-12 h-12 rounded-xl flex items-center justify-center text-white group hidden sm:flex" onClick={() => navigate('/screenshare')}>
-                    <MonitorUp className="w-5 h-5 group-hover:-translate-y-1 transition-transform" />
+                <div className="w-px h-8 bg-white/10 mx-2 hidden sm:block" aria-hidden="true"></div>
+                <button 
+                    className="glass-button active w-12 h-12 rounded-xl flex items-center justify-center text-white group hidden sm:flex" 
+                    onClick={() => navigate('/screenshare')}
+                    title="Share Screen"
+                    aria-label="Share Screen"
+                    aria-pressed="false"
+                >
+                    <MonitorUp className="w-5 h-5 group-hover:-translate-y-1 transition-transform" aria-hidden="true" />
                 </button>
                 <button 
                     className="glass-button danger px-6 h-12 rounded-xl flex items-center justify-center gap-2 font-bold tracking-wide shadow-lg shadow-red-900/20 ml-2 transition-all hover:scale-105" 
                     onClick={() => setShowLeaveConfirm(true)}
+                    aria-label="Leave Meeting"
                 >
-                    <PhoneOff className="w-4 h-4" /> {t('meeting.leave')}
+                    <PhoneOff className="w-4 h-4" aria-hidden="true" /> {t('meeting.leave')}
                 </button>
             </div>
 
@@ -710,22 +736,30 @@ export default function Meeting() {
                     onClick={() => togglePanel('participants')}
                     className={`glass-button w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${activePanel === 'participants' ? 'bg-white/20 text-white' : 'text-gray-300 hover:text-white hover:bg-white/10'}`}
                     title={t('meeting.participants', 'Participants')}
+                    aria-label="Toggle Participants Panel"
+                    aria-expanded={activePanel === 'participants'}
                 >
-                    <Users className="w-4 h-4" />
+                    <Users className="w-4 h-4" aria-hidden="true" />
                 </button>
                 <button 
                     onClick={() => togglePanel('chat')}
                     className={`glass-button w-10 h-10 rounded-xl flex items-center justify-center relative transition-colors ${activePanel === 'chat' ? 'bg-white/20 text-white' : 'text-gray-300 hover:text-white hover:bg-white/10'}`}
                     title={t('meeting.messages', 'Chat')}
+                    aria-label="Toggle Chat Panel"
+                    aria-expanded={activePanel === 'chat'}
                 >
-                    <MessageSquare className="w-4 h-4" />
+                    <MessageSquare className="w-4 h-4" aria-hidden="true" />
                     {unreadCount > 0 && activePanel !== 'chat' && (
-                        <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-[#030108]"></span>
+                        <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-[#030108]" aria-hidden="true"></span>
                     )}
                 </button>
-                <div className="w-px h-6 bg-white/10 mx-1"></div>
-                <button className="glass-button w-10 h-10 rounded-xl flex items-center justify-center text-gray-300 hover:text-white hover:bg-white/10 transition-colors">
-                    <Info className="w-4 h-4" />
+                <div className="w-px h-6 bg-white/10 mx-1" aria-hidden="true"></div>
+                <button 
+                    className="glass-button w-10 h-10 rounded-xl flex items-center justify-center text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
+                    title="Meeting Info"
+                    aria-label="Meeting Information"
+                >
+                    <Info className="w-4 h-4" aria-hidden="true" />
                 </button>
             </div>
         </footer>

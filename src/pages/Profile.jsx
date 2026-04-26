@@ -87,7 +87,11 @@ export default function Profile() {
                                 <span className="text-white font-mono text-xs">Unlimited</span>
                             </div>
                         </div>
-                        <button className="w-full py-2.5 bg-nebula-purple/10 hover:bg-nebula-purple/20 text-nebula-purple rounded-xl text-sm font-bold transition-colors border border-nebula-purple/30">
+                        <button 
+                            type="button"
+                            onClick={() => alert("Redirecting to Stripe Billing Portal...")}
+                            className="w-full py-2.5 bg-nebula-purple/10 hover:bg-nebula-purple/20 text-nebula-purple rounded-xl text-sm font-bold transition-colors border border-nebula-purple/30"
+                        >
                             {t('profile.manageBilling')}
                         </button>
                     </div>
@@ -162,14 +166,32 @@ export default function Profile() {
                                     <h4 className="text-white font-bold text-sm">{t('profile.regenerateKeys')}</h4>
                                     <p className="text-xs text-gray-500 mt-1">{t('profile.invalidateLinks')}</p>
                                 </div>
-                                <button className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg text-sm font-bold transition-colors border border-white/10">{t('profile.rotateKeys')}</button>
+                                <button 
+                                    type="button"
+                                    onClick={() => alert("Key rotation requested. A confirmation email will be sent to your registered address.")}
+                                    className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg text-sm font-bold transition-colors border border-white/10"
+                                >
+                                    {t('profile.rotateKeys')}
+                                </button>
                             </div>
                             <div className="flex items-center justify-between p-4 rounded-xl bg-red-500/5 border border-red-500/10">
                                 <div>
                                     <h4 className="text-red-400 font-bold text-sm">{t('profile.deleteAccount')}</h4>
                                     <p className="text-xs text-gray-500 mt-1">{t('profile.deleteAccountDesc')}</p>
                                 </div>
-                                <button className="px-4 py-2 bg-red-500/20 hover:bg-red-500/40 text-red-400 rounded-lg text-sm font-bold transition-colors border border-red-500/30">{t('profile.delete')}</button>
+                                <button 
+                                    type="button"
+                                    onClick={() => {
+                                        if (window.confirm("Are you sure you want to permanently delete your account? This action cannot be undone and all your meeting history will be lost.")) {
+                                            // Mock deletion and redirect
+                                            alert("Account deleted.");
+                                            navigate('/login');
+                                        }
+                                    }}
+                                    className="px-4 py-2 bg-red-500/20 hover:bg-red-500/40 text-red-400 rounded-lg text-sm font-bold transition-colors border border-red-500/30"
+                                >
+                                    {t('profile.delete')}
+                                </button>
                             </div>
                         </div>
                     </div>
