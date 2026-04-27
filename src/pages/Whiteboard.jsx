@@ -20,6 +20,21 @@ export default function Whiteboard() {
     // Local Media Stream
     const localVideoRef = useRef(null);
     const [localStream, setLocalStream] = useState(null);
+    const streamRef = useRef(null);
+
+    // Keep ref in sync with state for cleanup
+    useEffect(() => {
+        streamRef.current = localStream;
+    }, [localStream]);
+
+    // Master cleanup function on unmount
+    useEffect(() => {
+        return () => {
+            if (streamRef.current) {
+                streamRef.current.getTracks().forEach(track => track.stop());
+            }
+        };
+    }, []);
 
     // Dynamic Mock Data States
     const [meetingSeconds, setMeetingSeconds] = useState(5079); // 01:24:39
@@ -172,7 +187,12 @@ export default function Whiteboard() {
                 <button className="glass-button w-10 h-10 rounded-xl flex items-center justify-center text-white/70">
                     <Download className="w-5 h-5" />
                 </button>
-                <button onClick={() => navigate('/meeting')} className="bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 px-4 h-10 rounded-xl flex items-center gap-2 font-bold transition-colors text-sm">
+                <button onClick={() => {
+                    if (streamRef.current) {
+                        streamRef.current.getTracks().forEach(track => track.stop());
+                    }
+                    navigate('/meeting');
+                }} className="bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 px-4 h-10 rounded-xl flex items-center gap-2 font-bold transition-colors text-sm">
                     <X className="w-4 h-4" /> {t('whiteboard.closeBoard')}
                 </button>
             </div>

@@ -49,8 +49,23 @@ export default function Meeting() {
     const messagesEndRef = useRef(null);
     const localVideoRef = useRef(null);
     const [localStream, setLocalStream] = useState(null);
-    
-    // Dynamic Layout Engine for Gallery View
+    const streamRef = useRef(null);
+
+    // Keep ref in sync with state for cleanup
+    useEffect(() => {
+        streamRef.current = localStream;
+    }, [localStream]);
+
+    // Master cleanup function on unmount
+    useEffect(() => {
+        return () => {
+            if (streamRef.current) {
+                streamRef.current.getTracks().forEach(track => track.stop());
+            }
+        };
+    }, []);
+
+    // Request WebRTC Media Stream
     const { containerRef: galleryContainerRef, layout: galleryLayout } = useGalleryLayout(4, 16 / 9, 16);
 
     // Request WebRTC Media Stream
@@ -785,7 +800,12 @@ export default function Meeting() {
                         {t('meeting.cancelBtn')}
                     </button>
                     <button 
-                        onClick={() => navigate('/home')}
+                        onClick={() => {
+                            if (streamRef.current) {
+                                streamRef.current.getTracks().forEach(track => track.stop());
+                            }
+                            navigate('/home');
+                        }}
                         className="flex-1 py-3 rounded-xl font-bold text-sm text-white bg-red-500 hover:bg-red-600 transition-colors shadow-lg shadow-red-500/20"
                     >
                         {t('meeting.confirmLeaveBtn')}

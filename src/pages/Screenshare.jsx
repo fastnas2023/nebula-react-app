@@ -6,6 +6,7 @@ import ResizableSplitPane from '../components/ResizableSplitPane';
 import FloatingPresenterBar from '../components/FloatingPresenterBar';
 import AnnotationCanvas from '../components/AnnotationCanvas';
 import NebulaLogo from '../components/NebulaLogo';
+import useMediaStore from '../store/useMediaStore';
 
 export default function Screenshare() {
     const navigate = useNavigate();
@@ -19,6 +20,134 @@ export default function Screenshare() {
     const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
     const [clearCanvasTrigger, setClearCanvasTrigger] = useState(0);
     
+    // Global Media States
+    const displayName = useMediaStore(state => state.displayName);
+    const selectedVideoId = useMediaStore(state => state.selectedVideoId);
+    const selectedAudioId = useMediaStore(state => state.selectedAudioId);
+    const isMuted = useMediaStore(state => state.isAudioMuted);
+    const isVideoOff = useMediaStore(state => state.isVideoMuted);
+    const toggleAudio = useMediaStore(state => state.toggleAudio);
+    const toggleVideo = useMediaStore(state => state.toggleVideo);
+    
+    // Local Media Stream
+    const localVideoRef = useRef(null);
+    const [localStream, setLocalStream] = useState(null);
+    const streamRef = useRef(null);
+
+    // Keep ref in sync with state for cleanup
+    useEffect(() => {
+        streamRef.current = localStream;
+    }, [localStream]);
+
+    // Master cleanup function on unmount
+    useEffect(() => {
+        return () => {
+            if (streamRef.current) {
+                streamRef.current.getTracks().forEach(track => track.stop());
+            }
+        };
+    }, []);
+
+    // Request WebRTC Media Stream
+    useEffect(() => {
+        let activeStream = null;
+
+        const getMedia = async () => {
+            try {
+                const constraints = {
+                    video: isVideoOff ? false : (selectedVideoId ? { deviceId: { exact: selectedVideoId } } : true),
+                    audio: isMuted ? false : (selectedAudioId ? { deviceId: { exact: selectedAudioId } } : true)
+                };
+                
+                // Only request hardware if at least one is needed
+                if (constraints.video || constraints.audio) {
+                    activeStream = await navigator.mediaDevices.getUserMedia(constraints);
+                } else {
+                    // Create an empty MediaStream if both are off initially
+                    activeStream = new MediaStream();
+                }
+
+                setLocalStream(activeStream);
+                if (localVideoRef.current) {
+                    localVideoRef.current.srcObject = activeStream;
+                }
+            } catch (err) {
+                console.error("Failed to get local stream in screenshare", err);
+            }
+        };
+
+        getMedia();
+
+        return () => {
+            if (activeStream) {
+                activeStream.getTracks().forEach(track => track.stop());
+            }
+        };
+    }, [selectedVideoId, selectedAudioId]);
+
+    // Dynamically handle video toggle
+    useEffect(() => {
+        if (!localStream) return;
+
+        const manageVideoTrack = async () => {
+            const videoTrack = localStream.getVideoTracks()[0];
+
+            if (isVideoOff) {
+                if (videoTrack && videoTrack.readyState === 'live') {
+                    videoTrack.stop();
+                    localStream.removeTrack(videoTrack);
+                }
+            } else {
+                if (!videoTrack || videoTrack.readyState === 'ended') {
+                    try {
+                        const constraints = { video: selectedVideoId ? { deviceId: { exact: selectedVideoId } } : true, audio: false };
+                        const newStream = await navigator.mediaDevices.getUserMedia(constraints);
+                        const newVideoTrack = newStream.getVideoTracks()[0];
+                        
+                        localStream.addTrack(newVideoTrack);
+                        if (localVideoRef.current) {
+                            localVideoRef.current.srcObject = localStream;
+                        }
+                    } catch (err) {
+                        console.error("Failed to turn camera back on in screenshare", err);
+                    }
+                }
+            }
+        };
+
+        manageVideoTrack();
+    }, [isVideoOff, localStream, selectedVideoId]);
+
+    // Dynamically handle audio toggle
+    useEffect(() => {
+        if (!localStream) return;
+
+        const manageAudioTrack = async () => {
+            const audioTrack = localStream.getAudioTracks()[0];
+
+            if (isMuted) {
+                if (audioTrack && audioTrack.readyState === 'live') {
+                    audioTrack.stop();
+                    localStream.removeTrack(audioTrack);
+                }
+            } else {
+                if (!audioTrack || audioTrack.readyState === 'ended') {
+                    try {
+                        const constraints = { video: false, audio: selectedAudioId ? { deviceId: { exact: selectedAudioId } } : true };
+                        const newStream = await navigator.mediaDevices.getUserMedia(constraints);
+                        const newAudioTrack = newStream.getAudioTracks()[0];
+                        
+                        localStream.addTrack(newAudioTrack);
+                    } catch (err) {
+                        console.error("Failed to turn microphone back on in screenshare", err);
+                    }
+                }
+            }
+        };
+
+        manageAudioTrack();
+    }, [isMuted, localStream, selectedAudioId]);
+
     // Dynamic Mock Data States
     const [meetingSeconds, setMeetingSeconds] = useState(5079); // 01:24:39
 
@@ -306,7 +435,12 @@ export default function Screenshare() {
                         {t('screenshare.cancel')}
                     </button>
                     <button 
-                        onClick={() => navigate('/home')}
+                        onClick={() => {
+                            if (streamRef.current) {
+                                streamRef.current.getTracks().forEach(track => track.stop());
+                            }
+                            navigate('/home');
+                        }}
                         className="flex-1 py-3 rounded-xl font-bold text-sm text-white bg-red-500 hover:bg-red-600 transition-colors shadow-lg shadow-red-500/20"
                     >
                         {t('screenshare.yesLeave')}

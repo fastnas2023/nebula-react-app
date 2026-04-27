@@ -20,6 +20,22 @@ export default function Setup() {
     // WebRTC Real Device States
     const videoRef = useRef(null);
     const [stream, setStream] = useState(null);
+    const streamRef = useRef(null);
+
+    // Keep ref in sync with state for cleanup
+    useEffect(() => {
+        streamRef.current = stream;
+    }, [stream]);
+
+    // Master cleanup function on unmount
+    useEffect(() => {
+        return () => {
+            if (streamRef.current) {
+                streamRef.current.getTracks().forEach(track => track.stop());
+            }
+        };
+    }, []);
+
     const [videoDevices, setVideoDevices] = useState([]);
     const [audioDevices, setAudioDevices] = useState([]);
     const [selectedVideoId, setSelectedVideoId] = useState('');
@@ -189,7 +205,11 @@ export default function Setup() {
     <div className="bg-mesh fixed"></div>
     <div className="bg-noise fixed"></div>
 
-    <Link to="/home" className="absolute top-8 left-8 flex items-center gap-2 text-gray-400 hover:text-white transition-colors z-20 group font-mono text-sm">
+    <Link to="/home" onClick={() => {
+        if (streamRef.current) {
+            streamRef.current.getTracks().forEach(track => track.stop());
+        }
+    }} className="absolute top-8 left-8 flex items-center gap-2 text-gray-400 hover:text-white transition-colors z-20 group font-mono text-sm">
         <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> {t('setup.backToHome')}
     </Link>
 
