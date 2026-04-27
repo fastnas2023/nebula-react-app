@@ -231,7 +231,9 @@ export default function Whiteboard() {
             </aside>
 
             {/*  Canvas Area  */}
-            <div className="flex-1 whiteboard-canvas relative cursor-crosshair">
+            <div className="flex-1 whiteboard-canvas relative cursor-crosshair rounded-2xl overflow-hidden shadow-[inset_0_0_50px_rgba(0,0,0,0.5)]">
+                {/* Subtle grid background for the canvas */}
+                <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }}></div>
                 
                 {showElements && (
                     <React.Fragment>
