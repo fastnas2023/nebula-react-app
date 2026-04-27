@@ -41,110 +41,110 @@ export default function Recordings() {
                         <table className="w-full text-left border-collapse">
                             <thead>
                                 <tr className="border-b border-white/5 bg-white/[0.02]">
-                                    <th className="px-6 py-5 text-xs font-bold text-white/50 uppercase tracking-wider">Meeting Name</th>
-                                    <th className="px-6 py-5 text-xs font-bold text-white/50 uppercase tracking-wider">Date</th>
-                                    <th className="px-6 py-5 text-xs font-bold text-white/50 uppercase tracking-wider">{t('dashboard.duration')}</th>
-                                    <th className="px-6 py-5 text-xs font-bold text-white/50 uppercase tracking-wider">{t('dashboard.participants')}</th>
-                                    <th className="px-6 py-5 text-xs font-bold text-white/50 uppercase tracking-wider text-right">Action</th>
+                                    <th className="px-6 py-3.5 text-[11px] font-bold text-white/50 uppercase tracking-wider">Meeting Name</th>
+                                    <th className="px-6 py-3.5 text-[11px] font-bold text-white/50 uppercase tracking-wider">Date</th>
+                                    <th className="px-6 py-3.5 text-[11px] font-bold text-white/50 uppercase tracking-wider">{t('dashboard.duration')}</th>
+                                    <th className="px-6 py-3.5 text-[11px] font-bold text-white/50 uppercase tracking-wider">{t('dashboard.participants')}</th>
+                                    <th className="px-6 py-3.5 text-[11px] font-bold text-white/50 uppercase tracking-wider text-right">Action</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-white/5">
                                 <tr className="hover:bg-white/5 transition-colors group cursor-pointer" onClick={() => navigate('/recording')}>
-                                    <td className="px-6 py-5">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-lg bg-nebula-cyan/20 text-nebula-cyan flex items-center justify-center flex-shrink-0">
-                                                <Play className="w-4 h-4 ml-0.5" />
+                                    <td className="px-6 py-3">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-8 h-8 rounded-lg bg-nebula-cyan/20 text-nebula-cyan flex items-center justify-center flex-shrink-0">
+                                                <Play className="w-3.5 h-3.5 ml-0.5" />
                                             </div>
                                             <div>
-                                                <div className="font-bold text-white text-base">Design System Sync</div>
-                                                <div className="text-xs text-white/40 mt-1">ID: DGN-1102-Y</div>
+                                                <div className="font-bold text-white text-sm">Design System Sync</div>
+                                                <div className="text-[11px] text-white/40 mt-0.5">ID: DGN-1102-Y</div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-5">
-                                        <div className="flex items-center gap-2 text-sm text-white/70">
-                                            <Calendar className="w-4 h-4 text-white/30" /> Oct 21, 2026
+                                    <td className="px-6 py-3">
+                                        <div className="flex items-center gap-2 text-xs text-white/70">
+                                            <Calendar className="w-3.5 h-3.5 text-white/30" /> Oct 21, 2026
                                         </div>
                                     </td>
-                                    <td className="px-6 py-5">
-                                        <div className="flex items-center gap-2 text-sm text-white/70">
-                                            <Clock className="w-4 h-4 text-white/30" /> 1 hr 15 mins
+                                    <td className="px-6 py-3">
+                                        <div className="flex items-center gap-2 text-xs text-white/70">
+                                            <Clock className="w-3.5 h-3.5 text-white/30" /> 1 hr 15 mins
                                         </div>
                                     </td>
-                                    <td className="px-6 py-5">
-                                        <div className="flex items-center gap-2 text-sm text-white/70">
-                                            <Users className="w-4 h-4 text-white/30" /> 4
+                                    <td className="px-6 py-3">
+                                        <div className="flex items-center gap-2 text-xs text-white/70">
+                                            <Users className="w-3.5 h-3.5 text-white/30" /> 4
                                         </div>
                                     </td>
-                                    <td className="px-6 py-5 text-right">
-                                        <button className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 font-bold text-sm transition-colors shadow-lg shadow-emerald-500/10">
-                                            <Play className="w-4 h-4" /> {t('dashboard.play')}
+                                    <td className="px-6 py-3 text-right">
+                                        <button className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 font-bold text-xs transition-colors shadow-lg shadow-emerald-500/10 opacity-0 group-hover:opacity-100 focus:opacity-100">
+                                            <Play className="w-3.5 h-3.5" /> {t('dashboard.play')}
                                         </button>
                                     </td>
                                 </tr>
                                 <tr className="hover:bg-white/5 transition-colors group cursor-pointer" onClick={() => navigate('/recording')}>
-                                    <td className="px-6 py-5">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-lg bg-nebula-purple/20 text-nebula-purple flex items-center justify-center flex-shrink-0">
-                                                <Play className="w-4 h-4 ml-0.5" />
+                                    <td className="px-6 py-3">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-8 h-8 rounded-lg bg-nebula-purple/20 text-nebula-purple flex items-center justify-center flex-shrink-0">
+                                                <Play className="w-3.5 h-3.5 ml-0.5" />
                                             </div>
                                             <div>
-                                                <div className="font-bold text-white text-base">Q3 Roadmap Planning</div>
-                                                <div className="text-xs text-white/40 mt-1">ID: Q3R-9921-X</div>
+                                                <div className="font-bold text-white text-sm">Q3 Roadmap Planning</div>
+                                                <div className="text-[11px] text-white/40 mt-0.5">ID: Q3R-9921-X</div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-5">
-                                        <div className="flex items-center gap-2 text-sm text-white/70">
-                                            <Calendar className="w-4 h-4 text-white/30" /> Oct 23, 2026
+                                    <td className="px-6 py-3">
+                                        <div className="flex items-center gap-2 text-xs text-white/70">
+                                            <Calendar className="w-3.5 h-3.5 text-white/30" /> Oct 23, 2026
                                         </div>
                                     </td>
-                                    <td className="px-6 py-5">
-                                        <div className="flex items-center gap-2 text-sm text-white/70">
-                                            <Clock className="w-4 h-4 text-white/30" /> 45 mins
+                                    <td className="px-6 py-3">
+                                        <div className="flex items-center gap-2 text-xs text-white/70">
+                                            <Clock className="w-3.5 h-3.5 text-white/30" /> 45 mins
                                         </div>
                                     </td>
-                                    <td className="px-6 py-5">
-                                        <div className="flex items-center gap-2 text-sm text-white/70">
-                                            <Users className="w-4 h-4 text-white/30" /> 12
+                                    <td className="px-6 py-3">
+                                        <div className="flex items-center gap-2 text-xs text-white/70">
+                                            <Users className="w-3.5 h-3.5 text-white/30" /> 12
                                         </div>
                                     </td>
-                                    <td className="px-6 py-5 text-right">
-                                        <button className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 font-bold text-sm transition-colors shadow-lg shadow-emerald-500/10">
-                                            <Play className="w-4 h-4" /> {t('dashboard.play')}
+                                    <td className="px-6 py-3 text-right">
+                                        <button className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 font-bold text-xs transition-colors shadow-lg shadow-emerald-500/10 opacity-0 group-hover:opacity-100 focus:opacity-100">
+                                            <Play className="w-3.5 h-3.5" /> {t('dashboard.play')}
                                         </button>
                                     </td>
                                 </tr>
                                 <tr className="hover:bg-white/5 transition-colors group cursor-pointer" onClick={() => navigate('/recording')}>
-                                    <td className="px-6 py-5">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-lg bg-white/10 text-white/70 flex items-center justify-center flex-shrink-0">
-                                                <Play className="w-4 h-4 ml-0.5" />
+                                    <td className="px-6 py-3">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-8 h-8 rounded-lg bg-white/10 text-white/70 flex items-center justify-center flex-shrink-0">
+                                                <Play className="w-3.5 h-3.5 ml-0.5" />
                                             </div>
                                             <div>
-                                                <div className="font-bold text-white text-base">Engineering All-Hands</div>
-                                                <div className="text-xs text-white/40 mt-1">ID: ENG-4421-M</div>
+                                                <div className="font-bold text-white text-sm">Engineering All-Hands</div>
+                                                <div className="text-[11px] text-white/40 mt-0.5">ID: ENG-4421-M</div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-5">
-                                        <div className="flex items-center gap-2 text-sm text-white/70">
-                                            <Calendar className="w-4 h-4 text-white/30" /> Oct 18, 2026
+                                    <td className="px-6 py-3">
+                                        <div className="flex items-center gap-2 text-xs text-white/70">
+                                            <Calendar className="w-3.5 h-3.5 text-white/30" /> Oct 18, 2026
                                         </div>
                                     </td>
-                                    <td className="px-6 py-5">
-                                        <div className="flex items-center gap-2 text-sm text-white/70">
-                                            <Clock className="w-4 h-4 text-white/30" /> 58 mins
+                                    <td className="px-6 py-3">
+                                        <div className="flex items-center gap-2 text-xs text-white/70">
+                                            <Clock className="w-3.5 h-3.5 text-white/30" /> 58 mins
                                         </div>
                                     </td>
-                                    <td className="px-6 py-5">
-                                        <div className="flex items-center gap-2 text-sm text-white/70">
-                                            <Users className="w-4 h-4 text-white/30" /> 45
+                                    <td className="px-6 py-3">
+                                        <div className="flex items-center gap-2 text-xs text-white/70">
+                                            <Users className="w-3.5 h-3.5 text-white/30" /> 45
                                         </div>
                                     </td>
-                                    <td className="px-6 py-5 text-right">
-                                        <button className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 font-bold text-sm transition-colors shadow-lg shadow-emerald-500/10">
-                                            <Play className="w-4 h-4" /> {t('dashboard.play')}
+                                    <td className="px-6 py-3 text-right">
+                                        <button className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 font-bold text-xs transition-colors shadow-lg shadow-emerald-500/10 opacity-0 group-hover:opacity-100 focus:opacity-100">
+                                            <Play className="w-3.5 h-3.5" /> {t('dashboard.play')}
                                         </button>
                                     </td>
                                 </tr>
